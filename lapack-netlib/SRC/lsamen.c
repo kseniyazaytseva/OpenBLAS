@@ -605,8 +605,12 @@ logical lsamen_(integer *n, char *ca, char *cb)
 /* ===================================================================== */
 
     ret_val = FALSE_;
-    if (i_len(ca, ca_len) < *n || i_len(cb, cb_len) < *n) {
-	goto L20;
+
+	ca_len = (integer)strlen(ca);
+	cb_len = (integer)strlen(cb);
+
+    if (ca_len < *n || cb_len < *n) {
+		goto L20;
     }
 
 /*     Do for each character in the two strings. */
