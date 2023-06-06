@@ -90,6 +90,7 @@ BLASLONG CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
         FLOAT_V_T vx, v_min;
         UINT_V_T v_min_index;
         MASK_T mask;
+        int offset = 0;
         unsigned int gvl = 0;
         FLOAT_V_T_M1 v_res;
         v_res = VFMVVF_FLOAT_M1(FLT_MAX, 1);
