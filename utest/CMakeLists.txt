@@ -9,6 +9,10 @@ else ()
     test_min.c
     test_amax.c
     test_ismin.c
+    test_isamin.c
+    test_idamin.c
+    test_icamin.c
+    test_izamin.c
     test_rotmg.c
     test_rot.c
     test_axpy.c
