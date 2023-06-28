@@ -13,6 +13,10 @@ else ()
     test_idamin.c
     test_icamin.c
     test_izamin.c
+    test_ssum.c
+    test_dsum.c
+    test_scsum.c
+    test_dzsum.c
     test_rotmg.c
     test_rot.c
     test_axpy.c

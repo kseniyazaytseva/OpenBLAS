@@ -11,7 +11,7 @@ UTESTBIN=openblas_utest
 
 include $(TOPDIR)/Makefile.system
 
-OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_isamin.o test_idamin.o test_icamin.o test_izamin.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
+OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_isamin.o test_idamin.o test_icamin.o test_izamin.o test_ssum.o test_dsum.o test_scsum.o test_dzsum.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
 #test_rot.o test_swap.o test_axpy.o test_dotu.o test_dsdot.o test_fork.o
 
 ifneq ($(NO_LAPACK), 1)
