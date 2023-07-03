@@ -9,14 +9,6 @@ else ()
     test_min.c
     test_amax.c
     test_ismin.c
-    test_isamin.c
-    test_idamin.c
-    test_icamin.c
-    test_izamin.c
-    test_ssum.c
-    test_dsum.c
-    test_scsum.c
-    test_dzsum.c
     test_rotmg.c
     test_rot.c
     test_axpy.c
@@ -25,6 +17,20 @@ else ()
     test_swap.c
   )
 endif ()
+
+
+set(DIR_EXT test_extensions)
+set(OpenBLAS_utest_ext_src
+utest_main.c
+${DIR_EXT}/test_isamin.c 
+${DIR_EXT}/test_idamin.c 
+${DIR_EXT}/test_icamin.c 
+${DIR_EXT}/test_izamin.c 
+${DIR_EXT}/test_ssum.c 
+${DIR_EXT}/test_dsum.c 
+${DIR_EXT}/test_scsum.c 
+${DIR_EXT}/test_dzsum.c
+)
 
 # crashing on travis cl with an error code suggesting resource not found
 if (NOT MSVC)
@@ -65,7 +71,11 @@ endif()
 set(OpenBLAS_utest_bin openblas_utest)
 add_executable(${OpenBLAS_utest_bin} ${OpenBLAS_utest_src})
 
+set(OpenBLAS_utest_ext_bin openblas_utest_ext)
+add_executable(${OpenBLAS_utest_ext_bin} ${OpenBLAS_utest_ext_src})
+
 target_link_libraries(${OpenBLAS_utest_bin} ${OpenBLAS_LIBNAME})
+target_link_libraries(${OpenBLAS_utest_ext_bin} ${OpenBLAS_LIBNAME})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" OR ${CMAKE_SYSTEM_NAME} MATCHES "QNX"  )
 target_link_libraries(${OpenBLAS_utest_bin} m)
@@ -90,3 +100,4 @@ add_custom_command(TARGET ${OpenBLAS_utest_bin}
 endif()
 
 add_test(${OpenBLAS_utest_bin} ${CMAKE_CURRENT_BINARY_DIR}/${OpenBLAS_utest_bin})
+add_test(${OpenBLAS_utest_ext_bin} ${CMAKE_CURRENT_BINARY_DIR}/${OpenBLAS_utest_bin})

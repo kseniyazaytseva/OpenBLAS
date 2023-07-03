@@ -1,18 +1,21 @@
 UTEST_CHECK = 1
 TOPDIR	= ..
+DIR_EXT=test_extensions
 
 override TARGET_ARCH=
 override TARGET_MACH=
 
 UTESTBIN=openblas_utest
+UTESTEXTBIN=openblas_utest_ext
 
 .PHONY : all
-.NOTPARALLEL : all run_test $(UTESTBIN)
+.NOTPARALLEL : all run_test $(UTESTBIN) $(UTESTEXTBIN)
 
 include $(TOPDIR)/Makefile.system
 
-OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_isamin.o test_idamin.o test_icamin.o test_izamin.o test_ssum.o test_dsum.o test_scsum.o test_dzsum.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
+OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
 #test_rot.o test_swap.o test_axpy.o test_dotu.o test_dsdot.o test_fork.o
+OBJS_EXT=utest_main.o $(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o $(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o
 
 ifneq ($(NO_LAPACK), 1)
 OBJS += test_potrs.o
@@ -47,12 +50,17 @@ all : run_test
 $(UTESTBIN): $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ ../$(LIBNAME) $(EXTRALIB) $(FEXTRALIB)
 
-run_test: $(UTESTBIN)
+$(UTESTEXTBIN): $(OBJS_EXT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ ../$(LIBNAME) $(EXTRALIB) $(FEXTRALIB)
+
+run_test: $(UTESTBIN) $(UTESTEXTBIN)
 ifneq ($(CROSS), 1)
 	./$(UTESTBIN)
+	./$(UTESTEXTBIN)
 endif
 
 clean:
-	-rm -f *.o $(UTESTBIN)
+	-rm -f *.o $(UTESTBIN) $(UTESTEXTBIN)
+	-rm -f $(DIR_EXT)/*.o
 
 libs:

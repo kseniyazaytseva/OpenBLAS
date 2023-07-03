@@ -9,7 +9,7 @@
  * it is provided by YADRO.
  */
 
-#include "openblas_utest.h"
+#include "utest/openblas_utest.h"
 #include <cblas.h>
 
 #define ELEMENTS 50
