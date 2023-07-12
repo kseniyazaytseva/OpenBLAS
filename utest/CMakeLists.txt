@@ -30,6 +30,10 @@ ${DIR_EXT}/test_ssum.c
 ${DIR_EXT}/test_dsum.c 
 ${DIR_EXT}/test_scsum.c 
 ${DIR_EXT}/test_dzsum.c
+${DIR_EXT}/test_samin.c
+${DIR_EXT}/test_damin.c
+${DIR_EXT}/test_scamin.c
+${DIR_EXT}/test_dzamin.c
 ${DIR_EXT}/test_scamax.c
 ${DIR_EXT}/test_dzamax.c
 )
