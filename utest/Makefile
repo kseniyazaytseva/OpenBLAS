@@ -15,7 +15,7 @@ include $(TOPDIR)/Makefile.system
 
 OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
 #test_rot.o test_swap.o test_axpy.o test_dotu.o test_dsdot.o test_fork.o
-OBJS_EXT=utest_main.o $(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o $(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o
+OBJS_EXT=utest_main.o $(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o $(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o $(DIR_EXT)/test_scamax.o $(DIR_EXT)/test_dzamax.o
 
 ifneq ($(NO_LAPACK), 1)
 OBJS += test_potrs.o

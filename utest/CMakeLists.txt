@@ -30,6 +30,8 @@ ${DIR_EXT}/test_ssum.c
 ${DIR_EXT}/test_dsum.c 
 ${DIR_EXT}/test_scsum.c 
 ${DIR_EXT}/test_dzsum.c
+${DIR_EXT}/test_scamax.c
+${DIR_EXT}/test_dzamax.c
 )
 
 # crashing on travis cl with an error code suggesting resource not found
