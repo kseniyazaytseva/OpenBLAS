@@ -22,6 +22,7 @@ endif ()
 set(DIR_EXT test_extensions)
 set(OpenBLAS_utest_ext_src
 utest_main.c
+${DIR_EXT}/xerbla.c
 ${DIR_EXT}/test_isamin.c 
 ${DIR_EXT}/test_idamin.c 
 ${DIR_EXT}/test_icamin.c 
@@ -65,6 +66,11 @@ if (NOT NO_LAPACK)
 set(OpenBLAS_utest_src
   ${OpenBLAS_utest_src}
   test_potrs.c
+  )
+set(OpenBLAS_utest_ext_src
+  ${OpenBLAS_utest_ext_src}
+  ${DIR_EXT}/test_cspmv.c
+  ${DIR_EXT}/test_zspmv.c
   )
 if (NOT NO_CBLAS AND NOT NO_LAPACKE)
 set(OpenBLAS_utest_src
