@@ -18,8 +18,8 @@ OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_rotmg.o test_axpy.o t
 OBJS_EXT=utest_main.o $(DIR_EXT)/xerbla.o $(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o $(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o $(DIR_EXT)/test_scamax.o $(DIR_EXT)/test_dzamax.o $(DIR_EXT)/test_samin.o $(DIR_EXT)/test_damin.o $(DIR_EXT)/test_scamin.o $(DIR_EXT)/test_dzamin.o
 
 ifneq ($(NO_LAPACK), 1)
-OBJS += test_potrs.o 
-OBJS_EXT += $(DIR_EXT)/test_zspmv.o $(DIR_EXT)/test_cspmv.o
+OBJS += test_potrs.o
+OBJS_EXT += $(DIR_EXT)/test_zspmv.o $(DIR_EXT)/test_cspmv.o $(DIR_EXT)/test_zsbmv.o $(DIR_EXT)/test_csbmv.o
 ifneq ($(NO_CBLAS), 1)
 ifneq ($(NO_LAPACKE), 1)
 OBJS += test_kernel_regress.o

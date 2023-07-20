@@ -71,6 +71,8 @@ set(OpenBLAS_utest_ext_src
   ${OpenBLAS_utest_ext_src}
   ${DIR_EXT}/test_cspmv.c
   ${DIR_EXT}/test_zspmv.c
+  ${DIR_EXT}/test_csbmv.c
+  ${DIR_EXT}/test_zsbmv.c
   )
 if (NOT NO_CBLAS AND NOT NO_LAPACKE)
 set(OpenBLAS_utest_src
