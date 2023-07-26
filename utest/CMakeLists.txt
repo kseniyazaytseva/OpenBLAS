@@ -37,6 +37,8 @@ ${DIR_EXT}/test_scamin.c
 ${DIR_EXT}/test_dzamin.c
 ${DIR_EXT}/test_scamax.c
 ${DIR_EXT}/test_dzamax.c
+${DIR_EXT}/test_zrotg.c
+${DIR_EXT}/test_crotg.c
 )
 
 # crashing on travis cl with an error code suggesting resource not found
