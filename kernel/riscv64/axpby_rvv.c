@@ -126,10 +126,12 @@ int CNAME(BLASLONG n, FLOAT alpha, FLOAT *x, BLASLONG inc_x, FLOAT beta, FLOAT *
 
         } else {
             if ((1 == inc_x) && (1 == inc_y)) {
-                for (size_t vl; n > 0; n -= vl, y += vl) {
+                for (size_t vl; n > 0; n -= vl, x += vl, y += vl) {
                     vl = VSETVL(n);
+                    vx = VLEV_FLOAT(x, vl);
                     vy = VLEV_FLOAT(y, vl);
                     vy = VFMULVF_FLOAT(vy, beta, vl);
+                    vy = VFMACCVF_FLOAT(vy, alpha, vx, vl);
                     VSEV_FLOAT (y, vy, vl);
                 }
             } else if (1 == inc_x) {
