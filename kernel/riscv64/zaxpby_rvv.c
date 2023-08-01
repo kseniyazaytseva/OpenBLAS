@@ -81,7 +81,7 @@ int CNAME(BLASLONG n, FLOAT alpha_r, FLOAT alpha_i, FLOAT *x, BLASLONG inc_x, FL
         {
             size_t vl = VSETVL(n);
             FLOAT_V_T temp = VFMVVF_FLOAT(0.0, vl);
-            for ( ; n > 0; n -= vl, y += vl*stride_y)
+            for ( ; n > 0; n -= vl, y += vl*inc_y2)
             {
                 vl = VSETVL(n);
                 VSSSEG_FLOAT(y, stride_y, temp, temp, vl);
