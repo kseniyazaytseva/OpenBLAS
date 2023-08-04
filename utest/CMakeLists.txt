@@ -41,6 +41,10 @@ ${DIR_EXT}/test_zrotg.c
 ${DIR_EXT}/test_crotg.c
 $(DIR_EXT)/test_drotmg.c
 $(DIR_EXT)/test_srotmg.c
+$(DIR_EXT)/test_domatcopy.c
+$(DIR_EXT)/test_somatcopy.c
+$(DIR_EXT)/test_zomatcopy.c
+$(DIR_EXT)/test_comatcopy.c
 )
 
 # crashing on travis cl with an error code suggesting resource not found
