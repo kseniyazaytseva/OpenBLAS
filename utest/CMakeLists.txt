@@ -45,6 +45,10 @@ $(DIR_EXT)/test_domatcopy.c
 $(DIR_EXT)/test_somatcopy.c
 $(DIR_EXT)/test_zomatcopy.c
 $(DIR_EXT)/test_comatcopy.c
+${DIR_EXT}/test_simatcopy.c
+${DIR_EXT}/test_dimatcopy.c
+${DIR_EXT}/test_cimatcopy.c
+${DIR_EXT}/test_zimatcopy.c
 ${DIR_EXT}/test_sgeadd.c
 ${DIR_EXT}/test_dgeadd.c
 ${DIR_EXT}/test_cgeadd.c

@@ -142,7 +142,7 @@ static double check_domatcopy(char api, char order, char trans, blasint rows, bl
         for (j = 0; j < b_cols; j++)
             data_domatcopy.B_test[i*ldb+j] -= data_domatcopy.b_verify[i*ldb+j];
 
-        norm += BLASFUNC(snrm2)(&b_cols, data_domatcopy.B_test+ldb*i, &inc);
+        norm += BLASFUNC(dnrm2)(&b_cols, data_domatcopy.B_test+ldb*i, &inc);
     }
     
     return norm/(double)(b_rows);
