@@ -45,6 +45,14 @@ $(DIR_EXT)/test_domatcopy.c
 $(DIR_EXT)/test_somatcopy.c
 $(DIR_EXT)/test_zomatcopy.c
 $(DIR_EXT)/test_comatcopy.c
+${DIR_EXT}/test_sgeadd.c
+${DIR_EXT}/test_dgeadd.c
+${DIR_EXT}/test_cgeadd.c
+${DIR_EXT}/test_zgeadd.c
+${DIR_EXT}/test_saxpby.c
+${DIR_EXT}/test_daxpby.c
+${DIR_EXT}/test_caxpby.c
+${DIR_EXT}/test_zaxpby.c
 )
 
 # crashing on travis cl with an error code suggesting resource not found
