@@ -41,6 +41,8 @@ ${DIR_EXT}/test_zrotg.c
 ${DIR_EXT}/test_crotg.c
 $(DIR_EXT)/test_drotmg.c
 $(DIR_EXT)/test_srotmg.c
+$(DIR_EXT)/test_zscal.c
+$(DIR_EXT)/test_cscal.c
 $(DIR_EXT)/test_domatcopy.c
 $(DIR_EXT)/test_somatcopy.c
 $(DIR_EXT)/test_zomatcopy.c
