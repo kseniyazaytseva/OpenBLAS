@@ -23,6 +23,7 @@ OBJS_EXT+=$(DIR_EXT)/test_simatcopy.o $(DIR_EXT)/test_dimatcopy.o $(DIR_EXT)/tes
 OBJS_EXT+=$(DIR_EXT)/test_sgeadd.o $(DIR_EXT)/test_dgeadd.o $(DIR_EXT)/test_cgeadd.o $(DIR_EXT)/test_zgeadd.o
 OBJS_EXT+=$(DIR_EXT)/test_saxpby.o $(DIR_EXT)/test_daxpby.o
 OBJS_EXT+=$(DIR_EXT)/test_caxpby.o $(DIR_EXT)/test_zaxpby.o
+OBJS_EXT+=$(DIR_EXT)/test_crot.o $(DIR_EXT)/test_zrot.o
 
 ifneq ($(NO_LAPACK), 1)
 OBJS += test_potrs.o
