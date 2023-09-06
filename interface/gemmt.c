@@ -35,29 +35,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
-#ifdef FUNCTION_PROFILE
-#include "functable.h"
-#endif
 
 #ifndef COMPLEX
 #define SMP_THRESHOLD_MIN 65536.0
 #ifdef XDOUBLE
-#define ERROR_NAME "QGEMT "
+#define ERROR_NAME "QGEMMT "
 #elif defined(DOUBLE)
-#define ERROR_NAME "DGEMT "
+#define ERROR_NAME "DGEMMT "
 #elif defined(BFLOAT16)
-#define ERROR_NAME "SBGEMT "
+#define ERROR_NAME "SBGEMMT "
 #else
-#define ERROR_NAME "SGEMT "
+#define ERROR_NAME "SGEMMT "
 #endif
 #else
 #define SMP_THRESHOLD_MIN 8192.0
 #ifdef XDOUBLE
-#define ERROR_NAME "XGEMT "
+#define ERROR_NAME "XGEMMT "
 #elif defined(DOUBLE)
-#define ERROR_NAME "ZGEMT "
+#define ERROR_NAME "ZGEMMT "
 #else
-#define ERROR_NAME "CGEMT "
+#define ERROR_NAME "CGEMMT "
 #endif
 #endif
 
@@ -68,13 +65,13 @@
 #ifndef CBLAS
 
 void NAME(char *UPLO, char *TRANSA, char *TRANSB,
-	  blasint * M, blasint * N, blasint * K,
+	  blasint * M, blasint * K,
 	  FLOAT * Alpha,
 	  IFLOAT * a, blasint * ldA,
 	  IFLOAT * b, blasint * ldB, FLOAT * Beta, FLOAT * c, blasint * ldC)
 {
 
-	blasint m, n, k;
+	blasint m, k;
 	blasint lda, ldb, ldc;
 	int transa, transb, uplo;
 	blasint info;
@@ -96,7 +93,6 @@ void NAME(char *UPLO, char *TRANSA, char *TRANSB,
 	PRINT_DEBUG_NAME;
 
 	m = *M;
-	n = *N;
 	k = *K;
 
 #if defined(COMPLEX)
@@ -164,48 +160,38 @@ void NAME(char *UPLO, char *TRANSA, char *TRANSB,
 		uplo = 1;
 
 	nrowa = m;
-	if (transa & 1) nrowa = k;
+	if (transa) nrowa = k;
 	nrowb = k;
-#if defined(COMPLEX)
-	ncolb = m;
-#endif
-	if (transb & 1) {
-		nrowb = m;
-#if defined(COMPLEX)
-		ncolb = k;
-#endif
-	}
+	if (transb) nrowb = m;
 
 	info = 0;
 
-	if (uplo < 0)
-		info = 14;
-	if (ldc < m)
+	if (ldc < MAX(1, m))
 		info = 13;
-	if (ldb < MAX(1, nrowb))
+	if (ldb < MAX(1, nrowa))
 		info = 10;
-	if (lda < MAX(1, nrowa))
+	if (lda < MAX(1, nrowb))
 		info = 8;
 	if (k < 0)
 		info = 5;
-	if (n < 0)
-		info = 4;
 	if (m < 0)
-		info = 3;
+		info = 4;
 	if (transb < 0)
-		info = 2;
+		info = 3;
 	if (transa < 0)
+		info = 2;
+	if (uplo < 0)
 		info = 1;
 
-	if (info) {
+	if (info != 0) {
 		BLASFUNC(xerbla) (ERROR_NAME, &info, sizeof(ERROR_NAME));
 		return;
 	}
 #else
 
 void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
-	   enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANSPOSE TransB, blasint M,
-	   blasint N, blasint k,
+	   enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANSPOSE TransB, blasint m,
+	   blasint k,
 #ifndef COMPLEX
 	   FLOAT alpha,
 	   IFLOAT * A, blasint LDA,
@@ -226,7 +212,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 	int transa, transb, uplo;
 	blasint info;
-	blasint m, n, lda, ldb;
+	blasint lda, ldb;
 	FLOAT *a, *b;
 #if defined(COMPLEX)
 	blasint nrowb, ncolb;
@@ -235,11 +221,14 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 	PRINT_DEBUG_CNAME;
 
+	uplo = -1;
 	transa = -1;
 	transb = -1;
 	info = 0;
 
 	if (order == CblasColMajor) {
+		if (Uplo == CblasUpper) uplo = 0;
+		if (Uplo == CblasLower) uplo = 1;
 
 		if (TransA == CblasNoTrans)
 			transa = 0;
@@ -271,9 +260,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 		if (TransB == CblasConjTrans)
 			transb = 3;
 #endif
-
-		m = M;
-		n = N;
 
 		a = (void *)A;
 		b = (void *)B;
@@ -282,46 +268,40 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 		info = -1;
 
-		blasint nrowa;
-#if !defined(COMPLEX)
-		blasint nrowb;
-#endif
+		blasint nrowa, nrowb;
 		nrowa = m;
-		if (transa & 1) nrowa = k;
+		if (transa) nrowa = k;
 		nrowb = k;
-#if defined(COMPLEX)
-		ncolb = m;
-#endif
-		if (transb & 1) {
-			nrowb = m;
-#if defined(COMPLEX)
-			ncolb = k;
-#endif
-		}
+		if (transb) nrowb = m;
 
 		if (ldc < MAX(1, m))
 			info = 13;
+		if (ldb < MAX(1, nrowb))
+			info = 10;
+		if (lda < MAX(1, nrowa))
+			info = 8;
 		if (k < 0)
 			info = 5;
-		if (n < 0)
-			info = 4;
 		if (m < 0)
-			info = 3;
+			info = 4;
 		if (transb < 0)
-			info = 2;
+			info = 3;
 		if (transa < 0)
+			info = 2;
+		if (uplo < 0)
 			info = 1;
 	}
 
 	if (order == CblasRowMajor) {
-		m = N;
-		n = M;
 
 		a = (void *)B;
 		b = (void *)A;
 
 		lda = LDB;
 		ldb = LDA;
+
+		if (Uplo == CblasUpper) uplo = 0;
+		if (Uplo == CblasLower) uplo = 1;
 
 		if (TransB == CblasNoTrans)
 			transa = 0;
@@ -356,50 +336,29 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 		info = -1;
 
-		blasint ncola; 
-#if !defined(COMPLEX)
-		blasint ncolb;
-#endif
-		ncola = m;
-		if (transa & 1) ncola = k;
-		ncolb = k;
-#if defined(COMPLEX)
-		nrowb = m;
-#endif
-
-		if (transb & 1) {
-#if defined(COMPLEX)
-			nrowb = k;
-#endif
-			ncolb = m;
-		}
+		blasint ncola, ncolb;
+		ncola = k;
+		if (transa) ncola = m;
+		ncolb = m;
+		if (transb) ncolb = k;
 
 		if (ldc < MAX(1,m))
 			info = 13;
 		if (ldb < MAX(1, ncolb))
-			info = 8;
-		if (lda < MAX(1, ncola))
 			info = 10;
+		if (lda < MAX(1, ncola))
+			info = 8;
 		if (k < 0)
 			info = 5;
-		if (n < 0)
+		if (m < 0)
 			info = 4;
 		if (transb < 0)
-			info = 2;
-		if (transa < 0)
 			info = 3;
+		if (transa < 0)
+			info = 2;
 		if (uplo < 0)
 			info = 1;
-
 	}
-
-	uplo = -1;
-	if (Uplo == CblasUpper)
-		uplo = 0;
-	if (Uplo == CblasLower)
-		uplo = 1;
-	if (uplo < 0)
-		info = 14;
 
 	if (info >= 0) {
 		BLASFUNC(xerbla) (ERROR_NAME, &info, sizeof(ERROR_NAME));
@@ -470,50 +429,35 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 #endif
 
-	if ((m == 0) || (n == 0))
+	if (m == 0)
 		return;
 
 	IDEBUG_START;
 
-#if defined(COMPLEX)
-	if (transb > 1){
-#ifndef CBLAS
-		IMATCOPY_K_CNC(nrowb, ncolb, (FLOAT)(1.0), (FLOAT)(0.0), b, ldb);
-#else
-		if (order == CblasColMajor)
-			IMATCOPY_K_CNC(nrowb, ncolb, (FLOAT)(1.0), (FLOAT)(0.0), b, ldb);
-		if (order == CblasRowMajor)
-			IMATCOPY_K_RNC(nrowb, ncolb, (FLOAT)(1.0), (FLOAT)(0.0), b, ldb);
-#endif
-	}
-#endif
-
-	const blasint incb = ((transb & 1) == 0) ? 1 : ldb;
+	const blasint incb = (transb == 0) ? 1 : ldb;
 
 	if (uplo == 1) {
-		for (i = 0; i < n; i++) {
-			j = n - i;
+		for (i = 0; i < m; i++) {
+			j = m - i;
 
 			l = j;
 #if defined(COMPLEX)
 			aa = a + i * 2;
 			bb = b + i * ldb * 2;
-			if (transa & 1) {
+			if (transa) {
 				aa = a + lda * i * 2;
 			}
-			if (transb & 1)
+			if (transb)
 				bb = b + i * 2;
-			}
 			cc = c + i * 2 * ldc + i * 2;
 #else
 			aa = a + i;
 			bb = b + i * ldb;
-			if (transa & 1) {
+			if (transa) {
 				aa = a + lda * i;
 			}
-			if (transb & 1)
+			if (transb)
 				bb = b + i;
-			}
 			cc = c + i * ldc + i;
 #endif
 
@@ -534,8 +478,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 
 			IDEBUG_START;
 
-			FUNCTION_PROFILE_START();
-
 			buffer_size = j + k + 128 / sizeof(FLOAT);
 #ifdef WINDOWS_ABI
 			buffer_size += 160 / sizeof(FLOAT);
@@ -555,19 +497,31 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 #endif
 
 #if defined(COMPLEX)
-				if (!(transa & 1))
+				if (!transa)
 				(gemv[(int)transa]) (j, k, 0, alpha_r, alpha_i,
 						     aa, lda, bb, incb, cc, 1,
 						     buffer);
+				else
+				(gemv[(int)transa]) (k, j, 0, alpha_r, alpha_i,
+						     aa, lda, bb, incb, cc, 1,
+						     buffer);
 #else
-				if (!(transa & 1))
+				if (!transa)
 				(gemv[(int)transa]) (j, k, 0, alpha, aa, lda,
+						     bb, incb, cc, 1, buffer);
+				else
+				(gemv[(int)transa]) (k, j, 0, alpha, aa, lda,
 						     bb, incb, cc, 1, buffer);
 #endif
 #ifdef SMP
 			} else {
-				if (!(transa & 1))
+				if (!transa)
 				(gemv_thread[(int)transa]) (j, k, alpha, aa,
+							    lda, bb, incb, cc,
+							    1, buffer,
+							    nthreads);
+				else
+				(gemv_thread[(int)transa]) (k, j, alpha, aa,
 							    lda, bb, incb, cc,
 							    1, buffer,
 							    nthreads);
@@ -579,19 +533,19 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 		}
 	} else {
 
-		for (i = 0; i < n; i++) {
+		for (i = 0; i < m; i++) {
 			j = i + 1;
 
 			l = j;
 #if defined COMPLEX
 			bb = b + i * ldb * 2;
-			if (transb & 1) {
+			if (transb) {
 				bb = b + i * 2;
 			}
 			cc = c + i * 2 * ldc;
 #else
 			bb = b + i * ldb;
-			if (transb & 1) {
+			if (transb) {
 				bb = b + i;
 			}
 			cc = c + i * ldc;
@@ -613,8 +567,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 #endif
 			IDEBUG_START;
 
-			FUNCTION_PROFILE_START();
-
 			buffer_size = j + k + 128 / sizeof(FLOAT);
 #ifdef WINDOWS_ABI
 			buffer_size += 160 / sizeof(FLOAT);
@@ -634,32 +586,39 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_UPLO Uplo,
 #endif
 
 #if defined(COMPLEX)
-				if (!(transa & 1))
+				if (!transa)
 				(gemv[(int)transa]) (j, k, 0, alpha_r, alpha_i,
 						     a, lda, bb, incb, cc, 1,
 						     buffer);
+				else
+				(gemv[(int)transa]) (k, j, 0, alpha_r, alpha_i,
+						     a, lda, bb, incb, cc, 1,
+						     buffer);
 #else
-				if (!(transa & 1))
+				if (!transa)
 				(gemv[(int)transa]) (j, k, 0, alpha, a, lda, bb,
+						     incb, cc, 1, buffer);
+				else
+				(gemv[(int)transa]) (k, j, 0, alpha, a, lda, bb,
 						     incb, cc, 1, buffer);
 #endif
 
 #ifdef SMP
 			} else {
-				if (!(transa & 1))
+				if (!transa)
 				(gemv_thread[(int)transa]) (j, k, alpha, a, lda,
 							    bb, incb, cc, 1,
 							    buffer, nthreads);
-
+				else
+				(gemv_thread[(int)transa]) (k, j, alpha, a, lda,
+							    bb, incb, cc, 1,
+							    buffer, nthreads);
 			}
 #endif
 
 			STACK_FREE(buffer);
 		}
 	}
-	FUNCTION_PROFILE_END(COMPSIZE * COMPSIZE,
-			     args.m * args.k + args.k * args.n +
-			     args.m * args.n, 2 * args.m * args.n * args.k);
 
 	IDEBUG_END;
 
