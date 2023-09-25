@@ -26,6 +26,7 @@ OBJS_EXT+=$(DIR_EXT)/test_saxpby.o $(DIR_EXT)/test_daxpby.o $(DIR_EXT)/test_caxp
 OBJS_EXT+=$(DIR_EXT)/test_zaxpyc.o $(DIR_EXT)/test_caxpyc.o
 OBJS_EXT+=$(DIR_EXT)/test_cgemv_t.o $(DIR_EXT)/test_zgemv_t.o $(DIR_EXT)/test_cgemv_n.o $(DIR_EXT)/test_zgemv_n.o
 OBJS_EXT+=$(DIR_EXT)/test_crot.o $(DIR_EXT)/test_zrot.o $(DIR_EXT)/test_zgbmv.c $(DIR_EXT)/test_cgbmv.c
+OBJS_EXT+=$(DIR_EXT)/test_sgemmt.o $(DIR_EXT)/test_dgemmt.o $(DIR_EXT)/test_cgemmt.o $(DIR_EXT)/test_zgemmt.o
 
 ifneq ($(NO_LAPACK), 1)
 OBJS += test_potrs.o
