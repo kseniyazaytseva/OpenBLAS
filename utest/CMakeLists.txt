@@ -73,6 +73,8 @@ ${DIR_EXT}/test_dgemmt.c
 ${DIR_EXT}/test_sgemmt.c
 ${DIR_EXT}/test_cgemmt.c
 ${DIR_EXT}/test_zgemmt.c
+${DIR_EXT}/test_ztrmv.c
+${DIR_EXT}/test_ctrmv.c
 $(DIR_EXT)/test_ztrsv.c
 $(DIR_EXT)/test_ctrsv.c
 )
