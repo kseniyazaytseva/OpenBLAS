@@ -63,7 +63,7 @@ int CNAME(BLASLONG n, FLOAT alpha, FLOAT *x, BLASLONG inc_x, FLOAT beta, FLOAT *
                 BLASLONG stride_y = inc_y * sizeof(FLOAT);
                 size_t vl = VSETVL(n);
                 vy = VFMVVF_FLOAT(0.0, vl);
-                for ( ; n > 0; n -= vl, y += vl*stride_y) {
+                for ( ; n > 0; n -= vl, y += vl*inc_y) {
                     vl = VSETVL(n);
                     VSSEV_FLOAT(y, stride_y, vy, vl);
                 }
