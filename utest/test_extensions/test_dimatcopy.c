@@ -193,7 +193,7 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -201,7 +201,7 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
  * Square matrix
  * alpha = 1.0
  */
-CTEST(dimatcopy, colmajor_trans_col_100_row_100)
+CTEST(dimatcopy, colmajor_trans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -216,7 +216,7 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -224,7 +224,7 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_100)
  * Square matrix
  * alpha = 1.0
  */
-CTEST(dimatcopy, colmajor_notrans_col_100_row_100)
+CTEST(dimatcopy, colmajor_notrans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -239,7 +239,99 @@ CTEST(dimatcopy, colmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Square matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, colmajor_trans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'T';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Square matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, colmajor_notrans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Square matrix
+ * alpha = 2.0
+ */
+CTEST(dimatcopy, colmajor_trans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'T';
+    double alpha = 2.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Square matrix
+ * alpha = 2.0
+ */
+CTEST(dimatcopy, colmajor_notrans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    double alpha = 2.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -247,7 +339,7 @@ CTEST(dimatcopy, colmajor_notrans_col_100_row_100)
  * Rectangular matrix
  * alpha = 1.0
  */
-CTEST(dimatcopy, colmajor_trans_col_50_row_100)
+CTEST(dimatcopy, colmajor_trans_col_50_row_100_alpha_one)
 {
     blasint m = 100, n = 50;
     blasint lda_src = 100, lda_dst = 50;
@@ -262,7 +354,99 @@ CTEST(dimatcopy, colmajor_trans_col_50_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 1.0
+ */
+CTEST(dimatcopy, colmajor_notrans_col_50_row_100_alpha_one)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    double alpha = 1.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, colmajor_trans_col_50_row_100_alpha_zero)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'C';
+    char trans = 'T';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, colmajor_notrans_col_50_row_100_alpha_zero)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 2.0
+ */
+CTEST(dimatcopy, colmajor_trans_col_50_row_100)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'C';
+    char trans = 'T';
+    double alpha = 2.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -285,30 +469,7 @@ CTEST(dimatcopy, colmajor_notrans_col_50_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
- * with the following options:
- *
- * Column Major
- * Transposition
- * Rectangular matrix
- * alpha = 0.0
- */
-CTEST(dimatcopy, colmajor_trans_col_100_row_50)
-{
-    blasint m = 50, n = 100;
-    blasint lda_src = 50, lda_dst = 100;
-    char order = 'C';
-    char trans = 'T';
-    double alpha = 0.0;
-    double norm;
-
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
-
-    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
-}
-
-/**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -316,7 +477,7 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_50)
  * Square matrix
  * alpha = 1.0
  */
-CTEST(dimatcopy, rowmajor_trans_col_100_row_100)
+CTEST(dimatcopy, rowmajor_trans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -331,7 +492,7 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -339,7 +500,7 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_100)
  * Square matrix
  * alpha = 1.0
  */
-CTEST(dimatcopy, rowmajor_notrans_col_100_row_100)
+CTEST(dimatcopy, rowmajor_notrans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -354,7 +515,191 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Square matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, rowmajor_trans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Square matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, rowmajor_notrans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Square matrix
+ * alpha = 2.0
+ */
+CTEST(dimatcopy, rowmajor_trans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    double alpha = 2.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Square matrix
+ * alpha = 2.0
+ */
+CTEST(dimatcopy, rowmajor_notrans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    double alpha = 2.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 1.0
+ */
+CTEST(dimatcopy, rowmajor_trans_col_100_row_50_alpha_one)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'R';
+    char trans = 'C'; // same as trans for real matrix
+    double alpha = 1.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 1.0
+ */
+CTEST(dimatcopy, rowmajor_notrans_col_100_row_50_alpha_one)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    double alpha = 1.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, rowmajor_trans_col_100_row_50_alpha_zero)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'R';
+    char trans = 'C'; // same as trans for real matrix
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 0.0
+ */
+CTEST(dimatcopy, rowmajor_notrans_col_100_row_50_alpha_zero)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    double alpha = 0.0;
+    double norm;
+
+    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -362,7 +707,7 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_100)
  * Rectangular matrix
  * alpha = 2.0
  */
-CTEST(dimatcopy, rowmajor_conjtrans_col_100_row_50)
+CTEST(dimatcopy, rowmajor_trans_col_100_row_50)
 {
     blasint m = 50, n = 100;
     blasint lda_src = 100, lda_dst = 50;
@@ -377,45 +722,21 @@ CTEST(dimatcopy, rowmajor_conjtrans_col_100_row_50)
 }
 
 /**
- * Test dimatcopy by comparing it against refernce
- * with the following options:
- *
- * Row Major
- * Transposition
- * Matrix dimensions leave residues from 4 and 2 (specialize 
- * for rt case)
- * alpha = 1.5
- */
-CTEST(dimatcopy, rowmajor_trans_col_27_row_27)
-{
-    blasint m = 27, n = 27;
-    blasint lda_src = 27, lda_dst = 27;
-    char order = 'R';
-    char trans = 'T'; 
-    double alpha = 1.5;
-    double norm;
-
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
-
-    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
-}
-
-/**
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy only
  * Rectangular matrix
- * alpha = 0.0
+ * alpha = 2.0
  */
 CTEST(dimatcopy, rowmajor_notrans_col_100_row_50)
 {
     blasint m = 50, n = 100;
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
-    char trans = 'N'; 
-    double alpha = 0.0;
+    char trans = 'N';
+    double alpha = 2.0;
     double norm;
 
     norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -425,7 +746,7 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_50)
 
 /**
  * C API specific test
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -439,7 +760,7 @@ CTEST(dimatcopy, c_api_colmajor_trans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'C';
     char trans = 'T';
-    double alpha = 1.0;
+    double alpha = 2.0;
     double norm;
 
     norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -449,7 +770,7 @@ CTEST(dimatcopy, c_api_colmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -463,7 +784,7 @@ CTEST(dimatcopy, c_api_colmajor_notrans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'C';
     char trans = 'N';
-    double alpha = 1.0;
+    double alpha = 2.0;
     double norm;
 
     norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -473,13 +794,13 @@ CTEST(dimatcopy, c_api_colmajor_notrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0
  */
 CTEST(dimatcopy, c_api_rowmajor_trans_col_100_row_100)
 {
@@ -487,7 +808,7 @@ CTEST(dimatcopy, c_api_rowmajor_trans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
     char trans = 'T';
-    double alpha = 1.0;
+    double alpha = 2.0;
     double norm;
 
     norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -497,13 +818,13 @@ CTEST(dimatcopy, c_api_rowmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test dimatcopy by comparing it against refernce
+ * Test dimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0
  */
 CTEST(dimatcopy, c_api_rowmajor_notrans_col_100_row_100)
 {
@@ -511,7 +832,7 @@ CTEST(dimatcopy, c_api_rowmajor_notrans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
     char trans = 'N';
-    double alpha = 1.0;
+    double alpha = 2.0;
     double norm;
 
     norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);

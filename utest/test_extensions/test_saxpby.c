@@ -289,12 +289,92 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+*/
+CTEST(saxpby, inc_x_1_inc_y_2_N_100_alpha_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha = 0.0f;
+    float beta = 1.0f;
+
+    float norm = check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
 */
 CTEST(saxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 2
+ * Stride of vector y is 1
+ * Scalar beta is zero
+*/
+CTEST(saxpby, inc_x_2_inc_y_1_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 2, incy = 1;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar beta is zero
+*/
+CTEST(saxpby, inc_x_1_inc_y_2_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 2
+ * Stride of vector y is 2
+ * Scalar beta is zero
+*/
+CTEST(saxpby, inc_x_2_inc_y_2_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 2, incy = 2;
     float alpha = 1.0f;
     float beta = 0.0f;
 
@@ -325,6 +405,27 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 }
 
 /**
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(saxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha = 0.0f;
+    float beta = 0.0f;
+
+    float norm = check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
  * Check if n - size of vectors x, y is zero
 */
 CTEST(saxpby, check_n_zero)
@@ -334,7 +435,7 @@ CTEST(saxpby, check_n_zero)
     float beta = 1.0f;
 
     float norm = check_saxpby(n, alpha, incx, beta, incy);
-
+    
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
 }
 
@@ -515,12 +616,100 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+*/
+CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha = 0.0f;
+    float beta = 1.0f;
+
+    float norm = c_api_check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
 */
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = c_api_check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 2
+ * Stride of vector y is 1
+ * Scalar beta is zero
+*/
+CTEST(saxpby, c_api_inc_x_2_inc_y_1_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 2, incy = 1;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = c_api_check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar beta is zero
+*/
+CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    float norm = c_api_check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 2
+ * Stride of vector y is 2
+ * Scalar beta is zero
+*/
+CTEST(saxpby, c_api_inc_x_2_inc_y_2_N_100_beta_zero)
+{
+    blasint n = DATASIZE, incx = 2, incy = 2;
     float alpha = 1.0f;
     float beta = 0.0f;
 
@@ -544,6 +733,29 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
+    float alpha = 0.0f;
+    float beta = 0.0f;
+
+    float norm = c_api_check_saxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test saxpby by comparing it with sscal and saxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
     float alpha = 0.0f;
     float beta = 0.0f;
 

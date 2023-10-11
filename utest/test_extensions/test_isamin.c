@@ -251,6 +251,32 @@ CTEST(isamin, negative_step_2_N_50){
    ASSERT_EQUAL(9, index);
 }
 
+CTEST(isamin, min_idx_in_vec_tail){
+   blasint i;
+   blasint N = ELEMENTS, inc = INCREMENT;
+   float x[ELEMENTS * INCREMENT];
+   for (i = 0; i < N * inc; i ++) {
+      x[i] = i + 1000;
+   }
+
+   x[(N - 1) * inc] = 0.0f;
+   blasint index = BLASFUNC(isamin)(&N, x, &inc);
+   ASSERT_EQUAL(N, index);
+}
+
+CTEST(isamin, min_idx_in_vec_tail_inc_1){
+   blasint i;
+   blasint N = ELEMENTS, inc = 1;
+   float x[ELEMENTS * inc];
+   for (i = 0; i < N * inc; i ++) {
+      x[i] = i + 1000;
+   }
+
+   x[(N - 1) * inc] = 0.0f;
+   blasint index = BLASFUNC(isamin)(&N, x, &inc);
+   ASSERT_EQUAL(N, index);
+}
+
 CTEST(isamin, c_api_bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -484,5 +510,31 @@ CTEST(isamin, c_api_negative_step_2_N_50){
    x[8 * inc] = -1.0f;
    blasint index = cblas_isamin(N, x, inc);
    ASSERT_EQUAL(8, index);
+}
+
+CTEST(isamin, c_api_min_idx_in_vec_tail){
+   blasint i;
+   blasint N = ELEMENTS, inc = INCREMENT;
+   float x[ELEMENTS * INCREMENT];
+   for (i = 0; i < N * inc; i ++) {
+      x[i] = i + 1000;
+   }
+
+   x[(N - 1) * inc] = 0.0f;
+   blasint index = cblas_isamin(N, x, inc);
+   ASSERT_EQUAL(N - 1, index);
+}
+
+CTEST(isamin, c_api_min_idx_in_vec_tail_inc_1){
+   blasint i;
+   blasint N = ELEMENTS, inc = 1;
+   float x[ELEMENTS * inc];
+   for (i = 0; i < N * inc; i ++) {
+      x[i] = i + 1000;
+   }
+
+   x[(N - 1) * inc] = 0.0f;
+   blasint index = cblas_isamin(N, x, inc);
+   ASSERT_EQUAL(N - 1, index);
 }
 #endif

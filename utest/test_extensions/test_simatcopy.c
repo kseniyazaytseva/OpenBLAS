@@ -193,15 +193,15 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, colmajor_trans_col_100_row_100)
+CTEST(simatcopy, colmajor_trans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -216,15 +216,15 @@ CTEST(simatcopy, colmajor_trans_col_100_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, colmajor_notrans_col_100_row_100)
+CTEST(simatcopy, colmajor_notrans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -239,15 +239,107 @@ CTEST(simatcopy, colmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Square matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, colmajor_trans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'T';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Square matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, colmajor_notrans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Square matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, colmajor_trans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'T';
+    float alpha = 2.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Square matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, colmajor_notrans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    float alpha = 2.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition
  * Rectangular matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, colmajor_trans_col_50_row_100)
+CTEST(simatcopy, colmajor_trans_col_50_row_100_alpha_one)
 {
     blasint m = 100, n = 50;
     blasint lda_src = 100, lda_dst = 50;
@@ -262,13 +354,105 @@ CTEST(simatcopy, colmajor_trans_col_50_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Copy only
  * Rectangular matrix
- * alpha = 2.0
+ * alpha = 1.0f
+ */
+CTEST(simatcopy, colmajor_notrans_col_50_row_100_alpha_one)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    float alpha = 1.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, colmajor_trans_col_50_row_100_alpha_zero)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'C';
+    char trans = 'T';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, colmajor_notrans_col_50_row_100_alpha_zero)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'C';
+    char trans = 'N';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, colmajor_trans_col_50_row_100)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'C';
+    char trans = 'T';
+    float alpha = 2.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 2.0f
  */
 CTEST(simatcopy, colmajor_notrans_col_50_row_100)
 {
@@ -285,38 +469,15 @@ CTEST(simatcopy, colmajor_notrans_col_50_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
- * with the following options:
- *
- * Column Major
- * Transposition
- * Rectangular matrix
- * alpha = 0.0
- */
-CTEST(simatcopy, colmajor_trans_col_100_row_50)
-{
-    blasint m = 50, n = 100;
-    blasint lda_src = 50, lda_dst = 100;
-    char order = 'C';
-    char trans = 'T';
-    float alpha = 0.0f;
-    float norm;
-
-    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
-
-    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
-}
-
-/**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, rowmajor_trans_col_100_row_100)
+CTEST(simatcopy, rowmajor_trans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -331,15 +492,15 @@ CTEST(simatcopy, rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, rowmajor_notrans_col_100_row_100)
+CTEST(simatcopy, rowmajor_notrans_col_100_row_100_alpha_one)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -354,15 +515,199 @@ CTEST(simatcopy, rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Square matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, rowmajor_trans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Square matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, rowmajor_notrans_col_100_row_100_alpha_zero)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Square matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, rowmajor_trans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    float alpha = 2.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Square matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, rowmajor_notrans_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    float alpha = 2.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition
  * Rectangular matrix
- * alpha = 2.0
+ * alpha = 1.0f
  */
-CTEST(simatcopy, rowmajor_conjtrans_col_100_row_50)
+CTEST(simatcopy, rowmajor_trans_col_100_row_50_alpha_one)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'R';
+    char trans = 'C'; // same as trans for real matrix
+    float alpha = 1.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 1.0f
+ */
+CTEST(simatcopy, rowmajor_notrans_col_100_row_50_alpha_one)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    float alpha = 1.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, rowmajor_trans_col_100_row_50_alpha_zero)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 50;
+    char order = 'R';
+    char trans = 'C'; // same as trans for real matrix
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Copy only
+ * Rectangular matrix
+ * alpha = 0.0f
+ */
+CTEST(simatcopy, rowmajor_notrans_col_100_row_50_alpha_zero)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'N';
+    float alpha = 0.0f;
+    float norm;
+
+    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test simatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha = 2.0f
+ */
+CTEST(simatcopy, rowmajor_trans_col_100_row_50)
 {
     blasint m = 50, n = 100;
     blasint lda_src = 100, lda_dst = 50;
@@ -377,45 +722,21 @@ CTEST(simatcopy, rowmajor_conjtrans_col_100_row_50)
 }
 
 /**
- * Test simatcopy by comparing it against refernce
- * with the following options:
- *
- * Row Major
- * Transposition
- * Matrix dimensions leave residues from 4 and 2 (specialize 
- * for rt case)
- * alpha = 1.5
- */
-CTEST(simatcopy, rowmajor_trans_col_27_row_27)
-{
-    blasint m = 27, n = 27;
-    blasint lda_src = 27, lda_dst = 27;
-    char order = 'R';
-    char trans = 'T'; 
-    float alpha = 1.5f;
-    float norm;
-
-    norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
-
-    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
-}
-
-/**
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy only
  * Rectangular matrix
- * alpha = 0.0
+ * alpha = 2.0f
  */
 CTEST(simatcopy, rowmajor_notrans_col_100_row_50)
 {
     blasint m = 50, n = 100;
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
-    char trans = 'N'; 
-    float alpha = 0.0f;
+    char trans = 'N';
+    float alpha = 2.0f;
     float norm;
 
     norm = check_simatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -425,13 +746,13 @@ CTEST(simatcopy, rowmajor_notrans_col_100_row_50)
 
 /**
  * C API specific test
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
 CTEST(simatcopy, c_api_colmajor_trans_col_100_row_100)
 {
@@ -439,7 +760,7 @@ CTEST(simatcopy, c_api_colmajor_trans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'C';
     char trans = 'T';
-    float alpha = 1.0f;
+    float alpha = 2.0f;
     float norm;
 
     norm = check_simatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -449,13 +770,13 @@ CTEST(simatcopy, c_api_colmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 1.0f
  */
 CTEST(simatcopy, c_api_colmajor_notrans_col_100_row_100)
 {
@@ -463,7 +784,7 @@ CTEST(simatcopy, c_api_colmajor_notrans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'C';
     char trans = 'N';
-    float alpha = 1.0f;
+    float alpha = 2.0f;
     float norm;
 
     norm = check_simatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -473,13 +794,13 @@ CTEST(simatcopy, c_api_colmajor_notrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0f
  */
 CTEST(simatcopy, c_api_rowmajor_trans_col_100_row_100)
 {
@@ -487,7 +808,7 @@ CTEST(simatcopy, c_api_rowmajor_trans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
     char trans = 'T';
-    float alpha = 1.0f;
+    float alpha = 2.0f;
     float norm;
 
     norm = check_simatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -497,13 +818,13 @@ CTEST(simatcopy, c_api_rowmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test simatcopy by comparing it against refernce
+ * Test simatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0f
  */
 CTEST(simatcopy, c_api_rowmajor_notrans_col_100_row_100)
 {
@@ -511,7 +832,7 @@ CTEST(simatcopy, c_api_rowmajor_notrans_col_100_row_100)
     blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
     char trans = 'N';
-    float alpha = 1.0f;
+    float alpha = 2.0f;
     float norm;
 
     norm = check_simatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);

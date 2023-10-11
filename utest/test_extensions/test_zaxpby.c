@@ -329,6 +329,27 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 }
 
 /**
+ * Test zaxpby by comparing it with zscal and zaxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(zaxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    double alpha[] = {0.0, 0.0};
+    double beta[] = {0.0, 0.0};
+
+    double norm = check_zaxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
  * Check if n - size of vectors x, y is zero
 */
 CTEST(zaxpby, check_n_zero)
@@ -548,6 +569,29 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
+    double alpha[] = {0.0, 0.0};
+    double beta[] = {0.0, 0.0};
+
+    double norm = c_api_check_zaxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test zaxpby by comparing it with zscal and zaxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(zaxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
     double alpha[] = {0.0, 0.0};
     double beta[] = {0.0, 0.0};
 

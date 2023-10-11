@@ -329,6 +329,27 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_a_beta_zero)
 }
 
 /**
+ * Test caxpby by comparing it with cscal and caxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(caxpby, inc_x_1_inc_y_2_N_100_a_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
+    float alpha[] = {0.0f, 0.0f};
+    float beta[] = {0.0f, 0.0f};
+
+    float norm = check_caxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
  * Check if n - size of vectors x, y is zero
 */
 CTEST(caxpby, check_n_zero)
@@ -548,6 +569,29 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_a_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
+    float alpha[] = {0.0f, 0.0f};
+    float beta[] = {0.0f, 0.0f};
+
+    float norm = c_api_check_caxpby(n, alpha, incx, beta, incy);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * C API specific test
+ * 
+ * Test caxpby by comparing it with cscal and caxpy.
+ * Test with the following options:
+ * 
+ * Size of vectors x, y is 100
+ * Stride of vector x is 1
+ * Stride of vector y is 2
+ * Scalar alpha is zero
+ * Scalar beta is zero
+*/
+CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100_a_beta_zero)
+{
+    blasint n = DATASIZE, incx = 1, incy = 2;
     float alpha[] = {0.0f, 0.0f};
     float beta[] = {0.0f, 0.0f};
 

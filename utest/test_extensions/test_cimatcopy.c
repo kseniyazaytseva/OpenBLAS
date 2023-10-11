@@ -211,7 +211,7 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -233,7 +233,7 @@ CTEST(cimatcopy, colmajor_trans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -255,7 +255,7 @@ CTEST(cimatcopy, colmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -276,14 +276,14 @@ CTEST(cimatcopy, colmajor_conj_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(cimatcopy, colmajor_conjtrnas_col_100_row_100)
+CTEST(cimatcopy, colmajor_conjtrans_col_100_row_100)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -297,7 +297,7 @@ CTEST(cimatcopy, colmajor_conjtrnas_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -319,21 +319,21 @@ CTEST(cimatcopy, colmajor_trans_col_50_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Copy only
  * Rectangular matrix
- * alpha_r = 2.0, alpha_i = 1.0
+ * alpha_r = 1.0, alpha_i = 2.0
  */
-CTEST(cimatcopy, colmajor_notrans_col_50_row_100)
+CTEST(cimatcopy, colmajor_notrans_col_100_row_50)
 {
-    blasint m = 100, n = 50;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 50, n = 100;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'C';
     char trans = 'N';
-    float alpha[] = {2.0f, 1.0f};
+    float alpha[] = {1.0f, 2.0f};
 
     float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
@@ -341,21 +341,21 @@ CTEST(cimatcopy, colmajor_notrans_col_50_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
- * Transposition
+ * Transposition and conjugate
  * Rectangular matrix
- * alpha_r = 0.0, alpha_i = 0.0
+ * alpha_r = 1.0, alpha_i = 1.0
  */
-CTEST(cimatcopy, colmajor_trans_col_100_row_50)
+CTEST(cimatcopy, colmajor_conjtrans_col_50_row_100)
 {
-    blasint m = 50, n = 100;
-    blasint lda_src = 50, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
     char order = 'C';
-    char trans = 'T';
-    float alpha[] = {0.0f, 0.0f};
+    char trans = 'C';
+    float alpha[] = {1.0f, 1.0f};
 
     float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
@@ -363,7 +363,29 @@ CTEST(cimatcopy, colmajor_trans_col_100_row_50)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy and conjugate
+ * Rectangular matrix
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(cimatcopy, colmajor_conj_col_100_row_50)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 50, lda_dst = 50;
+    char order = 'C';
+    char trans = 'R';
+    float alpha[] = {1.0f, 2.0f};
+
+    float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -385,7 +407,7 @@ CTEST(cimatcopy, rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -407,21 +429,40 @@ CTEST(cimatcopy, rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
- * Row Major
- * Transposition
- * Matrix dimensions leave residues from 4 and 2 (specialize 
- * for rt case)
+ * Column Major
+ * Copy and conjugate
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(cimatcopy, rowmajor_conj_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'R';
+    float alpha[] = {1.0f, 2.0f};
+
+    float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test cimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(cimatcopy, rowmajor_trans_col_27_row_27)
+CTEST(cimatcopy, rowmajor_conjtrans_col_100_row_100)
 {
-    blasint m = 27, n = 27;
-    blasint lda_src = 27, lda_dst = 27;
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
-    char trans = 'T'; 
+    char trans = 'C';
     float alpha[] = {2.0f, 1.0f};
 
     float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -430,7 +471,7 @@ CTEST(cimatcopy, rowmajor_trans_col_27_row_27)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -438,10 +479,10 @@ CTEST(cimatcopy, rowmajor_trans_col_27_row_27)
  * Rectangular matrix
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(cimatcopy, rowmajor_notrans_col_100_row_50)
+CTEST(cimatcopy, rowmajor_notrans_col_50_row_100)
 {
-    blasint m = 50, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'R';
     char trans = 'N'; 
     float alpha[] = {2.0f, 1.0f};
@@ -452,17 +493,39 @@ CTEST(cimatcopy, rowmajor_notrans_col_100_row_50)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(cimatcopy, rowmajor_trans_col_50_row_100)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    float alpha[] = {1.0f, 2.0f};
+
+    float norm = check_cimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_EPS);
+}
+
+/**
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy and conjugate
  * alpha_r = 1.5, alpha_i = -1.0
  */
-CTEST(cimatcopy, rowmajor_conj_col_100_row_100)
+CTEST(cimatcopy, rowmajor_conj_col_50_row_100)
 {
-    blasint m = 100, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'R';
     char trans = 'R'; 
     float alpha[] = {1.5f, -1.0f};
@@ -473,17 +536,17 @@ CTEST(cimatcopy, rowmajor_conj_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition and conjugate
  * alpha_r = 1.0, alpha_i = 2.0
  */
-CTEST(cimatcopy, rowmajor_conjtrans_col_100_row_100)
+CTEST(cimatcopy, rowmajor_conjtrans_col_50_row_100)
 {
-    blasint m = 100, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 100;
     char order = 'R';
     char trans = 'C';
     float alpha[] = {1.0f, 2.0f};
@@ -495,7 +558,7 @@ CTEST(cimatcopy, rowmajor_conjtrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -518,7 +581,7 @@ CTEST(cimatcopy, c_api_colmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -541,7 +604,7 @@ CTEST(cimatcopy, c_api_colmajor_notrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -563,7 +626,7 @@ CTEST(cimatcopy, c_api_rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -584,14 +647,14 @@ CTEST(cimatcopy, c_api_colmajor_conj_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(cimatcopy, c_api_colmajor_conjtrnas_col_100_row_100)
+CTEST(cimatcopy, c_api_colmajor_conjtrans_col_100_row_100)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -606,7 +669,7 @@ CTEST(cimatcopy, c_api_colmajor_conjtrnas_col_100_row_100)
 
 /**
  * C API specific test
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -628,7 +691,7 @@ CTEST(cimatcopy, c_api_rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -649,7 +712,7 @@ CTEST(cimatcopy, c_api_rowmajor_conj_col_100_row_100)
 }
 
 /**
- * Test cimatcopy by comparing it against refernce
+ * Test cimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major

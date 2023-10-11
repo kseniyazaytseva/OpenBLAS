@@ -23,11 +23,11 @@ struct DATA_ZIMATCOPY{
 static struct DATA_ZIMATCOPY data_zimatcopy;
 
 
-static void rand_generate(double *a, blasint n)
+static void rand_generate(double *a_src, blasint n)
 {
     blasint i;
     for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
+        a_src[i] = (double)rand() / (double)RAND_MAX * 5.0;
 }
 
 /**
@@ -211,7 +211,7 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -233,7 +233,7 @@ CTEST(zimatcopy, colmajor_trans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -255,7 +255,7 @@ CTEST(zimatcopy, colmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -276,14 +276,14 @@ CTEST(zimatcopy, colmajor_conj_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(zimatcopy, colmajor_conjtrnas_col_100_row_100)
+CTEST(zimatcopy, colmajor_conjtrans_col_100_row_100)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -297,7 +297,7 @@ CTEST(zimatcopy, colmajor_conjtrnas_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -319,21 +319,21 @@ CTEST(zimatcopy, colmajor_trans_col_50_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Copy only
  * Rectangular matrix
- * alpha_r = 2.0, alpha_i = 1.0
+ * alpha_r = 1.0, alpha_i = 2.0
  */
-CTEST(zimatcopy, colmajor_notrans_col_50_row_100)
+CTEST(zimatcopy, colmajor_notrans_col_100_row_50)
 {
-    blasint m = 100, n = 50;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 50, n = 100;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'C';
     char trans = 'N';
-    double alpha[] = {2.0, 1.0};
+    double alpha[] = {1.0, 2.0};
 
     double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
@@ -341,21 +341,21 @@ CTEST(zimatcopy, colmajor_notrans_col_50_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
- * Transposition
+ * Transposition and conjugate
  * Rectangular matrix
- * alpha_r = 0.0, alpha_i = 0.0
+ * alpha_r = 1.0, alpha_i = 1.0
  */
-CTEST(zimatcopy, colmajor_trans_col_100_row_50)
+CTEST(zimatcopy, colmajor_conjtrans_col_50_row_100)
 {
-    blasint m = 50, n = 100;
-    blasint lda_src = 50, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 100, lda_dst = 50;
     char order = 'C';
-    char trans = 'T';
-    double alpha[] = {0.0, 0.0};
+    char trans = 'C';
+    double alpha[] = {1.0, 1.0};
 
     double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
@@ -363,7 +363,29 @@ CTEST(zimatcopy, colmajor_trans_col_100_row_50)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Copy and conjugate
+ * Rectangular matrix
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(zimatcopy, colmajor_conj_col_100_row_50)
+{
+    blasint m = 50, n = 100;
+    blasint lda_src = 50, lda_dst = 50;
+    char order = 'C';
+    char trans = 'R';
+    double alpha[] = {1.0, 2.0};
+
+    double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -385,7 +407,7 @@ CTEST(zimatcopy, rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -407,21 +429,40 @@ CTEST(zimatcopy, rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
- * Row Major
- * Transposition
- * Matrix dimensions leave residues from 4 and 2 (specialize 
- * for rt case)
+ * Column Major
+ * Copy and conjugate
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(zimatcopy, rowmajor_conj_col_100_row_100)
+{
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
+    char order = 'R';
+    char trans = 'R';
+    double alpha[] = {1.0, 2.0};
+
+    double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test zimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Column Major
+ * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(zimatcopy, rowmajor_trans_col_27_row_27)
+CTEST(zimatcopy, rowmajor_conjtrans_col_100_row_100)
 {
-    blasint m = 27, n = 27;
-    blasint lda_src = 27, lda_dst = 27;
+    blasint m = 100, n = 100;
+    blasint lda_src = 100, lda_dst = 100;
     char order = 'R';
-    char trans = 'T'; 
+    char trans = 'C';
     double alpha[] = {2.0, 1.0};
 
     double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
@@ -430,7 +471,7 @@ CTEST(zimatcopy, rowmajor_trans_col_27_row_27)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -438,10 +479,10 @@ CTEST(zimatcopy, rowmajor_trans_col_27_row_27)
  * Rectangular matrix
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(zimatcopy, rowmajor_notrans_col_100_row_50)
+CTEST(zimatcopy, rowmajor_notrans_col_50_row_100)
 {
-    blasint m = 50, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'R';
     char trans = 'N'; 
     double alpha[] = {2.0, 1.0};
@@ -452,17 +493,39 @@ CTEST(zimatcopy, rowmajor_notrans_col_100_row_50)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
+ * with the following options:
+ *
+ * Row Major
+ * Transposition
+ * Rectangular matrix
+ * alpha_r = 1.0, alpha_i = 2.0
+ */
+CTEST(zimatcopy, rowmajor_trans_col_50_row_100)
+{
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 100;
+    char order = 'R';
+    char trans = 'T';
+    double alpha[] = {1.0, 2.0};
+
+    double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+
+    ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
+}
+
+/**
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Copy and conjugate
  * alpha_r = 1.5, alpha_i = -1.0
  */
-CTEST(zimatcopy, rowmajor_conj_col_100_row_100)
+CTEST(zimatcopy, rowmajor_conj_col_50_row_100)
 {
-    blasint m = 100, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 50;
     char order = 'R';
     char trans = 'R'; 
     double alpha[] = {1.5, -1.0};
@@ -473,17 +536,17 @@ CTEST(zimatcopy, rowmajor_conj_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
  * Transposition and conjugate
  * alpha_r = 1.0, alpha_i = 2.0
  */
-CTEST(zimatcopy, rowmajor_conjtrans_col_100_row_100)
+CTEST(zimatcopy, rowmajor_conjtrans_col_50_row_100)
 {
-    blasint m = 100, n = 100;
-    blasint lda_src = 100, lda_dst = 100;
+    blasint m = 100, n = 50;
+    blasint lda_src = 50, lda_dst = 100;
     char order = 'R';
     char trans = 'C';
     double alpha[] = {1.0, 2.0};
@@ -495,7 +558,7 @@ CTEST(zimatcopy, rowmajor_conjtrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -518,7 +581,7 @@ CTEST(zimatcopy, c_api_colmajor_trans_col_100_row_100)
 
 /**
  * C API specific test
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -541,7 +604,7 @@ CTEST(zimatcopy, c_api_colmajor_notrans_col_100_row_100)
 
 /**
  * C API specific test
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -563,7 +626,7 @@ CTEST(zimatcopy, c_api_rowmajor_trans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
@@ -584,14 +647,14 @@ CTEST(zimatcopy, c_api_colmajor_conj_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Column Major
  * Transposition and conjugate
  * alpha_r = 2.0, alpha_i = 1.0
  */
-CTEST(zimatcopy, c_api_colmajor_conjtrnas_col_100_row_100)
+CTEST(zimatcopy, c_api_colmajor_conjtrans_col_100_row_100)
 {
     blasint m = 100, n = 100;
     blasint lda_src = 100, lda_dst = 100;
@@ -606,7 +669,7 @@ CTEST(zimatcopy, c_api_colmajor_conjtrnas_col_100_row_100)
 
 /**
  * C API specific test
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -628,7 +691,7 @@ CTEST(zimatcopy, c_api_rowmajor_notrans_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
@@ -649,7 +712,7 @@ CTEST(zimatcopy, c_api_rowmajor_conj_col_100_row_100)
 }
 
 /**
- * Test zimatcopy by comparing it against refernce
+ * Test zimatcopy by comparing it against reference
  * with the following options:
  *
  * Row Major
