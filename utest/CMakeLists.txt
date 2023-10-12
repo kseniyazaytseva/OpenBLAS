@@ -77,6 +77,8 @@ ${DIR_EXT}/test_ztrmv.c
 ${DIR_EXT}/test_ctrmv.c
 $(DIR_EXT)/test_ztrsv.c
 $(DIR_EXT)/test_ctrsv.c
+$(DIR_EXT)/test_zgemm.c
+$(DIR_EXT)/test_cgemm.c
 )
 
 # crashing on travis cl with an error code suggesting resource not found
