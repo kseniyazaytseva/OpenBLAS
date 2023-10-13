@@ -10,39 +10,20 @@
  */
 
 #include "utest/openblas_utest.h"
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_СAXPYC
-{
+struct DATA_CAXPYC {
     float x_test[DATASIZE * INCREMENT * 2];
     float x_verify[DATASIZE * INCREMENT * 2];
     float y_test[DATASIZE * INCREMENT * 2];
     float y_verify[DATASIZE * INCREMENT * 2];
 };
+
 #ifdef BUILD_COMPLEX
-static struct DATA_СAXPYC data_caxpyc;
-
-/**
- * Generate random vector stored in one-dimensional array
- */
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
-/**
- * Conjugate vector stored in one-dimensional array
- */
-static void conjugate(blasint n, float *a, blasint inc)
-{
-    blasint i;
-    for (i = 1; i < n * 2 * inc; i += 2 * inc)
-        a[i] *= -1.0f;
-}
+static struct DATA_CAXPYC data_caxpyc;
 
 /**
  * Test caxpyc by conjugating vector x and comparing with caxpy.
@@ -58,8 +39,8 @@ static float check_caxpyc(blasint n, float *alpha, blasint incx, blasint incy)
 {
     blasint i;
 
-    rand_generate(data_caxpyc.x_test, n * incx * 2);
-    rand_generate(data_caxpyc.y_test, n * incy * 2);
+    srand_generate(data_caxpyc.x_test, n * incx * 2);
+    srand_generate(data_caxpyc.y_test, n * incy * 2);
 
     for (i = 0; i < n * incx * 2; i++)
         data_caxpyc.x_verify[i] = data_caxpyc.x_test[i];
@@ -67,15 +48,13 @@ static float check_caxpyc(blasint n, float *alpha, blasint incx, blasint incy)
     for (i = 0; i < n * incy * 2; i++)
         data_caxpyc.y_verify[i] = data_caxpyc.y_test[i];
 
-    conjugate(n, data_caxpyc.x_verify, incx);
+    cconjugate_vector(n, incx, data_caxpyc.x_verify);
 
-    BLASFUNC(caxpy)
-    (&n, alpha, data_caxpyc.x_verify, &incx,
-     data_caxpyc.y_verify, &incy);
+    BLASFUNC(caxpy)(&n, alpha, data_caxpyc.x_verify, &incx,
+                    data_caxpyc.y_verify, &incy);
 
-    BLASFUNC(caxpyc)
-    (&n, alpha, data_caxpyc.x_test, &incx,
-     data_caxpyc.y_test, &incy);
+    BLASFUNC(caxpyc)(&n, alpha, data_caxpyc.x_test, &incx,
+                     data_caxpyc.y_test, &incy);
 
     for (i = 0; i < n * incy * 2; i++)
         data_caxpyc.y_verify[i] -= data_caxpyc.y_test[i];

@@ -16,6 +16,11 @@
 #define INCREMENT 2
 
 #ifdef BUILD_COMPLEX
+
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -27,6 +32,10 @@ CTEST(icamin, bad_args_N_0){
    ASSERT_EQUAL(0, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -38,6 +47,10 @@ CTEST(icamin, step_zero){
    ASSERT_EQUAL(0, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {1.0f, 2.0f};
@@ -45,6 +58,10 @@ CTEST(icamin, positive_step_1_N_1){
    ASSERT_EQUAL(1, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {-1.0f, -2.0f};
@@ -52,6 +69,10 @@ CTEST(icamin, negative_step_1_N_1){
    ASSERT_EQUAL(1, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -59,6 +80,10 @@ CTEST(icamin, positive_step_2_N_1){
    ASSERT_EQUAL(1, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -66,6 +91,10 @@ CTEST(icamin, negative_step_2_N_1){
    ASSERT_EQUAL(1, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -73,6 +102,10 @@ CTEST(icamin, positive_step_1_N_2){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -80,6 +113,10 @@ CTEST(icamin, negative_step_1_N_2){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f};
@@ -87,6 +124,10 @@ CTEST(icamin, positive_step_2_N_2){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f};
@@ -94,6 +135,10 @@ CTEST(icamin, negative_step_2_N_2){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f};
@@ -101,6 +146,10 @@ CTEST(icamin, positive_step_1_N_3){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -2.0f, -1.0f};
@@ -108,6 +157,10 @@ CTEST(icamin, negative_step_1_N_3){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f};
@@ -115,6 +168,10 @@ CTEST(icamin, positive_step_2_N_3){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -2.0f, -1.0f, 0.0f, 0.0f};
@@ -122,6 +179,10 @@ CTEST(icamin, negative_step_2_N_3){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f, -2.0f, -2.0f};
@@ -129,6 +190,10 @@ CTEST(icamin, positive_step_1_N_4){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -2.0f, -1.0f, -2.0f, -2.0f};
@@ -136,6 +201,10 @@ CTEST(icamin, negative_step_1_N_4){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -143,6 +212,10 @@ CTEST(icamin, positive_step_2_N_4){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -2.0f, -1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -150,6 +223,10 @@ CTEST(icamin, negative_step_2_N_4){
    ASSERT_EQUAL(2, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -163,6 +240,10 @@ CTEST(icamin, positive_step_1_N_50){
    ASSERT_EQUAL(8, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -176,6 +257,10 @@ CTEST(icamin, negative_step_1_N_50){
    ASSERT_EQUAL(8, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, positive_step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -189,6 +274,10 @@ CTEST(icamin, positive_step_2_N_50){
    ASSERT_EQUAL(8, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, negative_step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -202,6 +291,10 @@ CTEST(icamin, negative_step_2_N_50){
    ASSERT_EQUAL(8, index);
 }
 
+/**
+ * Fortran API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, min_idx_in_vec_tail){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -216,6 +309,10 @@ CTEST(icamin, min_idx_in_vec_tail){
    ASSERT_EQUAL(N, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_bad_args_N_0){
     blasint i;
     blasint N = 0, inc = 1;
@@ -227,6 +324,10 @@ CTEST(icamin, c_api_bad_args_N_0){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_step_zero){
     blasint i;
     blasint N = ELEMENTS, inc = 0;
@@ -238,6 +339,10 @@ CTEST(icamin, c_api_step_zero){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_1_N_1){
     blasint N = 1, inc = 1;
     float x[] = {1.0f, 2.0f};
@@ -245,6 +350,10 @@ CTEST(icamin, c_api_positive_step_1_N_1){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_1_N_1){
     blasint N = 1, inc = 1;
     float x[] = {-1.0f, -2.0f};
@@ -252,6 +361,10 @@ CTEST(icamin, c_api_negative_step_1_N_1){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_2_N_1){
     blasint N = 1, inc = 2;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -259,6 +372,10 @@ CTEST(icamin, c_api_positive_step_2_N_1){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_2_N_1){
     blasint N = 1, inc = 2;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -266,6 +383,10 @@ CTEST(icamin, c_api_negative_step_2_N_1){
     ASSERT_EQUAL(0, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_1_N_2){
     blasint N = 2, inc = 1;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -273,6 +394,10 @@ CTEST(icamin, c_api_positive_step_1_N_2){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_1_N_2){
     blasint N = 2, inc = 1;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -280,6 +405,10 @@ CTEST(icamin, c_api_negative_step_1_N_2){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_2_N_2){
     blasint N = 2, inc = 2;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f};
@@ -287,6 +416,10 @@ CTEST(icamin, c_api_positive_step_2_N_2){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_2_N_2){
     blasint N = 2, inc = 2;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f};
@@ -294,6 +427,10 @@ CTEST(icamin, c_api_negative_step_2_N_2){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_1_N_3){
     blasint N = 3, inc = 1;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f};
@@ -301,6 +438,10 @@ CTEST(icamin, c_api_positive_step_1_N_3){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_1_N_3){
     blasint N = 3, inc = 1;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -2.0f, -1.0f};
@@ -308,6 +449,10 @@ CTEST(icamin, c_api_negative_step_1_N_3){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_2_N_3){
     blasint N = 3, inc = 2;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f};
@@ -315,6 +460,10 @@ CTEST(icamin, c_api_positive_step_2_N_3){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_2_N_3){
     blasint N = 3, inc = 2;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -2.0f, -1.0f, 0.0f, 0.0f};
@@ -322,6 +471,10 @@ CTEST(icamin, c_api_negative_step_2_N_3){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_1_N_4){
     blasint N = 4, inc = 1;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f, -2.0f, -2.0f};
@@ -329,6 +482,10 @@ CTEST(icamin, c_api_positive_step_1_N_4){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_1_N_4){
     blasint N = 4, inc = 1;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -2.0f, -1.0f, -2.0f, -2.0f};
@@ -336,6 +493,10 @@ CTEST(icamin, c_api_negative_step_1_N_4){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_2_N_4){
     blasint N = 4, inc = 2;
     float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -343,6 +504,10 @@ CTEST(icamin, c_api_positive_step_2_N_4){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_2_N_4){
     blasint N = 4, inc = 2;
     float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -2.0f, -1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -350,6 +515,10 @@ CTEST(icamin, c_api_negative_step_2_N_4){
     ASSERT_EQUAL(1, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_1_N_50){
     blasint i;
     blasint N = ELEMENTS, inc = 1;
@@ -363,6 +532,10 @@ CTEST(icamin, c_api_positive_step_1_N_50){
     ASSERT_EQUAL(7, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_1_N_50){
     blasint i;
     blasint N = ELEMENTS, inc = 1;
@@ -376,6 +549,10 @@ CTEST(icamin, c_api_negative_step_1_N_50){
     ASSERT_EQUAL(7, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_positive_step_2_N_50){
     blasint i;
     blasint N = ELEMENTS, inc = INCREMENT;
@@ -389,6 +566,10 @@ CTEST(icamin, c_api_positive_step_2_N_50){
     ASSERT_EQUAL(7, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_negative_step_2_N_50){
     blasint i;
     blasint N = ELEMENTS, inc = INCREMENT;
@@ -402,6 +583,10 @@ CTEST(icamin, c_api_negative_step_2_N_50){
     ASSERT_EQUAL(7, index);
 }
 
+/**
+ * C API specific test
+ * Test icamin by comparing it against pre-calculated values
+ */
 CTEST(icamin, c_api_min_idx_in_vec_tail){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;

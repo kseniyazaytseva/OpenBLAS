@@ -15,7 +15,7 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CSBMV{
+struct DATA_CSBMV {
     float sp_matrix[DATASIZE * (DATASIZE + 1)];
     float sb_matrix[DATASIZE * DATASIZE * 2];
     float b_test[DATASIZE * 2 * INCREMENT];
@@ -29,16 +29,6 @@ struct DATA_CSBMV{
 
 #ifdef BUILD_COMPLEX
 static struct DATA_CSBMV data_csbmv;
-
-/**
- * Generate random vector or matrix stored in one-dimensional array
- */
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
 
 /** 
  * Transform full-storage symmetric band matrix A to upper (U) or lower (L)
@@ -142,7 +132,7 @@ static int check_badargs(char uplo, blasint n, blasint k, blasint lda, blasint i
     float beta[] = {0.0f, 0.0f};
 
     float a[2];
-    rand_generate(a, 2);
+    srand_generate(a, 2);
 
     set_xerbla("CSBMV ", expected_info);
 
@@ -179,9 +169,9 @@ static float check_csbmv(char uplo, blasint n, blasint k, float *alpha, blasint 
     float a[lda * n * 2];
 
     // Fill symmetric packed matrix sp_matrix, vector b_test, vector c_test 
-    rand_generate(data_csbmv.sp_matrix, n * (n + 1));
-    rand_generate(data_csbmv.b_test, n * inc_b * 2);
-    rand_generate(data_csbmv.c_test, n * inc_c * 2);
+    srand_generate(data_csbmv.sp_matrix, n * (n + 1));
+    srand_generate(data_csbmv.b_test, n * inc_b * 2);
+    srand_generate(data_csbmv.c_test, n * inc_c * 2);
 
     // Copy vector c_test for cgemv
     for (i = 0; i < n * inc_c * 2; i++)
@@ -489,9 +479,8 @@ CTEST(csbmv, xerbla_uplo_invalid)
     blasint k = 0;
     blasint lda = k + 1;
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -506,9 +495,8 @@ CTEST(csbmv, xerbla_n_invalid)
     blasint k = 0;
     blasint lda = k + 1;
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -541,9 +529,8 @@ CTEST(csbmv, xerbla_inc_b_zero)
     blasint k = 0;
     blasint lda = k + 1;
     int expected_info = 8;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -558,9 +545,8 @@ CTEST(csbmv, xerbla_inc_c_zero)
     blasint k = 0;
     blasint lda = k + 1;
     int expected_info = 11;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -575,9 +561,8 @@ CTEST(csbmv, xerbla_k_invalid)
     blasint k = INVALID;
     blasint lda = 1;
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -592,9 +577,8 @@ CTEST(csbmv, xerbla_lda_invalid)
     blasint k = 0;
     blasint lda = INVALID;
     int expected_info = 6;
-    int passed;
 
-    passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
+    int passed = check_badargs(uplo, n, k, lda, inc_b, inc_c, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 #endif

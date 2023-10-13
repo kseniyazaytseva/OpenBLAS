@@ -14,105 +14,13 @@
 
 #define DATASIZE 100
 
-struct DATA_ZIMATCOPY{
-    double A_Test[DATASIZE * DATASIZE * 2];
-    double A_Verify[DATASIZE * DATASIZE * 2];
+struct DATA_ZIMATCOPY {
+    double a_test[DATASIZE * DATASIZE * 2];
+    double a_verify[DATASIZE * DATASIZE * 2];
 };
 
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZIMATCOPY data_zimatcopy;
-
-
-static void rand_generate(double *a_src, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a_src[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
- * Find difference between two rectangle matrix
- * return norm of differences
- */
-static double matrix_difference(double *a, double *b, blasint cols, blasint rows, blasint ld)
-{
-    blasint i = 0;
-    blasint j = 0;
-    blasint inc = 1;
-    double norm = 0.0;
-
-    // Сomplex multiplier
-    ld *= 2;
-
-    double *a_ptr = a;
-    double *b_ptr = b;
-
-    for(i = 0; i < rows; i++)
-    {
-        for (j = 0; j < cols; j++) {
-            a_ptr[j] -= b_ptr[j];
-        }
-        norm += cblas_dnrm2(cols, a_ptr, inc);
-        
-        a_ptr += ld;
-        b_ptr += ld;
-    }
-    return norm/(double)(rows);
-}
-
-/**
- * Transpose matrix
- * 
- * param rows specifies number of rows of A
- * param cols specifies number of columns of A
- * param alpha specifies scaling factor for matrix A
- * param a_src - buffer holding input matrix A
- * param lda_src - leading dimension of the matrix A
- * param a_dst - buffer holding output matrix A
- * param lda_dst - leading dimension of output matrix A
- * param conj specifies conjugation
- */
-static void transpose(blasint rows, blasint cols, double *alpha, double *a_src, int lda_src, 
-                      double *a_dst, blasint lda_dst, int conj)
-{
-    blasint i, j;
-    lda_dst *= 2;
-    lda_src *= 2;
-    for (i = 0; i != cols*2; i+=2)
-    {
-        for (j = 0; j != rows*2; j+=2){
-            a_dst[(i/2)*lda_dst+j] = alpha[0] * a_src[(j/2)*lda_src+i] + conj * alpha[1] * a_src[(j/2)*lda_src+i+1];
-            a_dst[(i/2)*lda_dst+j+1] = (-1.0) * conj * alpha[0] * a_src[(j/2)*lda_src+i+1] + alpha[1] * a_src[(j/2)*lda_src+i];
-        } 
-    }
-}
-
-/**
- * Copy matrix from source A to destination A
- * 
- * param rows specifies number of rows of A
- * param cols specifies number of columns of A
- * param alpha specifies scaling factor for matrix A
- * param a_src - buffer holding input matrix A
- * param lda_src - leading dimension of the matrix A
- * param a_dst - buffer holding output matrix A
- * param lda_dst - leading dimension of output matrix A
- * param conj specifies conjugation
- */
-static void copy(blasint rows, blasint cols, double *alpha, double *a_src, int lda_src, 
-                      double *a_dst, blasint lda_dst, int conj)
-{
-    blasint i, j;
-    lda_dst *= 2;
-    lda_src *= 2;
-    for (i = 0; i != rows; i++)
-    {
-        for (j = 0; j != cols*2; j+=2){
-            a_dst[i*lda_dst+j] = alpha[0] * a_src[i*lda_src+j] + conj * alpha[1] * a_src[i*lda_src+j+1];
-            a_dst[i*lda_dst+j+1] = (-1.0) * conj *alpha[0] * a_src[i*lda_src+j+1] + alpha[1] * a_src[i*lda_src+j];
-        }
-    }
-}
 
 /**
  * Comapare results computed by zimatcopy and reference func
@@ -155,17 +63,17 @@ static double check_zimatcopy(char api, char order, char trans, blasint rows, bl
             conj = 1;
     }
 
-    rand_generate(data_zimatcopy.A_Test, lda_src*m*2);
+    drand_generate(data_zimatcopy.a_test, lda_src*m*2);
 
     if (trans == 'T' || trans == 'C') {
-        transpose(m, n, alpha, data_zimatcopy.A_Test, lda_src, data_zimatcopy.A_Verify, lda_dst, conj);
+        ztranspose(m, n, alpha, data_zimatcopy.a_test, lda_src, data_zimatcopy.a_verify, lda_dst, conj);
     } 
     else {
-        copy(m, n, alpha, data_zimatcopy.A_Test, lda_src, data_zimatcopy.A_Verify, lda_dst, conj);
+        zcopy(m, n, alpha, data_zimatcopy.a_test, lda_src, data_zimatcopy.a_verify, lda_dst, conj);
     }
 
     if (api == 'F') {
-        BLASFUNC(zimatcopy)(&order, &trans, &rows, &cols, alpha, data_zimatcopy.A_Test, 
+        BLASFUNC(zimatcopy)(&order, &trans, &rows, &cols, alpha, data_zimatcopy.a_test, 
                             &lda_src, &lda_dst);
     }
     else {
@@ -175,12 +83,12 @@ static double check_zimatcopy(char api, char order, char trans, blasint rows, bl
         if (trans == 'N') ctrans = CblasNoTrans;
         if (trans == 'C') ctrans = CblasConjTrans;
         if (trans == 'R') ctrans = CblasConjNoTrans;
-        cblas_zimatcopy(corder, ctrans, rows, cols, alpha, data_zimatcopy.A_Test, 
+        cblas_zimatcopy(corder, ctrans, rows, cols, alpha, data_zimatcopy.a_test, 
                     lda_src, lda_dst);
     }
 
     // Find the differences between output matrix computed by zimatcopy and reference func
-    return matrix_difference(data_zimatcopy.A_Test, data_zimatcopy.A_Verify, cols_out, rows_out, lda_dst);    
+    return dmatrix_difference(data_zimatcopy.a_test, data_zimatcopy.a_verify, cols_out, rows_out, lda_dst*2);    
 }
 
 /**
@@ -204,13 +112,14 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 
     set_xerbla("ZIMATCOPY", expected_info);
 
-    BLASFUNC(zimatcopy)(&order, &trans, &rows, &cols, alpha, data_zimatcopy.A_Test, 
+    BLASFUNC(zimatcopy)(&order, &trans, &rows, &cols, alpha, data_zimatcopy.a_test, 
                         &lda_src, &lda_dst);
 
     return check_error();
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -233,6 +142,7 @@ CTEST(zimatcopy, colmajor_trans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -255,6 +165,7 @@ CTEST(zimatcopy, colmajor_notrans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -276,6 +187,7 @@ CTEST(zimatcopy, colmajor_conj_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -297,6 +209,7 @@ CTEST(zimatcopy, colmajor_conjtrans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -319,6 +232,7 @@ CTEST(zimatcopy, colmajor_trans_col_50_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -341,6 +255,7 @@ CTEST(zimatcopy, colmajor_notrans_col_100_row_50)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -363,6 +278,7 @@ CTEST(zimatcopy, colmajor_conjtrans_col_50_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -385,6 +301,7 @@ CTEST(zimatcopy, colmajor_conj_col_100_row_50)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -407,6 +324,7 @@ CTEST(zimatcopy, rowmajor_trans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -429,6 +347,7 @@ CTEST(zimatcopy, rowmajor_notrans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -450,6 +369,7 @@ CTEST(zimatcopy, rowmajor_conj_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -471,6 +391,7 @@ CTEST(zimatcopy, rowmajor_conjtrans_col_100_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -493,6 +414,7 @@ CTEST(zimatcopy, rowmajor_notrans_col_50_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -515,6 +437,7 @@ CTEST(zimatcopy, rowmajor_trans_col_50_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -536,6 +459,7 @@ CTEST(zimatcopy, rowmajor_conj_col_50_row_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -626,6 +550,7 @@ CTEST(zimatcopy, c_api_rowmajor_trans_col_100_row_100)
 }
 
 /**
+ * C API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -647,6 +572,7 @@ CTEST(zimatcopy, c_api_colmajor_conj_col_100_row_100)
 }
 
 /**
+ * C API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -691,6 +617,7 @@ CTEST(zimatcopy, c_api_rowmajor_notrans_col_100_row_100)
 }
 
 /**
+ * C API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -706,12 +633,13 @@ CTEST(zimatcopy, c_api_rowmajor_conj_col_100_row_100)
     char trans = 'R'; 
     double alpha[] = {1.5, -1.0};
 
-    double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_zimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * C API specific test
  * Test zimatcopy by comparing it against reference
  * with the following options:
  *
@@ -727,7 +655,7 @@ CTEST(zimatcopy, c_api_rowmajor_conjtrans_col_100_row_100)
     char trans = 'C';
     double alpha[] = {1.0, 2.0};
 
-    double norm = check_zimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_zimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -743,9 +671,8 @@ CTEST(zimatcopy, xerbla_invalid_order)
     char order = 'O';
     char trans = 'T';
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -760,9 +687,8 @@ CTEST(zimatcopy, xerbla_invalid_trans)
     char order = 'C';
     char trans = 'O';
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -777,9 +703,8 @@ CTEST(zimatcopy, xerbla_invalid_rows)
     char order = 'C';
     char trans = 'T';
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -794,9 +719,8 @@ CTEST(zimatcopy, xerbla_invalid_cols)
     char order = 'C';
     char trans = 'T';
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -812,9 +736,8 @@ CTEST(zimatcopy, xerbla_rowmajor_invalid_lda)
     char order = 'R';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -830,9 +753,8 @@ CTEST(zimatcopy, xerbla_colmajor_invalid_lda)
     char order = 'C';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -848,9 +770,8 @@ CTEST(zimatcopy, xerbla_rowmajor_notrans_invalid_ldb)
     char order = 'R';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -866,9 +787,8 @@ CTEST(zimatcopy, xerbla_rowmajor_trans_invalid_ldb)
     char order = 'R';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -884,9 +804,8 @@ CTEST(zimatcopy, xerbla_colmajor_notrans_invalid_ldb)
     char order = 'C';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -902,9 +821,8 @@ CTEST(zimatcopy, xerbla_colmajor_trans_invalid_ldb)
     char order = 'C';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 #endif

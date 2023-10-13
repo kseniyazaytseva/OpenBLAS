@@ -11,26 +11,20 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 300
 #define INCREMENT 2
 
-struct DATA_ZTRMV
-{
+struct DATA_ZTRMV {
 	double a_test[DATASIZE * DATASIZE * 2];
 	double a_verify[DATASIZE * DATASIZE * 2];
 	double x_test[DATASIZE * INCREMENT * 2];
 	double x_verify[DATASIZE * INCREMENT * 2];
 };
+
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZTRMV data_ztrmv;
-
-static void rand_generate(double *a, blasint n)
-{
-	blasint i;
-	for (i = 0; i < n; i++)
-		a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
 
 /**
  * Test ztrmv with the conjugate and not-transposed matrix A by conjugating matrix A
@@ -50,8 +44,8 @@ static double check_ztrmv(char uplo, char trans, char diag, blasint n, blasint l
 	double alpha_conj[] = {1.0, 0.0}; 
 	char trans_verify = trans;
 
-	rand_generate(data_ztrmv.a_test, n * lda * 2);
-	rand_generate(data_ztrmv.x_test, n * incx * 2);
+	srand_generate(data_ztrmv.a_test, n * lda * 2);
+	srand_generate(data_ztrmv.x_test, n * incx * 2);
 
 	for (i = 0; i < n * lda * 2; i++)
 		data_ztrmv.a_verify[i] = data_ztrmv.a_test[i];

@@ -16,6 +16,11 @@
 #define INCREMENT 2
 
 #ifdef BUILD_SINGLE
+
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -27,6 +32,10 @@ CTEST(ssum, bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -39,6 +48,10 @@ CTEST(ssum, step_zero){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {1.1f};
@@ -47,6 +60,10 @@ CTEST(ssum, step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {1.1f, 0.0f};
@@ -55,6 +72,10 @@ CTEST(ssum, step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {1.1f, -1.0f};
@@ -63,6 +84,10 @@ CTEST(ssum, step_1_N_2){
    ASSERT_DBL_NEAR_TOL(0.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {1.1f, -1.5f, 1.0f, 1.0f};
@@ -71,6 +96,10 @@ CTEST(ssum, step_2_N_2){
    ASSERT_DBL_NEAR_TOL(2.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {1.1f, 1.0f, 2.2f};
@@ -79,6 +108,10 @@ CTEST(ssum, step_1_N_3){
    ASSERT_DBL_NEAR_TOL(4.3f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {1.1f, 0.0f, -1.0f, -3.0f, 2.2f, 3.0f};
@@ -87,6 +120,10 @@ CTEST(ssum, step_2_N_3){
    ASSERT_DBL_NEAR_TOL(2.3f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {1.1f, 1.0f, -2.2f, 3.3f};
@@ -95,6 +132,10 @@ CTEST(ssum, step_1_N_4){
    ASSERT_DBL_NEAR_TOL(3.2f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {1.1f, 0.0f, 1.0f, 2.0f, 2.2f, 2.7f, -3.3f, -5.9f};
@@ -103,6 +144,10 @@ CTEST(ssum, step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_5){
    blasint N = 5, inc = 1;
    float x[] = {0.0f, 1.0f, 2.2f, 3.3f, 0.0f};
@@ -111,6 +156,10 @@ CTEST(ssum, step_1_N_5){
    ASSERT_DBL_NEAR_TOL(6.5f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_5){
    blasint N = 5, inc = 2;
    float x[] = {0.0f, 3.0f, 1.0f, -2.2f, 2.2f, -1.7f, 3.3f, 14.5f, 0.0f, -9.0f};
@@ -119,6 +168,10 @@ CTEST(ssum, step_2_N_5){
    ASSERT_DBL_NEAR_TOL(6.5f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -130,6 +183,10 @@ CTEST(ssum, step_1_N_50){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -141,6 +198,10 @@ CTEST(ssum, step_2_N_50){
    ASSERT_DBL_NEAR_TOL(50.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -152,6 +213,10 @@ CTEST(ssum, c_api_bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -164,6 +229,10 @@ CTEST(ssum, c_api_step_zero){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {1.1f};
@@ -172,6 +241,10 @@ CTEST(ssum, c_api_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {1.1f, 0.0f};
@@ -180,6 +253,10 @@ CTEST(ssum, c_api_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {1.1f, -1.0f};
@@ -188,6 +265,10 @@ CTEST(ssum, c_api_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(0.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {1.1f, -1.5f, 1.0f, 1.0f};
@@ -196,6 +277,10 @@ CTEST(ssum, c_api_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(2.1f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {1.1f, 1.0f, 2.2f};
@@ -204,6 +289,10 @@ CTEST(ssum, c_api_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(4.3f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {1.1f, 0.0f, -1.0f, -3.0f, 2.2f, 3.0f};
@@ -212,6 +301,10 @@ CTEST(ssum, c_api_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(2.3f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {1.1f, 1.0f, -2.2f, 3.3f};
@@ -220,6 +313,10 @@ CTEST(ssum, c_api_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(3.2f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {1.1f, 0.0f, 1.0f, 2.0f, 2.2f, 2.7f, -3.3f, -5.9f};
@@ -228,6 +325,10 @@ CTEST(ssum, c_api_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_5){
    blasint N = 5, inc = 1;
    float x[] = {0.0f, 1.0f, 2.2f, 3.3f, 0.0f};
@@ -236,6 +337,10 @@ CTEST(ssum, c_api_step_1_N_5){
    ASSERT_DBL_NEAR_TOL(6.5f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_5){
    blasint N = 5, inc = 2;
    float x[] = {0.0f, 3.0f, 1.0f, -2.2f, 2.2f, -1.7f, 3.3f, 14.5f, 0.0f, -9.0f};
@@ -244,6 +349,10 @@ CTEST(ssum, c_api_step_2_N_5){
    ASSERT_DBL_NEAR_TOL(6.5f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -255,6 +364,10 @@ CTEST(ssum, c_api_step_1_N_50){
    ASSERT_DBL_NEAR_TOL(0.0f, sum, SINGLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test ssum by comparing it against pre-calculated values
+ */
 CTEST(ssum, c_api_step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;

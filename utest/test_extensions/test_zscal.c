@@ -11,11 +11,12 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZSCAL{
+struct DATA_ZSCAL {
     double x_test[DATASIZE * 2 * INCREMENT];
     double x_verify[DATASIZE * 2 * INCREMENT];
 };
@@ -45,13 +46,6 @@ static void zscal_trusted(blasint n, double *alpha, double* x, blasint inc){
     }
 }
 
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
 /**
  * Comapare results computed by zscal and zscal_trusted
  *
@@ -66,7 +60,7 @@ static double check_zscal(char api, blasint n, double *alpha, blasint inc)
     blasint i;
 
     // Fill vectors x
-    rand_generate(data_zscal.x_test, n * inc * 2);
+    drand_generate(data_zscal.x_test, n * inc * 2);
 
     // Copy vector x for zscal_trusted
     for (i = 0; i < n * 2 * inc; i++)

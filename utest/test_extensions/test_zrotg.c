@@ -15,8 +15,9 @@
 #ifdef BUILD_COMPLEX16
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, zero_a)
 {
     double sa[2] = {0.0, 0.0};
@@ -32,8 +33,9 @@ CTEST(zrotg, zero_a)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific tests
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, zero_b)
 {
     double sa[2] = {1.0, 1.0};
@@ -49,8 +51,9 @@ CTEST(zrotg, zero_b)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, zero_real)
 {
     double sa[2] = {0.0, 1.0};
@@ -66,8 +69,9 @@ CTEST(zrotg, zero_real)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, positive_real_positive_img)
 {
     double sa[2] = {3.0, 4.0};
@@ -83,8 +87,9 @@ CTEST(zrotg, positive_real_positive_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, negative_real_positive_img)
 {
     double sa[2] = {-3.0, 4.0};
@@ -100,8 +105,9 @@ CTEST(zrotg, negative_real_positive_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, positive_real_negative_img)
 {
     double sa[2] = {3.0, -4.0};
@@ -117,8 +123,9 @@ CTEST(zrotg, positive_real_negative_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, negative_real_negative_img)
 {
     double sa[2] = {-3.0, -4.0};
@@ -134,8 +141,9 @@ CTEST(zrotg, negative_real_negative_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_zero_a)
 {
     double sa[2] = {0.0, 0.0};
@@ -151,8 +159,9 @@ CTEST(zrotg, c_api_zero_a)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_zero_b)
 {
     double sa[2] = {1.0, 1.0};
@@ -168,8 +177,9 @@ CTEST(zrotg, c_api_zero_b)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_zero_real)
 {
     double sa[2] = {0.0, 1.0};
@@ -185,8 +195,9 @@ CTEST(zrotg, c_api_zero_real)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_positive_real_positive_img)
 {
     double sa[2] = {3.0, 4.0};
@@ -202,8 +213,9 @@ CTEST(zrotg, c_api_positive_real_positive_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_negative_real_positive_img)
 {
     double sa[2] = {-3.0, 4.0};
@@ -219,8 +231,9 @@ CTEST(zrotg, c_api_negative_real_positive_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_positive_real_negative_img)
 {
     double sa[2] = {3.0, -4.0};
@@ -236,8 +249,9 @@ CTEST(zrotg, c_api_positive_real_negative_img)
 }
 
 /**
-* Test zrotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test zrotg by comparing it against pre-calculated values
+ */
 CTEST(zrotg, c_api_negative_real_negative_img)
 {
     double sa[2] = {-3.0, -4.0};

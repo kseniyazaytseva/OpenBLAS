@@ -15,19 +15,20 @@ include $(TOPDIR)/Makefile.system
 
 OBJS=utest_main.o test_min.o test_amax.o test_ismin.o test_rotmg.o test_axpy.o test_dotu.o test_dsdot.o test_swap.o test_rot.o test_dnrm2.o
 #test_rot.o test_swap.o test_axpy.o test_dotu.o test_dsdot.o test_fork.o
-OBJS_EXT=utest_main.o $(DIR_EXT)/xerbla.o $(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o 
-OBJS_EXT+=$(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o $(DIR_EXT)/test_scamax.o $(DIR_EXT)/test_dzamax.o
-OBJS_EXT+=$(DIR_EXT)/test_samin.o $(DIR_EXT)/test_damin.o $(DIR_EXT)/test_scamin.o $(DIR_EXT)/test_dzamin.o $(DIR_EXT)/test_zrotg.o $(DIR_EXT)/test_crotg.o
-OBJS_EXT+=$(DIR_EXT)/test_drotmg.o $(DIR_EXT)/test_srotmg.o $(DIR_EXT)/test_cscal.o $(DIR_EXT)/test_zscal.o 
+OBJS_EXT=utest_main.o $(DIR_EXT)/xerbla.o $(DIR_EXT)/common.o 
+OBJS_EXT+=$(DIR_EXT)/test_isamin.o $(DIR_EXT)/test_idamin.o $(DIR_EXT)/test_icamin.o $(DIR_EXT)/test_izamin.o 
+OBJS_EXT+=$(DIR_EXT)/test_ssum.o $(DIR_EXT)/test_dsum.o $(DIR_EXT)/test_scsum.o $(DIR_EXT)/test_dzsum.o
+OBJS_EXT+=$(DIR_EXT)/test_saxpby.o $(DIR_EXT)/test_daxpby.o $(DIR_EXT)/test_caxpby.o $(DIR_EXT)/test_zaxpby.o $(DIR_EXT)/test_zaxpyc.o $(DIR_EXT)/test_caxpyc.o
+OBJS_EXT+=$(DIR_EXT)/test_samin.o $(DIR_EXT)/test_damin.o $(DIR_EXT)/test_scamin.o $(DIR_EXT)/test_dzamin.o $(DIR_EXT)/test_scamax.o $(DIR_EXT)/test_dzamax.o
+OBJS_EXT+=$(DIR_EXT)/test_drotmg.o $(DIR_EXT)/test_srotmg.o $(DIR_EXT)/test_zrotg.o $(DIR_EXT)/test_crotg.o $(DIR_EXT)/test_crot.o $(DIR_EXT)/test_zrot.o
+OBJS_EXT+=$(DIR_EXT)/test_zscal.o $(DIR_EXT)/test_cscal.o
 OBJS_EXT+=$(DIR_EXT)/test_domatcopy.o $(DIR_EXT)/test_somatcopy.o $(DIR_EXT)/test_zomatcopy.o $(DIR_EXT)/test_comatcopy.o
 OBJS_EXT+=$(DIR_EXT)/test_simatcopy.o $(DIR_EXT)/test_dimatcopy.o $(DIR_EXT)/test_cimatcopy.o $(DIR_EXT)/test_zimatcopy.o
 OBJS_EXT+=$(DIR_EXT)/test_sgeadd.o $(DIR_EXT)/test_dgeadd.o $(DIR_EXT)/test_cgeadd.o $(DIR_EXT)/test_zgeadd.o
-OBJS_EXT+=$(DIR_EXT)/test_saxpby.o $(DIR_EXT)/test_daxpby.o $(DIR_EXT)/test_caxpby.o $(DIR_EXT)/test_zaxpby.o
-OBJS_EXT+=$(DIR_EXT)/test_zaxpyc.o $(DIR_EXT)/test_caxpyc.o $(DIR_EXT)/test_ztrsv.o $(DIR_EXT)/test_ctrsv.o
 OBJS_EXT+=$(DIR_EXT)/test_cgemv_t.o $(DIR_EXT)/test_zgemv_t.o $(DIR_EXT)/test_cgemv_n.o $(DIR_EXT)/test_zgemv_n.o
-OBJS_EXT+=$(DIR_EXT)/test_crot.o $(DIR_EXT)/test_zrot.o $(DIR_EXT)/test_zgbmv.c $(DIR_EXT)/test_cgbmv.c
 OBJS_EXT+=$(DIR_EXT)/test_sgemmt.o $(DIR_EXT)/test_dgemmt.o $(DIR_EXT)/test_cgemmt.o $(DIR_EXT)/test_zgemmt.o
-OBJS_EXT+=$(DIR_EXT)/test_ztrmv.o $(DIR_EXT)/test_ctrmv.o $(DIR_EXT)/test_zgemm.o $(DIR_EXT)/test_cgemm.o
+OBJS_EXT+=$(DIR_EXT)/test_ztrmv.o $(DIR_EXT)/test_ctrmv.o $(DIR_EXT)/test_ztrsv.o $(DIR_EXT)/test_ctrsv.o
+OBJS_EXT+=$(DIR_EXT)/test_zgemm.o $(DIR_EXT)/test_cgemm.o $(DIR_EXT)/test_zgbmv.o $(DIR_EXT)/test_cgbmv.o
 
 ifneq ($(NO_LAPACK), 1)
 OBJS += test_potrs.o

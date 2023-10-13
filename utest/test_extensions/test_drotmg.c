@@ -15,9 +15,9 @@
 #ifdef BUILD_DOUBLE
 
 /**
-* Fortran API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, y1_zero)
 {
 	double te_d1, tr_d1;
@@ -62,9 +62,9 @@ CTEST(drotmg, y1_zero)
 }
 
 /**
-* Fortran API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, d1_negative)
 {
 	double te_d1, tr_d1;
@@ -109,9 +109,9 @@ CTEST(drotmg, d1_negative)
 }
 
 /**
-* Fortran API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, d1_positive_d2_positive_x1_zero)
 {
 	double te_d1, tr_d1;
@@ -156,9 +156,9 @@ CTEST(drotmg, d1_positive_d2_positive_x1_zero)
 }
 
 /**
-* Fortran API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, scaled_y_greater_than_scaled_x)
 {
 	double te_d1, tr_d1;
@@ -203,9 +203,9 @@ CTEST(drotmg, scaled_y_greater_than_scaled_x)
 }
 
 /**
-* C API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, c_api_y1_zero)
 {
 	double te_d1, tr_d1;
@@ -250,9 +250,9 @@ CTEST(drotmg, c_api_y1_zero)
 }
 
 /**
-* C API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, c_api_d1_negative)
 {
 	double te_d1, tr_d1;
@@ -297,9 +297,9 @@ CTEST(drotmg, c_api_d1_negative)
 }
 
 /**
-* C API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, c_api_d1_positive_d2_positive_x1_zero)
 {
 	double te_d1, tr_d1;
@@ -344,9 +344,9 @@ CTEST(drotmg, c_api_d1_positive_d2_positive_x1_zero)
 }
 
 /**
-* C API specific test
-* Test drotmg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test drotmg by comparing it against pre-calculated values
+ */
 CTEST(drotmg, c_api_scaled_y_greater_than_scaled_x)
 {
 	double te_d1, tr_d1;

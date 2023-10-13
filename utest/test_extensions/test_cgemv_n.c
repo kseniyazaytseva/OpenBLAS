@@ -15,23 +15,15 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CSPMV{
-    float A_test[DATASIZE * DATASIZE * 2];
-    float B_test[DATASIZE * 2 * INCREMENT];
-    float C_test[DATASIZE * 2 * INCREMENT];
-    float C_verify[DATASIZE * 2 * INCREMENT];
+struct DATA_CSPMV_N {
+    float a_test[DATASIZE * DATASIZE * 2];
+    float b_test[DATASIZE * 2 * INCREMENT];
+    float c_test[DATASIZE * 2 * INCREMENT];
+    float c_verify[DATASIZE * 2 * INCREMENT];
 };
 
 #ifdef BUILD_COMPLEX
-
-static struct DATA_CSPMV data_cgemv;
-
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
+static struct DATA_CSPMV_N data_cgemv_n;
 
 /**
  * cgemv not transposed reference code
@@ -125,22 +117,22 @@ static float check_cgemv_n(char trans, blasint m, blasint n, float *alpha, blasi
 {
     blasint i;
 
-    rand_generate(data_cgemv.A_test, n * lda);
-    rand_generate(data_cgemv.B_test, 2 * n * inc_b);
-    rand_generate(data_cgemv.C_test, 2 * m * inc_c);
+    srand_generate(data_cgemv_n.a_test, n * lda);
+    srand_generate(data_cgemv_n.b_test, 2 * n * inc_b);
+    srand_generate(data_cgemv_n.c_test, 2 * m * inc_c);
 
     for (i = 0; i < m * 2 * inc_c; i++)
-        data_cgemv.C_verify[i] = data_cgemv.C_test[i];
+        data_cgemv_n.c_verify[i] = data_cgemv_n.c_test[i];
 
-    cgemv_n_trusted(trans, m, n, alpha, data_cgemv.A_test, lda, data_cgemv.B_test, 
-                  inc_b, beta, data_cgemv.C_test, inc_c);
-    BLASFUNC(cgemv)(&trans, &m, &n, alpha, data_cgemv.A_test, &lda, data_cgemv.B_test, 
-                    &inc_b, beta, data_cgemv.C_verify, &inc_c);
+    cgemv_n_trusted(trans, m, n, alpha, data_cgemv_n.a_test, lda, data_cgemv_n.b_test, 
+                  inc_b, beta, data_cgemv_n.c_test, inc_c);
+    BLASFUNC(cgemv)(&trans, &m, &n, alpha, data_cgemv_n.a_test, &lda, data_cgemv_n.b_test, 
+                    &inc_b, beta, data_cgemv_n.c_verify, &inc_c);
 
     for (i = 0; i < m * 2 * inc_c; i++)
-        data_cgemv.C_verify[i] -= data_cgemv.C_test[i];
+        data_cgemv_n.c_verify[i] -= data_cgemv_n.c_test[i];
 
-    return BLASFUNC(scnrm2)(&n, data_cgemv.C_verify, &inc_c);
+    return BLASFUNC(scnrm2)(&n, data_cgemv_n.c_verify, &inc_c);
 }
 
 /**
@@ -159,9 +151,8 @@ CTEST(cgemv, trans_o_square_matrix)
     char trans = 'O';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -183,9 +174,8 @@ CTEST(cgemv, trans_o_rectangular_matrix_rows_less_then_cols)
     char trans = 'O';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -207,9 +197,8 @@ CTEST(cgemv, trans_o_rectangular_matrix_cols_less_then_rows)
     char trans = 'O';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -230,9 +219,8 @@ CTEST(cgemv, trans_o_double_strides)
     char trans = 'O';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -253,9 +241,8 @@ CTEST(cgemv, trans_s_square_matrix)
     char trans = 'S';
     float alpha[] = {1.0f, 1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -277,9 +264,8 @@ CTEST(cgemv, trans_s_rectangular_matrix_rows_less_then_cols)
     char trans = 'S';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -301,9 +287,8 @@ CTEST(cgemv, trans_s_rectangular_matrix_cols_less_then_rows)
     char trans = 'S';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.4f, 0.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
@@ -324,9 +309,8 @@ CTEST(cgemv, trans_s_double_strides)
     char trans = 'S';
     float alpha[] = {2.0f, -1.0f};
     float beta[] = {1.0f, 5.0f};
-    float norm = 0.0f;
 
-    norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }

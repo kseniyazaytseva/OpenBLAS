@@ -11,11 +11,12 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CSCAL{
+struct DATA_CSCAL {
     float x_test[DATASIZE * 2 * INCREMENT];
     float x_verify[DATASIZE * 2 * INCREMENT];
 };
@@ -44,13 +45,6 @@ static void cscal_trusted(blasint n, float *alpha, float* x, blasint inc){
     }
 }
 
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
 /**
  * Comapare results computed by cscal and cscal_trusted
  *
@@ -65,7 +59,7 @@ static float check_cscal(char api, blasint n, float *alpha, blasint inc)
     blasint i;
 
     // Fill vectors a 
-    rand_generate(data_cscal.x_test, n * inc * 2);
+    srand_generate(data_cscal.x_test, n * inc * 2);
 
     // Copy vector x for cscal_trusted
     for (i = 0; i < n * 2 * inc; i++)

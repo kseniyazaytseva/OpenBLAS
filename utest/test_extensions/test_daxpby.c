@@ -21,20 +21,12 @@ struct DATA_DAXPBY{
     double y_test[DATASIZE * INCREMENT];
     double y_verify[DATASIZE * INCREMENT];
 };
+
 #ifdef BUILD_DOUBLE
 static struct DATA_DAXPBY data_daxpby;
 
 /**
- * Generate random vector stored in one-dimensional array
-*/
-static void rand_generate(double *alpha, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        alpha[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
+ * Fortran API specific function
  * Test daxpby by comparing it with dscal and daxpy.
  * Compare with the following options:
  * 
@@ -44,7 +36,7 @@ static void rand_generate(double *alpha, blasint n)
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static double check_daxpby(blasint n, double alpha, blasint incx, double beta, blasint incy)
 {
     blasint i;
@@ -54,8 +46,8 @@ static double check_daxpby(blasint n, double alpha, blasint incx, double beta, b
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_daxpby.x_test, n * incx_abs);
-    rand_generate(data_daxpby.y_test, n * incy_abs);
+    drand_generate(data_daxpby.x_test, n * incx_abs);
+    drand_generate(data_daxpby.y_test, n * incy_abs);
 
     // Copy vector x for daxpy
     for (i = 0; i < n * incx_abs; i++)
@@ -84,8 +76,7 @@ static double check_daxpby(blasint n, double alpha, blasint incx, double beta, b
 }
 
 /**
- * C API specific function.
- * 
+ * C API specific function
  * Test daxpby by comparing it with dscal and daxpy.
  * Compare with the following options:
  * 
@@ -95,7 +86,7 @@ static double check_daxpby(blasint n, double alpha, blasint incx, double beta, b
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static double c_api_check_daxpby(blasint n, double alpha, blasint incx, double beta, blasint incy)
 {
     blasint i;
@@ -131,13 +122,14 @@ static double c_api_check_daxpby(blasint n, double alpha, blasint incx, double b
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(daxpby, inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -150,13 +142,14 @@ CTEST(daxpby, inc_x_1_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(daxpby, inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -169,13 +162,14 @@ CTEST(daxpby, inc_x_2_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -188,13 +182,14 @@ CTEST(daxpby, inc_x_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -207,13 +202,14 @@ CTEST(daxpby, inc_x_2_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -226,13 +222,14 @@ CTEST(daxpby, inc_x_neg_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(daxpby, inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -245,13 +242,14 @@ CTEST(daxpby, inc_x_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(daxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -264,6 +262,7 @@ CTEST(daxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -271,7 +270,7 @@ CTEST(daxpby, inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(daxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -284,6 +283,7 @@ CTEST(daxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -304,6 +304,7 @@ CTEST(daxpby, inc_x_1_inc_y_2_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -311,7 +312,7 @@ CTEST(daxpby, inc_x_1_inc_y_2_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(daxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -324,6 +325,7 @@ CTEST(daxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -344,6 +346,7 @@ CTEST(daxpby, inc_x_2_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -364,6 +367,7 @@ CTEST(daxpby, inc_x_1_inc_y_2_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -384,6 +388,7 @@ CTEST(daxpby, inc_x_2_inc_y_2_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -392,7 +397,7 @@ CTEST(daxpby, inc_x_2_inc_y_2_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(daxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -405,6 +410,7 @@ CTEST(daxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -426,8 +432,9 @@ CTEST(daxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(daxpby, check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;
@@ -441,14 +448,13 @@ CTEST(daxpby, check_n_zero)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -462,14 +468,13 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(daxpby, c_api_inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -483,14 +488,13 @@ CTEST(daxpby, c_api_inc_x_2_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, c_api_inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -504,14 +508,13 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, c_api_inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -525,14 +528,13 @@ CTEST(daxpby, c_api_inc_x_2_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(daxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -546,14 +548,13 @@ CTEST(daxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(daxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -567,14 +568,13 @@ CTEST(daxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(daxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -588,7 +588,6 @@ CTEST(daxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -596,7 +595,7 @@ CTEST(daxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -610,7 +609,6 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -640,7 +638,7 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -654,7 +652,6 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -729,7 +726,7 @@ CTEST(daxpby, c_api_inc_x_2_inc_y_2_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -743,7 +740,6 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test daxpby by comparing it with dscal and daxpy.
  * Test with the following options:
  * 
@@ -766,9 +762,8 @@ CTEST(daxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(daxpby, c_api_check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;

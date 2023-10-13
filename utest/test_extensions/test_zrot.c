@@ -12,11 +12,10 @@
 #include "utest/openblas_utest.h"
 #include "common.h"
 
-
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZROT{
+struct DATA_ZROT {
     double x_test[DATASIZE * INCREMENT * 2];
     double y_test[DATASIZE * INCREMENT * 2];
     double x_verify[DATASIZE * INCREMENT * 2];
@@ -25,14 +24,6 @@ struct DATA_ZROT{
 
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZROT data_zrot;
-
-
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
 
 /**
  * Comapare results computed by zdrot and zaxpby 
@@ -43,7 +34,7 @@ static void rand_generate(double *a, blasint n)
  * param c specifies cosine
  * param s specifies sine
  * return norm of differences 
-*/
+ */
 static double check_zdrot(blasint n, blasint inc_x, blasint inc_y, double *c, double *s)
 {
     blasint i;
@@ -54,12 +45,12 @@ static double check_zdrot(blasint n, blasint inc_x, blasint inc_y, double *c, do
     blasint inc_y_abs = labs(inc_y);
 
     // Fill vectors x, y
-    rand_generate(data_zrot.x_test, n * inc_x_abs * 2);
-    rand_generate(data_zrot.y_test, n * inc_y_abs * 2);
+    drand_generate(data_zrot.x_test, n * inc_x_abs * 2);
+    drand_generate(data_zrot.y_test, n * inc_y_abs * 2);
 
     if (inc_x == 0 && inc_y == 0) {
-        rand_generate(data_zrot.x_test, n * 2);
-        rand_generate(data_zrot.y_test, n * 2);
+        drand_generate(data_zrot.x_test, n * 2);
+        drand_generate(data_zrot.y_test, n * 2);
     }
 
     // Copy vector x for zaxpby
@@ -94,7 +85,6 @@ static double check_zdrot(blasint n, blasint inc_x, blasint inc_y, double *c, do
 
 /**
  * C API specific function
- * 
  * Comapare results computed by zdrot and zaxpby 
  * 
  * param n specifies size of vector x
@@ -103,7 +93,7 @@ static double check_zdrot(blasint n, blasint inc_x, blasint inc_y, double *c, do
  * param c specifies cosine
  * param s specifies sine
  * return norm of differences 
-*/
+ */
 static double c_api_check_zdrot(blasint n, blasint inc_x, blasint inc_y, double *c, double *s)
 {
     blasint i;
@@ -114,12 +104,12 @@ static double c_api_check_zdrot(blasint n, blasint inc_x, blasint inc_y, double 
     blasint inc_y_abs = labs(inc_y);
 
     // Fill vectors x, y
-    rand_generate(data_zrot.x_test, n * inc_x_abs * 2);
-    rand_generate(data_zrot.y_test, n * inc_y_abs * 2);
+    drand_generate(data_zrot.x_test, n * inc_x_abs * 2);
+    drand_generate(data_zrot.y_test, n * inc_y_abs * 2);
 
     if (inc_x == 0 && inc_y == 0) {
-        rand_generate(data_zrot.x_test, n * 2);
-        rand_generate(data_zrot.y_test, n * 2);
+        drand_generate(data_zrot.x_test, n * 2);
+        drand_generate(data_zrot.y_test, n * 2);
     }
 
     // Copy vector x for zaxpby
@@ -153,8 +143,7 @@ static double c_api_check_zdrot(blasint n, blasint inc_x, blasint inc_y, double 
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -163,7 +152,7 @@ static double c_api_check_zdrot(blasint n, blasint inc_x, blasint inc_y, double 
  * Stride of vector y is 0
  * c = 1.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, inc_x_0_inc_y_0)
 {
     blasint n = 100;
@@ -180,8 +169,7 @@ CTEST(zrot, inc_x_0_inc_y_0)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -190,7 +178,7 @@ CTEST(zrot, inc_x_0_inc_y_0)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_1_inc_y_1)
 {
     blasint n = 100;
@@ -207,8 +195,7 @@ CTEST(zrot, inc_x_1_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -217,7 +204,7 @@ CTEST(zrot, inc_x_1_inc_y_1)
  * Stride of vector y is -1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_neg_1_inc_y_neg_1)
 {
     blasint n = 100;
@@ -234,8 +221,7 @@ CTEST(zrot, inc_x_neg_1_inc_y_neg_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -244,7 +230,7 @@ CTEST(zrot, inc_x_neg_1_inc_y_neg_1)
  * Stride of vector y is 1
  * c = 3.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, inc_x_2_inc_y_1)
 {
     blasint n = 100;
@@ -261,8 +247,7 @@ CTEST(zrot, inc_x_2_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -271,7 +256,7 @@ CTEST(zrot, inc_x_2_inc_y_1)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_neg_2_inc_y_1)
 {
     blasint n = 100;
@@ -288,8 +273,7 @@ CTEST(zrot, inc_x_neg_2_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -298,7 +282,7 @@ CTEST(zrot, inc_x_neg_2_inc_y_1)
  * Stride of vector y is 2
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_1_inc_y_2)
 {
     blasint n = 100;
@@ -315,8 +299,7 @@ CTEST(zrot, inc_x_1_inc_y_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -325,7 +308,7 @@ CTEST(zrot, inc_x_1_inc_y_2)
  * Stride of vector y is -2
  * c = 2.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_1_inc_y_neg_2)
 {
     blasint n = 100;
@@ -342,8 +325,7 @@ CTEST(zrot, inc_x_1_inc_y_neg_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -352,7 +334,7 @@ CTEST(zrot, inc_x_1_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 1.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, inc_x_2_inc_y_2)
 {
     blasint n = 100;
@@ -369,8 +351,7 @@ CTEST(zrot, inc_x_2_inc_y_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -379,7 +360,7 @@ CTEST(zrot, inc_x_2_inc_y_2)
  * Stride of vector y is 2
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_neg_2_inc_y_neg_2)
 {
     blasint n = 100;
@@ -396,8 +377,7 @@ CTEST(zrot, inc_x_neg_2_inc_y_neg_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -406,7 +386,7 @@ CTEST(zrot, inc_x_neg_2_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 0.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, inc_x_2_inc_y_2_c_zero)
 {
     blasint n = 100;
@@ -423,8 +403,7 @@ CTEST(zrot, inc_x_2_inc_y_2_c_zero)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -433,7 +412,7 @@ CTEST(zrot, inc_x_2_inc_y_2_c_zero)
  * Stride of vector y is 2
  * c = 1.0
  * s = 0.0
-*/
+ */
 CTEST(zrot, inc_x_2_inc_y_2_s_zero)
 {
     blasint n = 100;
@@ -450,8 +429,7 @@ CTEST(zrot, inc_x_2_inc_y_2_s_zero)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -460,7 +438,7 @@ CTEST(zrot, inc_x_2_inc_y_2_s_zero)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, check_n_zero)
 {
     blasint n = 0;
@@ -477,8 +455,7 @@ CTEST(zrot, check_n_zero)
 }
 
 /**
- * C API specific test
- * 
+ * C API specific test 
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -487,7 +464,7 @@ CTEST(zrot, check_n_zero)
  * Stride of vector y is 0
  * c = 1.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_0_inc_y_0)
 {
     blasint n = 100;
@@ -505,7 +482,6 @@ CTEST(zrot, c_api_inc_x_0_inc_y_0)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -514,7 +490,7 @@ CTEST(zrot, c_api_inc_x_0_inc_y_0)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_1_inc_y_1)
 {
     blasint n = 100;
@@ -532,7 +508,6 @@ CTEST(zrot, c_api_inc_x_1_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -541,7 +516,7 @@ CTEST(zrot, c_api_inc_x_1_inc_y_1)
  * Stride of vector y is -1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_neg_1_inc_y_neg_1)
 {
     blasint n = 100;
@@ -559,7 +534,6 @@ CTEST(zrot, c_api_inc_x_neg_1_inc_y_neg_1)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -568,7 +542,7 @@ CTEST(zrot, c_api_inc_x_neg_1_inc_y_neg_1)
  * Stride of vector y is 1
  * c = 3.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_2_inc_y_1)
 {
     blasint n = 100;
@@ -586,7 +560,6 @@ CTEST(zrot, c_api_inc_x_2_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -595,7 +568,7 @@ CTEST(zrot, c_api_inc_x_2_inc_y_1)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_neg_2_inc_y_1)
 {
     blasint n = 100;
@@ -613,7 +586,6 @@ CTEST(zrot, c_api_inc_x_neg_2_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -622,7 +594,7 @@ CTEST(zrot, c_api_inc_x_neg_2_inc_y_1)
  * Stride of vector y is 2
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_1_inc_y_2)
 {
     blasint n = 100;
@@ -640,7 +612,6 @@ CTEST(zrot, c_api_inc_x_1_inc_y_2)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -649,7 +620,7 @@ CTEST(zrot, c_api_inc_x_1_inc_y_2)
  * Stride of vector y is -2
  * c = 2.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_1_inc_y_neg_2)
 {
     blasint n = 100;
@@ -667,7 +638,6 @@ CTEST(zrot, c_api_inc_x_1_inc_y_neg_2)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -676,7 +646,7 @@ CTEST(zrot, c_api_inc_x_1_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 1.0
  * s = 2.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_2_inc_y_2)
 {
     blasint n = 100;
@@ -694,7 +664,6 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -703,7 +672,7 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2)
  * Stride of vector y is 2
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_neg_2_inc_y_neg_2)
 {
     blasint n = 100;
@@ -721,7 +690,6 @@ CTEST(zrot, c_api_inc_x_neg_2_inc_y_neg_2)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -730,7 +698,7 @@ CTEST(zrot, c_api_inc_x_neg_2_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 0.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_2_inc_y_2_c_zero)
 {
     blasint n = 100;
@@ -748,7 +716,6 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2_c_zero)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -757,7 +724,7 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2_c_zero)
  * Stride of vector y is 2
  * c = 1.0
  * s = 0.0
-*/
+ */
 CTEST(zrot, c_api_inc_x_2_inc_y_2_s_zero)
 {
     blasint n = 100;
@@ -775,7 +742,6 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2_s_zero)
 
 /**
  * C API specific test
- *
  * Test zrot by comparing it with zaxpby.
  * Test with the following options:
  * 
@@ -784,7 +750,7 @@ CTEST(zrot, c_api_inc_x_2_inc_y_2_s_zero)
  * Stride of vector y is 1
  * c = 1.0
  * s = 1.0
-*/
+ */
 CTEST(zrot, c_api_check_n_zero)
 {
     blasint n = 0;

@@ -25,15 +25,7 @@ struct DATA_CGBMV {
 };
 
 #ifdef BUILD_COMPLEX
-
 static struct DATA_CGBMV data_cgbmv;
-
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
 
 /** 
  * Transform full-storage band matrix A to band-packed storage mode.
@@ -126,9 +118,9 @@ static float check_cgbmv(char trans, blasint m, blasint n, blasint kl, blasint k
         lenc = m;
     }
     
-    rand_generate(data_cgbmv.matrix, m * n * 2);
-    rand_generate(data_cgbmv.b_test, 2 * (1 + (lenb - 1) * inc_b));
-    rand_generate(data_cgbmv.c_test, 2 * (1 + (lenc - 1) * inc_c));
+    srand_generate(data_cgbmv.matrix, m * n * 2);
+    srand_generate(data_cgbmv.b_test, 2 * (1 + (lenb - 1) * inc_b));
+    srand_generate(data_cgbmv.c_test, 2 * (1 + (lenc - 1) * inc_c));
 
     for (i = 0; i < 2 * (1 + (lenc - 1) * inc_c); i++)
         data_cgbmv.c_verify[i] = data_cgbmv.c_test[i];
@@ -163,9 +155,8 @@ CTEST(cgbmv, trans_D)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 
@@ -183,9 +174,8 @@ CTEST(cgbmv, trans_O)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 
@@ -203,9 +193,8 @@ CTEST(cgbmv, trans_S)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 
@@ -223,9 +212,8 @@ CTEST(cgbmv, trans_U)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 
@@ -243,9 +231,8 @@ CTEST(cgbmv, trans_C)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 
@@ -263,9 +250,8 @@ CTEST(cgbmv, trans_R)
 
     float alpha[] = {7.0f, 1.0f};
     float beta[] = {1.5f, -1.5f};
-    float norm;
 
-    norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    float norm = check_cgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0f, norm, SINGLE_TOL);
 }
 #endif

@@ -14,65 +14,14 @@
 
 #define DATASIZE 100
 
-struct DATA_DOMATCOPY{
-    double A_test[DATASIZE * DATASIZE];
-    double B_test[DATASIZE * DATASIZE];
+struct DATA_DOMATCOPY {
+    double a_test[DATASIZE * DATASIZE];
+    double b_test[DATASIZE * DATASIZE];
     double b_verify[DATASIZE * DATASIZE];
 };
 
 #ifdef BUILD_DOUBLE
 static struct DATA_DOMATCOPY data_domatcopy;
-
-/**
- * Transpose matrix out-of-place
- *
- * param rows specifies number of rows of A and number of columns of B
- * param cols specifies number of columns of A and number of rows of B
- * param alpha specifies scaling factor for matrix B
- * param a - buffer holding input matrix A
- * param lda - leading dimension of the matrix A
- * param b - buffer holding output matrix B
- * param ldb - leading dimension of the matrix B
- */
-static void transpose(blasint rows, blasint cols, double alpha, double* a, int lda, 
-                      double* b, blasint ldb)
-{
-    blasint i, j;
-    for (i = 0; i != cols; i++)
-    {
-        for (j = 0; j != rows; j++)
-            b[i*ldb+j] = alpha*a[j*lda+i];
-    }
-}
-
-/**
- * Copy matrix from A to B
- *
- * param rows specifies number of rows of A and B
- * param cols specifies number of columns of A and B
- * param alpha specifies scaling factor for matrix B
- * param a - buffer holding input matrix A
- * param lda - leading dimension of the matrix A
- * param b - buffer holding output matrix B
- * param ldb - leading dimension of the matrix B
- */
-static void copy(blasint rows, blasint cols, double alpha, double* a, int lda, 
-                      double* b, blasint ldb)
-{
-    blasint i, j;
-    for (i = 0; i != rows; i++)
-    {
-        for (j = 0; j != cols; j++)
-            b[i*ldb+j] = alpha*a[i*lda+j];
-    }
-}
-
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
 
 /**
  * Comapare results computed by domatcopy and reference func
@@ -91,13 +40,10 @@ static void rand_generate(double *a, blasint n)
 static double check_domatcopy(char api, char order, char trans, blasint rows, blasint cols, double alpha, 
                              blasint lda, blasint ldb)
 {
-    blasint i, j;
     blasint b_rows, b_cols;
     blasint m, n;
-    blasint inc = 1;
     enum CBLAS_ORDER corder;
     enum CBLAS_TRANSPOSE ctrans;
-    double norm = 0.0;
 
     if (order == 'C') {
         m = cols; n = rows;
@@ -113,18 +59,18 @@ static double check_domatcopy(char api, char order, char trans, blasint rows, bl
         b_rows = m; b_cols = n;
     }
 
-    rand_generate(data_domatcopy.A_test, lda*m);
+    drand_generate(data_domatcopy.a_test, lda*m);
 
     if (trans == 'T' || trans == 'C') {
-        transpose(m, n, alpha, data_domatcopy.A_test, lda, data_domatcopy.b_verify, ldb);
+        dtranspose(m, n, alpha, data_domatcopy.a_test, lda, data_domatcopy.b_verify, ldb);
     } 
     else {
-        copy(m, n, alpha, data_domatcopy.A_test, lda, data_domatcopy.b_verify, ldb);
+        dcopy(m, n, alpha, data_domatcopy.a_test, lda, data_domatcopy.b_verify, ldb);
     }
 
     if (api == 'F') {
-        BLASFUNC(domatcopy)(&order, &trans, &rows, &cols, &alpha, data_domatcopy.A_test, 
-                            &lda, data_domatcopy.B_test, &ldb);
+        BLASFUNC(domatcopy)(&order, &trans, &rows, &cols, &alpha, data_domatcopy.a_test, 
+                            &lda, data_domatcopy.b_test, &ldb);
     }
     else {
         if (order == 'C') corder = CblasColMajor;
@@ -133,19 +79,11 @@ static double check_domatcopy(char api, char order, char trans, blasint rows, bl
         if (trans == 'N') ctrans = CblasNoTrans;
         if (trans == 'C') ctrans = CblasConjTrans;
         if (trans == 'R') ctrans = CblasConjNoTrans;
-        cblas_domatcopy(corder, ctrans, rows, cols, alpha, data_domatcopy.A_test, 
-                    lda, data_domatcopy.B_test, ldb);
-    }
-
-    for(i = 0; i < b_rows; i++)
-    {
-        for (j = 0; j < b_cols; j++)
-            data_domatcopy.B_test[i*ldb+j] -= data_domatcopy.b_verify[i*ldb+j];
-
-        norm += BLASFUNC(dnrm2)(&b_cols, data_domatcopy.B_test+ldb*i, &inc);
+        cblas_domatcopy(corder, ctrans, rows, cols, alpha, data_domatcopy.a_test, 
+                    lda, data_domatcopy.b_test, ldb);
     }
     
-    return norm/(double)(b_rows);
+    return dmatrix_difference(data_domatcopy.b_test, data_domatcopy.b_verify, b_cols, b_rows, ldb);
 }
 
 /**
@@ -169,13 +107,14 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 
     set_xerbla("DOMATCOPY", expected_info);
 
-    BLASFUNC(domatcopy)(&order, &trans, &rows, &cols, &alpha, data_domatcopy.A_test, 
-                        &lda, data_domatcopy.B_test, &ldb);
+    BLASFUNC(domatcopy)(&order, &trans, &rows, &cols, &alpha, data_domatcopy.a_test, 
+                        &lda, data_domatcopy.b_test, &ldb);
 
     return check_error();
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -191,14 +130,14 @@ CTEST(domatcopy, colmajor_trans_col_100_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -214,14 +153,14 @@ CTEST(domatcopy, colmajor_notrans_col_100_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -237,14 +176,14 @@ CTEST(domatcopy, colmajor_trans_col_50_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific tests
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -260,14 +199,14 @@ CTEST(domatcopy, colmajor_notrans_col_50_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -283,14 +222,14 @@ CTEST(domatcopy, colmajor_trans_col_100_row_50)
     char order = 'C';
     char trans = 'T';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -306,14 +245,14 @@ CTEST(domatcopy, colmajor_notrans_col_100_row_50)
     char order = 'C';
     char trans = 'N';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -329,14 +268,14 @@ CTEST(domatcopy, rowmajor_trans_col_100_row_100)
     char order = 'R';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -352,14 +291,14 @@ CTEST(domatcopy, rowmajor_notrans_col_100_row_100)
     char order = 'R';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -375,14 +314,14 @@ CTEST(domatcopy, rowmajor_conjtrans_col_100_row_50)
     char order = 'R';
     char trans = 'C'; // same as trans for real matrix
     double alpha = 2.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -398,14 +337,14 @@ CTEST(domatcopy, rowmajor_notrans_col_50_row_100)
     char order = 'R';
     char trans = 'N'; 
     double alpha = 2.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -422,14 +361,14 @@ CTEST(domatcopy, rowmajor_trans_col_27_row_27)
     char order = 'R';
     char trans = 'T'; 
     double alpha = 1.5;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test domatcopy by comparing it against refernce
  * with the following options:
  *
@@ -445,9 +384,8 @@ CTEST(domatcopy, rowmajor_notrans_col_100_row_50)
     char order = 'R';
     char trans = 'N'; 
     double alpha = 0.0;
-    double norm;
 
-    norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('F', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -469,9 +407,8 @@ CTEST(domatcopy, c_api_colmajor_trans_col_100_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -493,9 +430,8 @@ CTEST(domatcopy, c_api_colmajor_notrans_col_100_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -517,9 +453,8 @@ CTEST(domatcopy, c_api_rowmajor_trans_col_100_row_100)
     char order = 'R';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -541,9 +476,8 @@ CTEST(domatcopy, c_api_rowmajor_notrans_col_100_row_100)
     char order = 'R';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
+    double norm = check_domatcopy('C', order, trans, m, n, alpha, lda, ldb);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -559,9 +493,8 @@ CTEST(domatcopy, xerbla_invalid_order)
     char order = 'O';
     char trans = 'T';
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -576,9 +509,8 @@ CTEST(domatcopy, xerbla_invalid_trans)
     char order = 'C';
     char trans = 'O';
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -593,9 +525,8 @@ CTEST(domatcopy, xerbla_invalid_rows)
     char order = 'C';
     char trans = 'T';
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -610,9 +541,8 @@ CTEST(domatcopy, xerbla_invalid_cols)
     char order = 'C';
     char trans = 'T';
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -628,9 +558,8 @@ CTEST(domatcopy, xerbla_rowmajor_invalid_lda)
     char order = 'R';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -646,9 +575,8 @@ CTEST(domatcopy, xerbla_colmajor_invalid_lda)
     char order = 'C';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -664,9 +592,8 @@ CTEST(domatcopy, xerbla_rowmajor_notrans_invalid_ldb)
     char order = 'R';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -682,9 +609,8 @@ CTEST(domatcopy, xerbla_rowmajor_trans_invalid_ldb)
     char order = 'R';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -700,9 +626,8 @@ CTEST(domatcopy, xerbla_colmajor_notrans_invalid_ldb)
     char order = 'C';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -718,9 +643,8 @@ CTEST(domatcopy, xerbla_colmajor_trans_invalid_ldb)
     char order = 'C';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, ldb, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 #endif

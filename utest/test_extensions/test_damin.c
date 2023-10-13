@@ -16,6 +16,10 @@
 #define INCREMENT 2
 
 #ifdef BUILD_DOUBLE
+
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -27,6 +31,9 @@ CTEST(damin, bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -39,6 +46,9 @@ CTEST(damin, step_zero){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_1){
    blasint N = 1, inc = 1;
    double x[] = {1.1};
@@ -47,6 +57,9 @@ CTEST(damin, positive_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_1){
    blasint N = 1, inc = 1;
    double x[] = {-1.1};
@@ -55,6 +68,9 @@ CTEST(damin, negative_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_1){
    blasint N = 1, inc = 2;
    double x[] = {1.1, 0.0};
@@ -63,6 +79,9 @@ CTEST(damin, positive_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_1){
    blasint N = 1, inc = 2;
    double x[] = {-1.1, 0.0};
@@ -71,6 +90,9 @@ CTEST(damin, negative_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_2){
    blasint N = 2, inc = 1;
    double x[] = {1.1, 1.0};
@@ -79,6 +101,9 @@ CTEST(damin, positive_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_2){
    blasint N = 2, inc = 1;
    double x[] = {-1.1, 1.0};
@@ -87,6 +112,9 @@ CTEST(damin, negative_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_2){
    blasint N = 2, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 0.0};
@@ -95,6 +123,9 @@ CTEST(damin, positive_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_2){
    blasint N = 2, inc = 2;
    double x[] = {-1.1, 0.0, 1.0, 0.0};
@@ -103,6 +134,9 @@ CTEST(damin, negative_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_3){
    blasint N = 3, inc = 1;
    double x[] = {1.1, 1.0, 2.2};
@@ -111,6 +145,9 @@ CTEST(damin, positive_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_3){
    blasint N = 3, inc = 1;
    double x[] = {-1.1, 1.0, -2.2};
@@ -119,6 +156,9 @@ CTEST(damin, negative_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_3){
    blasint N = 3, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 0.0, 2.2, 0.0};
@@ -127,6 +167,9 @@ CTEST(damin, positive_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_3){
    blasint N = 3, inc = 2;
    double x[] = {-1.1, 0.0, 1.0, 0.0, -2.2, 0.0};
@@ -135,6 +178,9 @@ CTEST(damin, negative_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_4){
    blasint N = 4, inc = 1;
    double x[] = {1.1, 1.0, 2.2, 3.3};
@@ -143,6 +189,9 @@ CTEST(damin, positive_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_4){
    blasint N = 4, inc = 1;
    double x[] = {-1.1, 1.0, -2.2, -3.3};
@@ -151,6 +200,9 @@ CTEST(damin, negative_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_4){
    blasint N = 4, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 0.0, 2.2, 0.0, 3.3, 0.0};
@@ -159,6 +211,9 @@ CTEST(damin, positive_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_4){
    blasint N = 4, inc = 2;
    double x[] = {-1.1, 0.0, 1.0, 0.0, -2.2, 0.0, -3.3, 0.0};
@@ -167,6 +222,9 @@ CTEST(damin, negative_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_5){
    blasint N = 5, inc = 1;
    double x[] = {1.1, 1.0, 2.2, 3.3, 0.0};
@@ -175,6 +233,9 @@ CTEST(damin, positive_step_1_N_5){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_5){
    blasint N = 5, inc = 1;
    double x[] = {-1.1, 1.0, -2.2, -3.3, 0.0};
@@ -183,6 +244,9 @@ CTEST(damin, negative_step_1_N_5){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_5){
    blasint N = 5, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 0.0, 2.2, 0.0, 3.3, 0.0, 0.0, 0.0};
@@ -191,6 +255,9 @@ CTEST(damin, positive_step_2_N_5){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_5){
    blasint N = 5, inc = 2;
    double x[] = {-1.1, 0.0, 1.0, 0.0, -2.2, 0.0, -3.3, 0.0, 0.0, 0.0};
@@ -199,6 +266,9 @@ CTEST(damin, negative_step_2_N_5){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_1_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -212,6 +282,9 @@ CTEST(damin, positive_step_1_N_70){
    ASSERT_DBL_NEAR_TOL(0.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_1_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -225,6 +298,9 @@ CTEST(damin, negative_step_1_N_70){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, positive_step_2_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -238,6 +314,9 @@ CTEST(damin, positive_step_2_N_70){
    ASSERT_DBL_NEAR_TOL(1.0, amin, DOUBLE_EPS);
 }
 
+/**
+ * Test damin by comparing it against pre-calculated values
+ */
 CTEST(damin, negative_step_2_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;

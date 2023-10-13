@@ -28,13 +28,6 @@ struct DATA_ZGBMV {
 
 static struct DATA_ZGBMV data_zgbmv;
 
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
 /** 
  * Transform full-storage band matrix A to band-packed storage mode.
  * 
@@ -73,7 +66,7 @@ static void transform_to_band_storage(blasint m, blasint n, blasint kl,
  * output param band_matrix - buffer for full-storage band matrix.
  * param matrix - buffer holding input general matrix
  * param ldm - specifies the leading of input general matrix
-*/
+ */
 static void get_band_matrix(blasint m, blasint n, blasint kl, blasint ku, 
                             double *band_matrix, double *matrix, blasint ldm)
 {
@@ -126,9 +119,9 @@ static double check_zgbmv(char trans, blasint m, blasint n, blasint kl, blasint 
         lenc = m;
     }
 
-    rand_generate(data_zgbmv.matrix, m * n * 2);
-    rand_generate(data_zgbmv.b_test, 2 * (1 + (lenb - 1) * inc_b));
-    rand_generate(data_zgbmv.c_test, 2 * (1 + (lenc - 1) * inc_c));
+    drand_generate(data_zgbmv.matrix, m * n * 2);
+    drand_generate(data_zgbmv.b_test, 2 * (1 + (lenb - 1) * inc_b));
+    drand_generate(data_zgbmv.c_test, 2 * (1 + (lenc - 1) * inc_c));
 
     for (i = 0; i < 2 * (1 + (lenc - 1) * inc_c); i++)
         data_zgbmv.c_verify[i] = data_zgbmv.c_test[i];
@@ -163,9 +156,8 @@ CTEST(zgbmv, trans_D)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 
@@ -183,9 +175,8 @@ CTEST(zgbmv, trans_O)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 
@@ -203,9 +194,8 @@ CTEST(zgbmv, trans_S)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 
@@ -223,9 +213,8 @@ CTEST(zgbmv, trans_U)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 
@@ -243,9 +232,8 @@ CTEST(zgbmv, trans_C)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 
@@ -263,9 +251,8 @@ CTEST(zgbmv, trans_R)
 
     double alpha[] = {7.0, 1.0};
     double beta[] = {1.5, -1.5};
-    double norm;
 
-    norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgbmv(trans, m, n, kl, ku, alpha, lda, inc_b, beta, inc_c);
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
 #endif

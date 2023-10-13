@@ -11,12 +11,12 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZGEMM
-{
+struct DATA_ZGEMM {
 	double a_test[DATASIZE * DATASIZE * 2];
     double a_verify[DATASIZE * DATASIZE * 2];
 	double b_test[DATASIZE * DATASIZE * 2];
@@ -24,42 +24,9 @@ struct DATA_ZGEMM
     double c_test[DATASIZE * DATASIZE * 2];
 	double c_verify[DATASIZE * DATASIZE * 2];
 };
+
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZGEMM data_zgemm;
-
-static void rand_generate(double *a, blasint n)
-{
-	blasint i;
-	for (i = 0; i < n; i++)
-		a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
- * Find difference between two rectangle matrix
- * return norm of differences
- */
-double dmatrix_difference(double *a, double *b, blasint cols, blasint rows, blasint ld)
-{
-    blasint i = 0;
-    blasint j = 0;
-    blasint inc = 1;
-    double norm = 0.0;
-
-    double *a_ptr = a;
-    double *b_ptr = b;
-
-    for(i = 0; i < rows; i++)
-    {
-        for (j = 0; j < cols; j++) {
-            a_ptr[j] -= b_ptr[j];
-        }
-        norm += cblas_dnrm2(cols, a_ptr, inc);
-        
-        a_ptr += ld;
-        b_ptr += ld;
-    }
-    return norm/(double)(rows);
-}
 
 /**
  * Test zgemm with the conjugate matrices by conjugating and not transposed matrices
@@ -96,9 +63,9 @@ static double check_zgemm(char transa, char transb, blasint m, blasint n, blasin
         brows = k; bcols = n;
     }
 
-	rand_generate(data_zgemm.a_test, arows * lda * 2);
-	rand_generate(data_zgemm.b_test, brows * ldb * 2);
-    rand_generate(data_zgemm.c_test, n * ldc * 2);
+	drand_generate(data_zgemm.a_test, arows * lda * 2);
+	drand_generate(data_zgemm.b_test, brows * ldb * 2);
+    drand_generate(data_zgemm.c_test, n * ldc * 2);
 
 	for (i = 0; i < arows * lda * 2; i++)
 		data_zgemm.a_verify[i] = data_zgemm.a_test[i];

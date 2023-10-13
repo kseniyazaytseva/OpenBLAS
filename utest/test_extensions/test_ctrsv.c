@@ -11,26 +11,20 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 300
 #define INCREMENT 2
 
-struct DATA_CTRSV
-{
+struct DATA_CTRSV {
 	float a_test[DATASIZE * DATASIZE * 2];
 	float a_verify[DATASIZE * DATASIZE * 2];
 	float x_test[DATASIZE * INCREMENT * 2];
 	float x_verify[DATASIZE * INCREMENT * 2];
 };
+
 #ifdef BUILD_COMPLEX
 static struct DATA_CTRSV data_ctrsv;
-
-static void rand_generate(float *a, blasint n)
-{
-	blasint i;
-	for (i = 0; i < n; i++)
-		a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
 
 /**
  * Test ctrsv with the conjugate and not-transposed matrix A by conjugating matrix A
@@ -50,8 +44,8 @@ static float check_ctrsv(char uplo, char trans, char diag, blasint n, blasint ld
 	float alpha_conj[] = {1.0f, 0.0f}; 
 	char trans_verify = trans;
 
-	rand_generate(data_ctrsv.a_test, n * lda * 2);
-	rand_generate(data_ctrsv.x_test, n * incx * 2);
+	srand_generate(data_ctrsv.a_test, n * lda * 2);
+	srand_generate(data_ctrsv.x_test, n * incx * 2);
 
 	for (i = 0; i < n * lda * 2; i++)
 		data_ctrsv.a_verify[i] = data_ctrsv.a_test[i];

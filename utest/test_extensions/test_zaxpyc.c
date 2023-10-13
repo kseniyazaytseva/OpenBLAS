@@ -10,12 +10,12 @@
  */
 
 #include "utest/openblas_utest.h"
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZAXPYC
-{
+struct DATA_ZAXPYC {
 	double x_test[DATASIZE * INCREMENT * 2];
 	double x_verify[DATASIZE * INCREMENT * 2];
 	double y_test[DATASIZE * INCREMENT * 2];
@@ -23,26 +23,6 @@ struct DATA_ZAXPYC
 };
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZAXPYC data_zaxpyc;
-
-/**
- * Generate random vector stored in one-dimensional array
- */
-static void rand_generate(double *a, blasint n)
-{
-	blasint i;
-	for (i = 0; i < n; i++)
-		a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
- * Conjugate vector stored in one-dimensional array
- */
-static void conjugate(blasint n, double *a, blasint inc)
-{
-	blasint i;
-	for (i = 1; i < n * 2 * inc; i += 2 * inc)
-		a[i] *= -1.0;
-}
 
 /**
  * Test zaxpyc by conjugating vector x and comparing with zaxpy.
@@ -58,8 +38,8 @@ static double check_zaxpyc(blasint n, double *alpha, blasint incx, blasint incy)
 {
 	blasint i;
 
-	rand_generate(data_zaxpyc.x_test, n * incx * 2);
-	rand_generate(data_zaxpyc.y_test, n * incy * 2);
+	drand_generate(data_zaxpyc.x_test, n * incx * 2);
+	drand_generate(data_zaxpyc.y_test, n * incy * 2);
 
 	for (i = 0; i < n * incx * 2; i++)
 		data_zaxpyc.x_verify[i] = data_zaxpyc.x_test[i];
@@ -67,7 +47,7 @@ static double check_zaxpyc(blasint n, double *alpha, blasint incx, blasint incy)
 	for (i = 0; i < n * incy * 2; i++)
 		data_zaxpyc.y_verify[i] = data_zaxpyc.y_test[i];
 
-	conjugate(n, data_zaxpyc.x_verify, incx);
+	zconjugate_vector(n, incx, data_zaxpyc.x_verify);
 
 	BLASFUNC(zaxpy)
 	(&n, alpha, data_zaxpyc.x_verify, &incx,

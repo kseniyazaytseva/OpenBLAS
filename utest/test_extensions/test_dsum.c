@@ -16,6 +16,11 @@
 #define INCREMENT 2
 
 #ifdef BUILD_DOUBLE
+
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -27,6 +32,10 @@ CTEST(dsum, bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -39,6 +48,10 @@ CTEST(dsum, step_zero){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_1){
    blasint N = 1, inc = 1;
    double x[] = {1.1};
@@ -47,6 +60,10 @@ CTEST(dsum, step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_1){
    blasint N = 1, inc = 2;
    double x[] = {1.1, 0.0};
@@ -55,6 +72,10 @@ CTEST(dsum, step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_2){
    blasint N = 2, inc = 1;
    double x[] = {1.1, -1.0};
@@ -63,6 +84,10 @@ CTEST(dsum, step_1_N_2){
    ASSERT_DBL_NEAR_TOL(0.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_2){
    blasint N = 2, inc = 2;
    double x[] = {1.1, -1.5, 1.0, 1.0};
@@ -71,6 +96,10 @@ CTEST(dsum, step_2_N_2){
    ASSERT_DBL_NEAR_TOL(2.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_3){
    blasint N = 3, inc = 1;
    double x[] = {1.1, 1.0, 2.2};
@@ -79,6 +108,10 @@ CTEST(dsum, step_1_N_3){
    ASSERT_DBL_NEAR_TOL(4.3, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_3){
    blasint N = 3, inc = 2;
    double x[] = {1.1, 0.0, -1.0, -3.0, 2.2, 3.0};
@@ -87,6 +120,10 @@ CTEST(dsum, step_2_N_3){
    ASSERT_DBL_NEAR_TOL(2.3, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_4){
    blasint N = 4, inc = 1;
    double x[] = {1.1, 1.0, -2.2, 3.3};
@@ -95,6 +132,10 @@ CTEST(dsum, step_1_N_4){
    ASSERT_DBL_NEAR_TOL(3.2, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_4){
    blasint N = 4, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 2.0, 2.2, 2.7, -3.3, -5.9};
@@ -103,6 +144,10 @@ CTEST(dsum, step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_5){
    blasint N = 5, inc = 1;
    double x[] = {0.0, 1.0, 2.2, 3.3, 0.0};
@@ -111,6 +156,10 @@ CTEST(dsum, step_1_N_5){
    ASSERT_DBL_NEAR_TOL(6.5, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_5){
    blasint N = 5, inc = 2;
    double x[] = {0.0, 3.0, 1.0, -2.2, 2.2, -1.7, 3.3, 14.5, 0.0, -9.0};
@@ -119,6 +168,10 @@ CTEST(dsum, step_2_N_5){
    ASSERT_DBL_NEAR_TOL(6.5, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -130,6 +183,10 @@ CTEST(dsum, step_1_N_50){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * Fortran API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -141,6 +198,10 @@ CTEST(dsum, step_2_N_50){
    ASSERT_DBL_NEAR_TOL(50.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -152,6 +213,10 @@ CTEST(dsum, c_api_bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_zero){
    blasint i;
    blasint N = ELEMENTS, inc = 0;
@@ -164,6 +229,10 @@ CTEST(dsum, c_api_step_zero){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_1){
    blasint N = 1, inc = 1;
    double x[] = {1.1};
@@ -172,6 +241,10 @@ CTEST(dsum, c_api_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_1){
    blasint N = 1, inc = 2;
    double x[] = {1.1, 0.0};
@@ -180,6 +253,10 @@ CTEST(dsum, c_api_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(1.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_2){
    blasint N = 2, inc = 1;
    double x[] = {1.1, -1.0};
@@ -188,6 +265,10 @@ CTEST(dsum, c_api_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(0.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_2){
    blasint N = 2, inc = 2;
    double x[] = {1.1, -1.5, 1.0, 1.0};
@@ -196,6 +277,10 @@ CTEST(dsum, c_api_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(2.1, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_3){
    blasint N = 3, inc = 1;
    double x[] = {1.1, 1.0, 2.2};
@@ -204,6 +289,10 @@ CTEST(dsum, c_api_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(4.3, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_3){
    blasint N = 3, inc = 2;
    double x[] = {1.1, 0.0, -1.0, -3.0, 2.2, 3.0};
@@ -212,6 +301,10 @@ CTEST(dsum, c_api_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(2.3, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_4){
    blasint N = 4, inc = 1;
    double x[] = {1.1, 1.0, -2.2, 3.3};
@@ -220,6 +313,10 @@ CTEST(dsum, c_api_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(3.2, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_4){
    blasint N = 4, inc = 2;
    double x[] = {1.1, 0.0, 1.0, 2.0, 2.2, 2.7, -3.3, -5.9};
@@ -228,6 +325,10 @@ CTEST(dsum, c_api_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(1.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_5){
    blasint N = 5, inc = 1;
    double x[] = {0.0, 1.0, 2.2, 3.3, 0.0};
@@ -236,6 +337,10 @@ CTEST(dsum, c_api_step_1_N_5){
    ASSERT_DBL_NEAR_TOL(6.5, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_5){
    blasint N = 5, inc = 2;
    double x[] = {0.0, 3.0, 1.0, -2.2, 2.2, -1.7, 3.3, 14.5, 0.0, -9.0};
@@ -244,6 +349,10 @@ CTEST(dsum, c_api_step_2_N_5){
    ASSERT_DBL_NEAR_TOL(6.5, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_1_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -255,6 +364,10 @@ CTEST(dsum, c_api_step_1_N_50){
    ASSERT_DBL_NEAR_TOL(0.0, sum, DOUBLE_EPS);
 }
 
+/**
+ * C API specific test
+ * Test dsum by comparing it against pre-calculated values
+ */
 CTEST(dsum, c_api_step_2_N_50){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;

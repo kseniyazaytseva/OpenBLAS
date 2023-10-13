@@ -14,8 +14,7 @@
 
 #define DATASIZE 100
 
-struct DATA_CGEMMT
-{
+struct DATA_CGEMMT {
     float a_test[DATASIZE * DATASIZE * 2];
     float b_test[DATASIZE * DATASIZE * 2];
     float c_test[DATASIZE * DATASIZE * 2];
@@ -78,13 +77,6 @@ static void cgemmt_trusted(char api, enum CBLAS_ORDER order, char uplo, char tra
     }
 }
 
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
 /**
  * Comapare results computed by cgemmt and cgemmt_trusted
  *
@@ -134,9 +126,9 @@ static float check_cgemmt(char api, enum CBLAS_ORDER order, char uplo, char tran
         else b_cols = k;
     }
 
-    rand_generate(data_cgemmt.a_test, a_cols * lda * 2);
-    rand_generate(data_cgemmt.b_test, b_cols * ldb  * 2);
-    rand_generate(data_cgemmt.c_test, m * ldc * 2);
+    srand_generate(data_cgemmt.a_test, a_cols * lda * 2);
+    srand_generate(data_cgemmt.b_test, b_cols * ldb  * 2);
+    srand_generate(data_cgemmt.c_test, m * ldc * 2);
 
     for (i = 0; i < m * ldc * 2; i++)
         data_cgemmt.c_gemm[i] = data_cgemmt.c_verify[i] = data_cgemmt.c_test[i];
@@ -148,7 +140,7 @@ static float check_cgemmt(char api, enum CBLAS_ORDER order, char uplo, char tran
                          &lda, data_cgemmt.b_test, &ldb, beta, data_cgemmt.c_test, &ldc);
     else
         cblas_cgemmt(order, uplo, transa, transb, m, k, alpha, data_cgemmt.a_test, lda,
-                    data_cgemmt.b_test, ldb, beta, data_cgemmt.c_test, ldc);
+                     data_cgemmt.b_test, ldb, beta, data_cgemmt.c_test, ldc);
 
     for (i = 0; i < m * ldc * 2; i++)
         data_cgemmt.c_verify[i] -= data_cgemmt.c_test[i];
@@ -185,7 +177,7 @@ static int check_badargs(char api, enum CBLAS_ORDER order, char uplo, char trans
                          &lda, data_cgemmt.b_test, &ldb, beta, data_cgemmt.c_test, &ldc);
     else
         cblas_cgemmt(order, uplo, transa, transb, m, k, alpha, data_cgemmt.a_test, lda,
-                    data_cgemmt.b_test, ldb, beta, data_cgemmt.c_test, ldc);
+                     data_cgemmt.b_test, ldb, beta, data_cgemmt.c_test, ldc);
 
     return check_error();
 }
@@ -1590,9 +1582,8 @@ CTEST(cgemmt, xerbla_uplo_invalid)
     char transa = 'N', transb = 'N';
     char uplo = 'O';
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1609,9 +1600,8 @@ CTEST(cgemmt, xerbla_transa_invalid)
     char transa = 'O', transb = 'N';
     char uplo = 'U';
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1628,9 +1618,8 @@ CTEST(cgemmt, xerbla_transb_invalid)
     char transa = 'N', transb = 'O';
     char uplo = 'U';
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1647,9 +1636,8 @@ CTEST(cgemmt, xerbla_m_invalid)
     char transa = 'N', transb = 'N';
     char uplo = 'U';
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1666,9 +1654,8 @@ CTEST(cgemmt, xerbla_k_invalid)
     char transa = 'N', transb = 'N';
     char uplo = 'U';
     int expected_info = 5;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1685,9 +1672,8 @@ CTEST(cgemmt, xerbla_lda_invalid)
     char transa = 'T', transb = 'N';
     char uplo = 'U';
     int expected_info = 8;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1704,9 +1690,8 @@ CTEST(cgemmt, xerbla_ldb_invalid)
     char transa = 'N', transb = 'N';
     char uplo = 'U';
     int expected_info = 10;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1723,9 +1708,8 @@ CTEST(cgemmt, xerbla_ldc_invalid)
     char transa = 'T', transb = 'N';
     char uplo = 'U';
     int expected_info = 13;
-    int passed;
 
-    passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
+    int passed = check_badargs('F', CblasColMajor, uplo, transa, transb,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1740,9 +1724,8 @@ CTEST(cgemmt, xerbla_c_api_major_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 0;
-    int passed;
 
-    passed = check_badargs('C', 'O', CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', 'O', CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1757,9 +1740,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_uplo_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, 'O', CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, 'O', CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1774,9 +1756,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_transa_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, 'O', CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, 'O', CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1791,9 +1772,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_transb_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, 'O',
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, 'O',
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1808,9 +1788,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_m_invalid)
     blasint M = -1, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1825,9 +1804,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_k_invalid)
     blasint M = 50, K = -1;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 5;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1842,9 +1820,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_lda_invalid)
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 100, ldc = 50;
     int expected_info = 8;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1859,9 +1836,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_ldb_invalid)
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 10;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1876,9 +1852,8 @@ CTEST(cgemmt, xerbla_c_api_colmajor_ldc_invalid)
     blasint M = 100, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 13;
-    int passed;
 
-    passed = check_badargs('C', CblasColMajor, CblasUpper, CblasTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasColMajor, CblasUpper, CblasTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1893,9 +1868,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_uplo_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, 'O', CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, 'O', CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1910,9 +1884,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_transa_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, 'O', CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, 'O', CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1927,9 +1900,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_transb_invalid)
     blasint M = 50, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, 'O',
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, 'O',
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1944,9 +1916,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_m_invalid)
     blasint M = -1, K = 50;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1961,9 +1932,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_k_invalid)
     blasint M = 50, K = -1;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 5;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1978,9 +1948,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_lda_invalid)
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 8;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasNoTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -1995,9 +1964,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_ldb_invalid)
     blasint M = 50, K = 100;
     blasint lda = 50, ldb = 50, ldc = 50;
     int expected_info = 10;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasTrans, CblasTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasTrans, CblasTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
@@ -2012,9 +1980,8 @@ CTEST(cgemmt, xerbla_c_api_rowmajor_ldc_invalid)
     blasint M = 100, K = 50;
     blasint lda = 100, ldb = 100, ldc = 50;
     int expected_info = 13;
-    int passed;
 
-    passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasTrans, CblasNoTrans,
+    int passed = check_badargs('C', CblasRowMajor, CblasUpper, CblasTrans, CblasNoTrans,
                             M, K, lda, ldb, ldc, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }

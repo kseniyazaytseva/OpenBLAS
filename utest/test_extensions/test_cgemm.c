@@ -11,12 +11,12 @@
 
 #include "utest/openblas_utest.h"
 #include <cblas.h>
+#include "common.h"
 
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CGEMM
-{
+struct DATA_CGEMM {
 	float a_test[DATASIZE * DATASIZE * 2];
     float a_verify[DATASIZE * DATASIZE * 2];
 	float b_test[DATASIZE * DATASIZE * 2];
@@ -24,42 +24,9 @@ struct DATA_CGEMM
     float c_test[DATASIZE * DATASIZE * 2];
 	float c_verify[DATASIZE * DATASIZE * 2];
 };
+
 #ifdef BUILD_COMPLEX
 static struct DATA_CGEMM data_cgemm;
-
-static void rand_generate(float *a, blasint n)
-{
-	blasint i;
-	for (i = 0; i < n; i++)
-		a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
-/**
- * Find difference between two rectangle matrix
- * return norm of differences
- */
-float smatrix_difference(float *a, float *b, blasint cols, blasint rows, blasint ld)
-{
-    blasint i = 0;
-    blasint j = 0;
-    blasint inc = 1;
-    float norm = 0.0f;
-
-    float *a_ptr = a;
-    float *b_ptr = b;
-
-    for(i = 0; i < rows; i++)
-    {
-        for (j = 0; j < cols; j++) {
-            a_ptr[j] -= b_ptr[j];
-        }
-        norm += cblas_snrm2(cols, a_ptr, inc);
-        
-        a_ptr += ld;
-        b_ptr += ld;
-    }
-    return norm/(float)(rows);
-}
 
 /**
  * Test cgemm with the conjugate matrices by conjugating and not transposed matrices
@@ -96,9 +63,9 @@ static float check_cgemm(char transa, char transb, blasint m, blasint n, blasint
         brows = k; bcols = n;
     }
 
-	rand_generate(data_cgemm.a_test, arows * lda * 2);
-	rand_generate(data_cgemm.b_test, brows * ldb * 2);
-    rand_generate(data_cgemm.c_test, n * ldc * 2);
+	srand_generate(data_cgemm.a_test, arows * lda * 2);
+	srand_generate(data_cgemm.b_test, brows * ldb * 2);
+    srand_generate(data_cgemm.c_test, n * ldc * 2);
 
 	for (i = 0; i < arows * lda * 2; i++)
 		data_cgemm.a_verify[i] = data_cgemm.a_test[i];

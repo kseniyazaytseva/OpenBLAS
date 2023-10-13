@@ -15,26 +15,18 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CAXPBY{
+struct DATA_CAXPBY {
     float x_test[DATASIZE * INCREMENT * 2];
     float x_verify[DATASIZE * INCREMENT * 2];
     float y_test[DATASIZE * INCREMENT * 2];
     float y_verify[DATASIZE * INCREMENT * 2];
 };
+
 #ifdef BUILD_COMPLEX
 static struct DATA_CAXPBY data_caxpby;
 
 /**
- * Generate random vector stored in one-dimensional array
-*/
-static void rand_generate(float *alpha, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        alpha[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
-/**
+ * Fortran API specific function
  * Test caxpby by comparing it with cscal and caxpy.
  * Compare with the following options:
  * 
@@ -44,7 +36,7 @@ static void rand_generate(float *alpha, blasint n)
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static float check_caxpby(blasint n, float *alpha, blasint incx, float *beta, blasint incy)
 {
     blasint i;
@@ -54,8 +46,8 @@ static float check_caxpby(blasint n, float *alpha, blasint incx, float *beta, bl
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_caxpby.x_test, n * incx_abs * 2);
-    rand_generate(data_caxpby.y_test, n * incy_abs * 2);
+    srand_generate(data_caxpby.x_test, n * incx_abs * 2);
+    srand_generate(data_caxpby.y_test, n * incy_abs * 2);
 
     // Copy vector x for caxpy
     for (i = 0; i < n * incx_abs * 2; i++)
@@ -84,8 +76,7 @@ static float check_caxpby(blasint n, float *alpha, blasint incx, float *beta, bl
 }
 
 /**
- * C API specific function.
- * 
+ * C API specific function 
  * Test caxpby by comparing it with cscal and caxpy.
  * Compare with the following options:
  * 
@@ -95,7 +86,7 @@ static float check_caxpby(blasint n, float *alpha, blasint incx, float *beta, bl
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static float c_api_check_caxpby(blasint n, float *alpha, blasint incx, float *beta, blasint incy)
 {
     blasint i;
@@ -105,8 +96,8 @@ static float c_api_check_caxpby(blasint n, float *alpha, blasint incx, float *be
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_caxpby.x_test, n * incx_abs * 2);
-    rand_generate(data_caxpby.y_test, n * incy_abs * 2);
+    srand_generate(data_caxpby.x_test, n * incx_abs * 2);
+    srand_generate(data_caxpby.y_test, n * incy_abs * 2);
 
     // Copy vector x for caxpy
     for (i = 0; i < n * incx_abs * 2; i++)
@@ -135,13 +126,14 @@ static float c_api_check_caxpby(blasint n, float *alpha, blasint incx, float *be
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(caxpby, inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -154,13 +146,14 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(caxpby, inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -173,13 +166,14 @@ CTEST(caxpby, inc_x_2_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -192,13 +186,14 @@ CTEST(caxpby, inc_x_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -211,13 +206,14 @@ CTEST(caxpby, inc_x_2_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -230,13 +226,14 @@ CTEST(caxpby, inc_x_neg_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(caxpby, inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -249,13 +246,14 @@ CTEST(caxpby, inc_x_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(caxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -268,6 +266,7 @@ CTEST(caxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -275,7 +274,7 @@ CTEST(caxpby, inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(caxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -288,6 +287,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -295,7 +295,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(caxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -308,6 +308,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -316,7 +317,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(caxpby, inc_x_1_inc_y_1_N_100_a_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -329,6 +330,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_a_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -338,7 +340,7 @@ CTEST(caxpby, inc_x_1_inc_y_1_N_100_a_beta_zero)
  * Scalar alpha is zero
  * Scalar beta is zero
 */
-CTEST(caxpby, inc_x_1_inc_y_2_N_100_a_beta_zero)
+CTEST(caxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
     float alpha[] = {0.0f, 0.0f};
@@ -350,8 +352,9 @@ CTEST(caxpby, inc_x_1_inc_y_2_N_100_a_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(caxpby, check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;
@@ -365,14 +368,13 @@ CTEST(caxpby, check_n_zero)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -386,14 +388,13 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(caxpby, c_api_inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -407,14 +408,13 @@ CTEST(caxpby, c_api_inc_x_2_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -428,14 +428,13 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, c_api_inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -449,14 +448,13 @@ CTEST(caxpby, c_api_inc_x_2_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(caxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -470,14 +468,13 @@ CTEST(caxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(caxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -491,14 +488,13 @@ CTEST(caxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(caxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -512,7 +508,6 @@ CTEST(caxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -520,7 +515,7 @@ CTEST(caxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -534,7 +529,6 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -542,7 +536,7 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -556,7 +550,6 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -565,7 +558,7 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_a_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -579,7 +572,6 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_a_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test caxpby by comparing it with cscal and caxpy.
  * Test with the following options:
  * 
@@ -589,7 +581,7 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_1_N_100_a_beta_zero)
  * Scalar alpha is zero
  * Scalar beta is zero
 */
-CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100_a_beta_zero)
+CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
     float alpha[] = {0.0f, 0.0f};
@@ -602,9 +594,8 @@ CTEST(caxpby, c_api_inc_x_1_inc_y_2_N_100_a_beta_zero)
 
 /**
  * C API specific test
- * 
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(caxpby, c_api_check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;

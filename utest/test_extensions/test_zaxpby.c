@@ -15,7 +15,7 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZAXPBY{
+struct DATA_ZAXPBY {
     double x_test[DATASIZE * INCREMENT * 2];
     double x_verify[DATASIZE * INCREMENT * 2];
     double y_test[DATASIZE * INCREMENT * 2];
@@ -25,16 +25,7 @@ struct DATA_ZAXPBY{
 static struct DATA_ZAXPBY data_zaxpby;
 
 /**
- * Generate random vector stored in one-dimensional array
-*/
-static void rand_generate(double *alpha, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        alpha[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
+ * Fortran API specific function
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Compare with the following options:
  * 
@@ -44,7 +35,7 @@ static void rand_generate(double *alpha, blasint n)
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static double check_zaxpby(blasint n, double *alpha, blasint incx, double *beta, blasint incy)
 {
     blasint i;
@@ -54,8 +45,8 @@ static double check_zaxpby(blasint n, double *alpha, blasint incx, double *beta,
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_zaxpby.x_test, n * incx_abs * 2);
-    rand_generate(data_zaxpby.y_test, n * incy_abs * 2);
+    drand_generate(data_zaxpby.x_test, n * incx_abs * 2);
+    drand_generate(data_zaxpby.y_test, n * incy_abs * 2);
 
     // Copy vector x for zaxpy
     for (i = 0; i < n * incx_abs * 2; i++)
@@ -84,8 +75,7 @@ static double check_zaxpby(blasint n, double *alpha, blasint incx, double *beta,
 }
 
 /**
- * C API specific function.
- * 
+ * C API specific function
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Compare with the following options:
  * 
@@ -95,7 +85,7 @@ static double check_zaxpby(blasint n, double *alpha, blasint incx, double *beta,
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static double c_api_check_zaxpby(blasint n, double *alpha, blasint incx, double *beta, blasint incy)
 {
     blasint i;
@@ -105,8 +95,8 @@ static double c_api_check_zaxpby(blasint n, double *alpha, blasint incx, double 
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_zaxpby.x_test, n * incx_abs * 2);
-    rand_generate(data_zaxpby.y_test, n * incy_abs * 2);
+    drand_generate(data_zaxpby.x_test, n * incx_abs * 2);
+    drand_generate(data_zaxpby.y_test, n * incy_abs * 2);
 
     // Copy vector x for zaxpy
     for (i = 0; i < n * incx_abs * 2; i++)
@@ -135,13 +125,14 @@ static double c_api_check_zaxpby(blasint n, double *alpha, blasint incx, double 
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(zaxpby, inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -154,13 +145,14 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(zaxpby, inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -173,13 +165,14 @@ CTEST(zaxpby, inc_x_2_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -192,13 +185,14 @@ CTEST(zaxpby, inc_x_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -211,13 +205,14 @@ CTEST(zaxpby, inc_x_2_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -230,13 +225,14 @@ CTEST(zaxpby, inc_x_neg_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(zaxpby, inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -249,13 +245,14 @@ CTEST(zaxpby, inc_x_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(zaxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -268,6 +265,7 @@ CTEST(zaxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -275,7 +273,7 @@ CTEST(zaxpby, inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -288,6 +286,7 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -295,7 +294,7 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(zaxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -308,6 +307,7 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -316,7 +316,7 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -329,6 +329,7 @@ CTEST(zaxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -350,8 +351,9 @@ CTEST(zaxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(zaxpby, check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;
@@ -365,14 +367,13 @@ CTEST(zaxpby, check_n_zero)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -386,14 +387,13 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -407,14 +407,13 @@ CTEST(zaxpby, c_api_inc_x_2_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -428,14 +427,13 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -449,14 +447,13 @@ CTEST(zaxpby, c_api_inc_x_2_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -470,14 +467,13 @@ CTEST(zaxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -491,14 +487,13 @@ CTEST(zaxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -512,7 +507,6 @@ CTEST(zaxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -520,7 +514,7 @@ CTEST(zaxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -534,7 +528,6 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -542,7 +535,7 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -556,7 +549,6 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -565,7 +557,7 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -579,7 +571,6 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test zaxpby by comparing it with zscal and zaxpy.
  * Test with the following options:
  * 
@@ -602,9 +593,8 @@ CTEST(zaxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(zaxpby, c_api_check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;

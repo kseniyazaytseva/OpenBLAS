@@ -15,8 +15,9 @@
 #ifdef BUILD_COMPLEX
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, zero_a)
 {
     float sa[2] = {0.0f, 0.0f};
@@ -32,8 +33,9 @@ CTEST(crotg, zero_a)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, zero_b)
 {
     float sa[2] = {1.0f, 1.0f};
@@ -49,8 +51,9 @@ CTEST(crotg, zero_b)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, zero_real)
 {
     float sa[2] = {0.0f, 1.0f};
@@ -66,8 +69,9 @@ CTEST(crotg, zero_real)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, positive_real_positive_img)
 {
     float sa[2] = {3.0f, 4.0f};
@@ -83,8 +87,9 @@ CTEST(crotg, positive_real_positive_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, negative_real_positive_img)
 {
     float sa[2] = {-3.0f, 4.0f};
@@ -100,8 +105,9 @@ CTEST(crotg, negative_real_positive_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, positive_real_negative_img)
 {
     float sa[2] = {3.0f, -4.0f};
@@ -117,8 +123,9 @@ CTEST(crotg, positive_real_negative_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * Fortran API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, negative_real_negative_img)
 {
     float sa[2] = {-3.0f, -4.0f};
@@ -134,8 +141,9 @@ CTEST(crotg, negative_real_negative_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_zero_a)
 {
     float sa[2] = {0.0f, 0.0f};
@@ -151,8 +159,9 @@ CTEST(crotg, c_api_zero_a)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_zero_b)
 {
     float sa[2] = {1.0f, 1.0f};
@@ -168,8 +177,9 @@ CTEST(crotg, c_api_zero_b)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_zero_real)
 {
     float sa[2] = {0.0f, 1.0f};
@@ -185,8 +195,9 @@ CTEST(crotg, c_api_zero_real)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_positive_real_positive_img)
 {
     float sa[2] = {3.0f, 4.0f};
@@ -202,8 +213,9 @@ CTEST(crotg, c_api_positive_real_positive_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_negative_real_positive_img)
 {
     float sa[2] = {-3.0f, 4.0f};
@@ -219,8 +231,9 @@ CTEST(crotg, c_api_negative_real_positive_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_positive_real_negative_img)
 {
     float sa[2] = {3.0f, -4.0f};
@@ -236,8 +249,9 @@ CTEST(crotg, c_api_positive_real_negative_img)
 }
 
 /**
-* Test crotg by comparing it against pre-calculated values
-*/
+ * C API specific test
+ * Test crotg by comparing it against pre-calculated values
+ */
 CTEST(crotg, c_api_negative_real_negative_img)
 {
     float sa[2] = {-3.0f, -4.0f};

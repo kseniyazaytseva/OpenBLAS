@@ -16,7 +16,7 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_CROT{
+struct DATA_CROT {
     float x_test[DATASIZE * INCREMENT * 2];
     float y_test[DATASIZE * INCREMENT * 2];
     float x_verify[DATASIZE * INCREMENT * 2];
@@ -26,15 +26,8 @@ struct DATA_CROT{
 #ifdef BUILD_COMPLEX
 static struct DATA_CROT data_crot;
 
-
-static void rand_generate(float *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
 /**
+ * Fortran API specific function
  * Comapare results computed by csrot and caxpby 
  * 
  * param n specifies size of vector x
@@ -43,7 +36,7 @@ static void rand_generate(float *a, blasint n)
  * param c specifies cosine
  * param s specifies sine
  * return norm of differences 
-*/
+ */
 static float check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c, float *s)
 {
     blasint i;
@@ -54,12 +47,12 @@ static float check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c, floa
     blasint inc_y_abs = labs(inc_y);
 
     // Fill vectors x, y
-    rand_generate(data_crot.x_test, n * inc_x_abs * 2);
-    rand_generate(data_crot.y_test, n * inc_y_abs * 2);
+    srand_generate(data_crot.x_test, n * inc_x_abs * 2);
+    srand_generate(data_crot.y_test, n * inc_y_abs * 2);
 
     if (inc_x == 0 && inc_y == 0) {
-        rand_generate(data_crot.x_test, n * 2);
-        rand_generate(data_crot.y_test, n * 2);
+        srand_generate(data_crot.x_test, n * 2);
+        srand_generate(data_crot.y_test, n * 2);
     }
 
     // Copy vector x for caxpby
@@ -94,7 +87,6 @@ static float check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c, floa
 
 /**
  * C API specific function
- * 
  * Comapare results computed by csrot and caxpby 
  * 
  * param n specifies size of vector x
@@ -103,7 +95,7 @@ static float check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c, floa
  * param c specifies cosine
  * param s specifies sine
  * return norm of differences 
-*/
+ */
 static float c_api_check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c, float *s)
 {
     blasint i;
@@ -114,12 +106,12 @@ static float c_api_check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c
     blasint inc_y_abs = labs(inc_y);
 
     // Fill vectors x, y
-    rand_generate(data_crot.x_test, n * inc_x_abs * 2);
-    rand_generate(data_crot.y_test, n * inc_y_abs * 2);
+    srand_generate(data_crot.x_test, n * inc_x_abs * 2);
+    srand_generate(data_crot.y_test, n * inc_y_abs * 2);
 
     if (inc_x == 0 && inc_y == 0) {
-        rand_generate(data_crot.x_test, n * 2);
-        rand_generate(data_crot.y_test, n * 2);
+        srand_generate(data_crot.x_test, n * 2);
+        srand_generate(data_crot.y_test, n * 2);
     }
 
     // Copy vector x for caxpby
@@ -153,8 +145,7 @@ static float c_api_check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -163,7 +154,7 @@ static float c_api_check_csrot(blasint n, blasint inc_x, blasint inc_y, float *c
  * Stride of vector y is 0
  * c = 1.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, inc_x_0_inc_y_0)
 {
     blasint n = 100;
@@ -180,8 +171,7 @@ CTEST(crot, inc_x_0_inc_y_0)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -190,7 +180,7 @@ CTEST(crot, inc_x_0_inc_y_0)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_1_inc_y_1)
 {
     blasint n = 100;
@@ -207,8 +197,7 @@ CTEST(crot, inc_x_1_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -217,7 +206,7 @@ CTEST(crot, inc_x_1_inc_y_1)
  * Stride of vector y is -1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_neg_1_inc_y_neg_1)
 {
     blasint n = 100;
@@ -234,8 +223,7 @@ CTEST(crot, inc_x_neg_1_inc_y_neg_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -244,7 +232,7 @@ CTEST(crot, inc_x_neg_1_inc_y_neg_1)
  * Stride of vector y is 1
  * c = 3.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, inc_x_2_inc_y_1)
 {
     blasint n = 100;
@@ -261,8 +249,7 @@ CTEST(crot, inc_x_2_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -271,7 +258,7 @@ CTEST(crot, inc_x_2_inc_y_1)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_neg_2_inc_y_1)
 {
     blasint n = 100;
@@ -288,8 +275,7 @@ CTEST(crot, inc_x_neg_2_inc_y_1)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -298,7 +284,7 @@ CTEST(crot, inc_x_neg_2_inc_y_1)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_1_inc_y_2)
 {
     blasint n = 100;
@@ -315,8 +301,7 @@ CTEST(crot, inc_x_1_inc_y_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -325,7 +310,7 @@ CTEST(crot, inc_x_1_inc_y_2)
  * Stride of vector y is -2
  * c = 2.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_1_inc_y_neg_2)
 {
     blasint n = 100;
@@ -342,8 +327,7 @@ CTEST(crot, inc_x_1_inc_y_neg_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -352,7 +336,7 @@ CTEST(crot, inc_x_1_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, inc_x_2_inc_y_2)
 {
     blasint n = 100;
@@ -369,8 +353,7 @@ CTEST(crot, inc_x_2_inc_y_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -379,7 +362,7 @@ CTEST(crot, inc_x_2_inc_y_2)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_neg_2_inc_y_neg_2)
 {
     blasint n = 100;
@@ -396,8 +379,7 @@ CTEST(crot, inc_x_neg_2_inc_y_neg_2)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -406,7 +388,7 @@ CTEST(crot, inc_x_neg_2_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 0.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, inc_x_2_inc_y_2_c_zero)
 {
     blasint n = 100;
@@ -423,8 +405,7 @@ CTEST(crot, inc_x_2_inc_y_2_c_zero)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -433,7 +414,7 @@ CTEST(crot, inc_x_2_inc_y_2_c_zero)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 0.0f
-*/
+ */
 CTEST(crot, inc_x_2_inc_y_2_s_zero)
 {
     blasint n = 100;
@@ -450,8 +431,7 @@ CTEST(crot, inc_x_2_inc_y_2_s_zero)
 }
 
 /**
- * FORTRAN API specific test
- *
+ * Fortran API specific test
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -460,7 +440,7 @@ CTEST(crot, inc_x_2_inc_y_2_s_zero)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, check_n_zero)
 {
     blasint n = 0;
@@ -477,8 +457,7 @@ CTEST(crot, check_n_zero)
 }
 
 /**
- * C API specific test
- * 
+ * C API specific test 
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -487,7 +466,7 @@ CTEST(crot, check_n_zero)
  * Stride of vector y is 0
  * c = 1.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_0_inc_y_0)
 {
     blasint n = 100;
@@ -505,7 +484,6 @@ CTEST(crot, c_api_inc_x_0_inc_y_0)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -514,7 +492,7 @@ CTEST(crot, c_api_inc_x_0_inc_y_0)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_1_inc_y_1)
 {
     blasint n = 100;
@@ -532,7 +510,6 @@ CTEST(crot, c_api_inc_x_1_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -541,7 +518,7 @@ CTEST(crot, c_api_inc_x_1_inc_y_1)
  * Stride of vector y is -1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_neg_1_inc_y_neg_1)
 {
     blasint n = 100;
@@ -559,7 +536,6 @@ CTEST(crot, c_api_inc_x_neg_1_inc_y_neg_1)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -568,7 +544,7 @@ CTEST(crot, c_api_inc_x_neg_1_inc_y_neg_1)
  * Stride of vector y is 1
  * c = 3.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_2_inc_y_1)
 {
     blasint n = 100;
@@ -586,7 +562,6 @@ CTEST(crot, c_api_inc_x_2_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -595,7 +570,7 @@ CTEST(crot, c_api_inc_x_2_inc_y_1)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_neg_2_inc_y_1)
 {
     blasint n = 100;
@@ -613,7 +588,6 @@ CTEST(crot, c_api_inc_x_neg_2_inc_y_1)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -622,7 +596,7 @@ CTEST(crot, c_api_inc_x_neg_2_inc_y_1)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_1_inc_y_2)
 {
     blasint n = 100;
@@ -640,7 +614,6 @@ CTEST(crot, c_api_inc_x_1_inc_y_2)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -649,7 +622,7 @@ CTEST(crot, c_api_inc_x_1_inc_y_2)
  * Stride of vector y is -2
  * c = 2.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_1_inc_y_neg_2)
 {
     blasint n = 100;
@@ -667,7 +640,6 @@ CTEST(crot, c_api_inc_x_1_inc_y_neg_2)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -676,7 +648,7 @@ CTEST(crot, c_api_inc_x_1_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 2.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_2_inc_y_2)
 {
     blasint n = 100;
@@ -694,7 +666,6 @@ CTEST(crot, c_api_inc_x_2_inc_y_2)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -703,7 +674,7 @@ CTEST(crot, c_api_inc_x_2_inc_y_2)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_neg_2_inc_y_neg_2)
 {
     blasint n = 100;
@@ -721,7 +692,6 @@ CTEST(crot, c_api_inc_x_neg_2_inc_y_neg_2)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -730,7 +700,7 @@ CTEST(crot, c_api_inc_x_neg_2_inc_y_neg_2)
  * Stride of vector y is 2
  * c = 0.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_2_inc_y_2_c_zero)
 {
     blasint n = 100;
@@ -748,7 +718,6 @@ CTEST(crot, c_api_inc_x_2_inc_y_2_c_zero)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -757,7 +726,7 @@ CTEST(crot, c_api_inc_x_2_inc_y_2_c_zero)
  * Stride of vector y is 2
  * c = 1.0f
  * s = 0.0f
-*/
+ */
 CTEST(crot, c_api_inc_x_2_inc_y_2_s_zero)
 {
     blasint n = 100;
@@ -775,7 +744,6 @@ CTEST(crot, c_api_inc_x_2_inc_y_2_s_zero)
 
 /**
  * C API specific test
- *
  * Test crot by comparing it with caxpby.
  * Test with the following options:
  * 
@@ -784,7 +752,7 @@ CTEST(crot, c_api_inc_x_2_inc_y_2_s_zero)
  * Stride of vector y is 1
  * c = 1.0f
  * s = 1.0f
-*/
+ */
 CTEST(crot, c_api_check_n_zero)
 {
     blasint n = 0;

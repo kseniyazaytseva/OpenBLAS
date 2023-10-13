@@ -14,92 +14,13 @@
 
 #define DATASIZE 100
 
-struct DATA_DIMATCOPY{
-    double A_Test[DATASIZE* DATASIZE];
-    double A_Verify[DATASIZE* DATASIZE];
+struct DATA_DIMATCOPY {
+    double a_test[DATASIZE* DATASIZE];
+    double a_verify[DATASIZE* DATASIZE];
 };
 
 #ifdef BUILD_DOUBLE
 static struct DATA_DIMATCOPY data_dimatcopy;
-
-
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
- * Find difference between two rectangle matrix
- * return norm of differences
- */
-static double matrix_difference(double *a, double *b, blasint cols, blasint rows, blasint ld)
-{
-    blasint i = 0;
-    blasint j = 0;
-    blasint inc = 1;
-    double norm = 0.0;
-
-    double *a_ptr = a;
-    double *b_ptr = b;
-
-    for(i = 0; i < rows; i++)
-    {
-        for (j = 0; j < cols; j++) {
-            a_ptr[j] -= b_ptr[j];
-        }
-        norm += cblas_dnrm2(cols, a_ptr, inc);
-        
-        a_ptr += ld;
-        b_ptr += ld;
-    }
-    return norm/(double)(rows);
-}
-
-/**
- * Transpose matrix
- * 
- * param rows specifies number of rows of A
- * param cols specifies number of columns of A
- * param alpha specifies scaling factor for matrix A
- * param a_src - buffer holding input matrix A
- * param lda_src - leading dimension of the matrix A
- * param a_dst - buffer holding output matrix A
- * param lda_dst - leading dimension of output matrix A
- */
-static void transpose(blasint rows, blasint cols, double alpha, double *a_src, int lda_src, 
-                      double *a_dst, blasint lda_dst)
-{
-    blasint i, j;
-    for (i = 0; i != cols; i++)
-    {
-        for (j = 0; j != rows; j++)
-            a_dst[i*lda_dst+j] = alpha*a_src[j*lda_src+i];
-    }
-}
-
-/**
- * Copy matrix from source A to destination A
- * 
- * param rows specifies number of rows of A
- * param cols specifies number of columns of A
- * param alpha specifies scaling factor for matrix A
- * param a_src - buffer holding input matrix A
- * param lda_src - leading dimension of the matrix A
- * param a_dst - buffer holding output matrix A
- * param lda_dst - leading dimension of output matrix A
- */
-static void copy(blasint rows, blasint cols, double alpha, double *a_src, int lda_src, 
-                      double *a_dst, blasint lda_dst)
-{
-    blasint i, j;
-    for (i = 0; i != rows; i++)
-    {
-        for (j = 0; j != cols; j++)
-            a_dst[i*lda_dst+j] = alpha*a_src[i*lda_src+j];
-    }
-}
 
 /**
  * Comapare results computed by dimatcopy and reference func
@@ -137,17 +58,17 @@ static double check_dimatcopy(char api, char order, char trans, blasint rows, bl
         rows_out = m; cols_out = n;
     }
 
-    rand_generate(data_dimatcopy.A_Test, lda_src*m);
+    drand_generate(data_dimatcopy.a_test, lda_src*m);
 
     if (trans == 'T' || trans == 'C') {
-        transpose(m, n, alpha, data_dimatcopy.A_Test, lda_src, data_dimatcopy.A_Verify, lda_dst);
+        dtranspose(m, n, alpha, data_dimatcopy.a_test, lda_src, data_dimatcopy.a_verify, lda_dst);
     } 
     else {
-        copy(m, n, alpha, data_dimatcopy.A_Test, lda_src, data_dimatcopy.A_Verify, lda_dst);
+        dcopy(m, n, alpha, data_dimatcopy.a_test, lda_src, data_dimatcopy.a_verify, lda_dst);
     }
 
     if (api == 'F') {
-        BLASFUNC(dimatcopy)(&order, &trans, &rows, &cols, &alpha, data_dimatcopy.A_Test, 
+        BLASFUNC(dimatcopy)(&order, &trans, &rows, &cols, &alpha, data_dimatcopy.a_test, 
                             &lda_src, &lda_dst);
     }
     else {
@@ -157,12 +78,12 @@ static double check_dimatcopy(char api, char order, char trans, blasint rows, bl
         if (trans == 'N') ctrans = CblasNoTrans;
         if (trans == 'C') ctrans = CblasConjTrans;
         if (trans == 'R') ctrans = CblasConjNoTrans;
-        cblas_dimatcopy(corder, ctrans, rows, cols, alpha, data_dimatcopy.A_Test, 
+        cblas_dimatcopy(corder, ctrans, rows, cols, alpha, data_dimatcopy.a_test, 
                     lda_src, lda_dst);
     }
 
     // Find the differences between output matrix computed by dimatcopy and reference func
-    return matrix_difference(data_dimatcopy.A_Test, data_dimatcopy.A_Verify, cols_out, rows_out, lda_dst);
+    return dmatrix_difference(data_dimatcopy.a_test, data_dimatcopy.a_verify, cols_out, rows_out, lda_dst);
 }
 
 /**
@@ -186,13 +107,14 @@ static int check_badargs(char order, char trans, blasint rows, blasint cols,
 
     set_xerbla("DIMATCOPY", expected_info);
 
-    BLASFUNC(dimatcopy)(&order, &trans, &rows, &cols, &alpha, data_dimatcopy.A_Test, 
+    BLASFUNC(dimatcopy)(&order, &trans, &rows, &cols, &alpha, data_dimatcopy.a_test, 
                         &lda_src, &lda_dst);
 
     return check_error();
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -208,14 +130,14 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_100_alpha_one)
     char order = 'C';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -231,14 +153,14 @@ CTEST(dimatcopy, colmajor_notrans_col_100_row_100_alpha_one)
     char order = 'C';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -254,14 +176,14 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_100_alpha_zero)
     char order = 'C';
     char trans = 'T';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -277,14 +199,14 @@ CTEST(dimatcopy, colmajor_notrans_col_100_row_100_alpha_zero)
     char order = 'C';
     char trans = 'N';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -300,14 +222,14 @@ CTEST(dimatcopy, colmajor_trans_col_100_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -323,14 +245,14 @@ CTEST(dimatcopy, colmajor_notrans_col_100_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -346,14 +268,14 @@ CTEST(dimatcopy, colmajor_trans_col_50_row_100_alpha_one)
     char order = 'C';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -369,14 +291,14 @@ CTEST(dimatcopy, colmajor_notrans_col_50_row_100_alpha_one)
     char order = 'C';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -392,14 +314,14 @@ CTEST(dimatcopy, colmajor_trans_col_50_row_100_alpha_zero)
     char order = 'C';
     char trans = 'T';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -415,14 +337,14 @@ CTEST(dimatcopy, colmajor_notrans_col_50_row_100_alpha_zero)
     char order = 'C';
     char trans = 'N';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -438,14 +360,14 @@ CTEST(dimatcopy, colmajor_trans_col_50_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -461,14 +383,14 @@ CTEST(dimatcopy, colmajor_notrans_col_50_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -484,14 +406,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_100_alpha_one)
     char order = 'R';
     char trans = 'T';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -507,14 +429,14 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_100_alpha_one)
     char order = 'R';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -530,14 +452,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_100_alpha_zero)
     char order = 'R';
     char trans = 'T';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -553,14 +475,14 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_100_alpha_zero)
     char order = 'R';
     char trans = 'N';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -576,14 +498,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_100)
     char order = 'R';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -599,14 +521,14 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_100)
     char order = 'R';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -622,14 +544,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_50_alpha_one)
     char order = 'R';
     char trans = 'C'; // same as trans for real matrix
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -645,14 +567,14 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_50_alpha_one)
     char order = 'R';
     char trans = 'N';
     double alpha = 1.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -668,14 +590,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_50_alpha_zero)
     char order = 'R';
     char trans = 'C'; // same as trans for real matrix
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -691,14 +613,14 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_50_alpha_zero)
     char order = 'R';
     char trans = 'N';
     double alpha = 0.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -714,14 +636,14 @@ CTEST(dimatcopy, rowmajor_trans_col_100_row_50)
     char order = 'R';
     char trans = 'C'; // same as trans for real matrix
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
 
 /**
+ * Fortran API specific test
  * Test dimatcopy by comparing it against reference
  * with the following options:
  *
@@ -737,9 +659,8 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_50)
     char order = 'R';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('F', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -752,7 +673,7 @@ CTEST(dimatcopy, rowmajor_notrans_col_100_row_50)
  * Column Major
  * Transposition
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0
  */
 CTEST(dimatcopy, c_api_colmajor_trans_col_100_row_100)
 {
@@ -761,9 +682,8 @@ CTEST(dimatcopy, c_api_colmajor_trans_col_100_row_100)
     char order = 'C';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -776,7 +696,7 @@ CTEST(dimatcopy, c_api_colmajor_trans_col_100_row_100)
  * Column Major
  * Copy only
  * Square matrix
- * alpha = 1.0
+ * alpha = 2.0
  */
 CTEST(dimatcopy, c_api_colmajor_notrans_col_100_row_100)
 {
@@ -785,9 +705,8 @@ CTEST(dimatcopy, c_api_colmajor_notrans_col_100_row_100)
     char order = 'C';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -809,9 +728,8 @@ CTEST(dimatcopy, c_api_rowmajor_trans_col_100_row_100)
     char order = 'R';
     char trans = 'T';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -833,9 +751,8 @@ CTEST(dimatcopy, c_api_rowmajor_notrans_col_100_row_100)
     char order = 'R';
     char trans = 'N';
     double alpha = 2.0;
-    double norm;
 
-    norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
+    double norm = check_dimatcopy('C', order, trans, m, n, alpha, lda_src, lda_dst);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS);
 }
@@ -851,9 +768,8 @@ CTEST(dimatcopy, xerbla_invalid_order)
     char order = 'O';
     char trans = 'T';
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -868,9 +784,8 @@ CTEST(dimatcopy, xerbla_invalid_trans)
     char order = 'C';
     char trans = 'O';
     int expected_info = 2;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -885,9 +800,8 @@ CTEST(dimatcopy, xerbla_invalid_rows)
     char order = 'C';
     char trans = 'T';
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -902,9 +816,8 @@ CTEST(dimatcopy, xerbla_invalid_cols)
     char order = 'C';
     char trans = 'T';
     int expected_info = 4;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -920,9 +833,8 @@ CTEST(dimatcopy, xerbla_rowmajor_invalid_lda)
     char order = 'R';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -938,9 +850,8 @@ CTEST(dimatcopy, xerbla_colmajor_invalid_lda)
     char order = 'C';
     char trans = 'T';
     int expected_info = 7;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -956,9 +867,8 @@ CTEST(dimatcopy, xerbla_rowmajor_notrans_invalid_ldb)
     char order = 'R';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -974,9 +884,8 @@ CTEST(dimatcopy, xerbla_rowmajor_trans_invalid_ldb)
     char order = 'R';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -992,9 +901,8 @@ CTEST(dimatcopy, xerbla_colmajor_notrans_invalid_ldb)
     char order = 'C';
     char trans = 'N';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
@@ -1010,9 +918,8 @@ CTEST(dimatcopy, xerbla_colmajor_trans_invalid_ldb)
     char order = 'C';
     char trans = 'T';
     int expected_info = 9;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda_src, lda_dst, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 #endif

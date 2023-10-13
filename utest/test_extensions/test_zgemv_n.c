@@ -15,23 +15,16 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_ZSPMV{
-    double A_test[DATASIZE * DATASIZE * 2];
-    double B_test[DATASIZE * 2 * INCREMENT];
-    double C_test[DATASIZE * 2 * INCREMENT];
-    double C_verify[DATASIZE * 2 * INCREMENT];
+struct DATA_ZSPMV_N {
+    double a_test[DATASIZE * DATASIZE * 2];
+    double b_test[DATASIZE * 2 * INCREMENT];
+    double c_test[DATASIZE * 2 * INCREMENT];
+    double c_verify[DATASIZE * 2 * INCREMENT];
 };
 
 #ifdef BUILD_COMPLEX16
 
-static struct DATA_ZSPMV data_zgemv;
-
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
+static struct DATA_ZSPMV_N data_zgemv_n;
 
 /**
  * zgemv not transposed reference code
@@ -125,22 +118,22 @@ static double check_zgemv_n(char trans, blasint m, blasint n, double *alpha, bla
 {
     blasint i;
 
-    rand_generate(data_zgemv.A_test, n * lda);
-    rand_generate(data_zgemv.B_test, 2 * n * inc_b);
-    rand_generate(data_zgemv.C_test, 2 * m * inc_c);
+    drand_generate(data_zgemv_n.a_test, n * lda);
+    drand_generate(data_zgemv_n.b_test, 2 * n * inc_b);
+    drand_generate(data_zgemv_n.c_test, 2 * m * inc_c);
 
     for (i = 0; i < m * 2 * inc_c; i++)
-        data_zgemv.C_verify[i] = data_zgemv.C_test[i];
+        data_zgemv_n.c_verify[i] = data_zgemv_n.c_test[i];
 
-    zgemv_n_trusted(trans, m, n, alpha, data_zgemv.A_test, lda, data_zgemv.B_test, 
-                  inc_b, beta, data_zgemv.C_test, inc_c);
-    BLASFUNC(zgemv)(&trans, &m, &n, alpha, data_zgemv.A_test, &lda, data_zgemv.B_test, 
-                    &inc_b, beta, data_zgemv.C_verify, &inc_c);
+    zgemv_n_trusted(trans, m, n, alpha, data_zgemv_n.a_test, lda, data_zgemv_n.b_test, 
+                  inc_b, beta, data_zgemv_n.c_test, inc_c);
+    BLASFUNC(zgemv)(&trans, &m, &n, alpha, data_zgemv_n.a_test, &lda, data_zgemv_n.b_test, 
+                    &inc_b, beta, data_zgemv_n.c_verify, &inc_c);
 
     for (i = 0; i < m * 2 * inc_c; i++)
-        data_zgemv.C_verify[i] -= data_zgemv.C_test[i];
+        data_zgemv_n.c_verify[i] -= data_zgemv_n.c_test[i];
 
-    return BLASFUNC(dznrm2)(&n, data_zgemv.C_verify, &inc_c);
+    return BLASFUNC(dznrm2)(&n, data_zgemv_n.c_verify, &inc_c);
 }
 
 /**
@@ -159,9 +152,8 @@ CTEST(zgemv, trans_o_square_matrix)
     char trans = 'O';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -183,9 +175,8 @@ CTEST(zgemv, trans_o_rectangular_matrix_rows_less_then_cols)
     char trans = 'O';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -207,9 +198,8 @@ CTEST(zgemv, trans_o_rectangular_matrix_cols_less_then_rows)
     char trans = 'O';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -230,9 +220,8 @@ CTEST(zgemv, trans_o_double_strides)
     char trans = 'O';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -253,9 +242,8 @@ CTEST(zgemv, trans_s_square_matrix)
     char trans = 'S';
     double alpha[] = {1.0, 1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -277,9 +265,8 @@ CTEST(zgemv, trans_s_rectangular_matrix_rows_less_then_cols)
     char trans = 'S';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -301,9 +288,8 @@ CTEST(zgemv, trans_s_rectangular_matrix_cols_less_then_rows)
     char trans = 'S';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.4, 0.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }
@@ -324,9 +310,8 @@ CTEST(zgemv, trans_s_double_strides)
     char trans = 'S';
     double alpha[] = {2.0, -1.0};
     double beta[] = {1.0, 5.0};
-    double norm = 0.0;
 
-    norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
+    double norm = check_zgemv_n(trans, m, n, alpha, lda, inc_b, beta, inc_c);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_TOL);
 }

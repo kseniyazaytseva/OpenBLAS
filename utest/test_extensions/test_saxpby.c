@@ -15,7 +15,7 @@
 #define DATASIZE 100
 #define INCREMENT 2
 
-struct DATA_SAXPBY{
+struct DATA_SAXPBY {
     float x_test[DATASIZE * INCREMENT];
     float x_verify[DATASIZE * INCREMENT];
     float y_test[DATASIZE * INCREMENT];
@@ -25,16 +25,7 @@ struct DATA_SAXPBY{
 static struct DATA_SAXPBY data_saxpby;
 
 /**
- * Generate random vector stored in one-dimensional array
-*/
-static void rand_generate(float *alpha, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        alpha[i] = (float)rand() / (float)RAND_MAX * 5.0f;
-}
-
-/**
+ * Fortran API specific function
  * Test saxpby by comparing it with sscal and saxpy.
  * Compare with the following options:
  * 
@@ -44,7 +35,7 @@ static void rand_generate(float *alpha, blasint n)
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static float check_saxpby(blasint n, float alpha, blasint incx, float beta, blasint incy)
 {
     blasint i;
@@ -54,8 +45,8 @@ static float check_saxpby(blasint n, float alpha, blasint incx, float beta, blas
     blasint incy_abs = labs(incy);
 
     // Fill vectors x, y
-    rand_generate(data_saxpby.x_test, n * incx_abs);
-    rand_generate(data_saxpby.y_test, n * incy_abs);
+    srand_generate(data_saxpby.x_test, n * incx_abs);
+    srand_generate(data_saxpby.y_test, n * incy_abs);
 
     // Copy vector x for saxpy
     for (i = 0; i < n * incx_abs; i++)
@@ -84,8 +75,7 @@ static float check_saxpby(blasint n, float alpha, blasint incx, float beta, blas
 }
 
 /**
- * C API specific function.
- * 
+ * C API specific function
  * Test saxpby by comparing it with sscal and saxpy.
  * Compare with the following options:
  * 
@@ -95,7 +85,7 @@ static float check_saxpby(blasint n, float alpha, blasint incx, float beta, blas
  * param beta - scalar beta
  * param incy - increment for the elements of y
  * return norm of difference
-*/
+ */
 static float c_api_check_saxpby(blasint n, float alpha, blasint incx, float beta, blasint incy)
 {
     blasint i;
@@ -131,13 +121,14 @@ static float c_api_check_saxpby(blasint n, float alpha, blasint incx, float beta
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(saxpby, inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -150,13 +141,14 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(saxpby, inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -169,13 +161,14 @@ CTEST(saxpby, inc_x_2_inc_y_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -188,13 +181,14 @@ CTEST(saxpby, inc_x_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -207,13 +201,14 @@ CTEST(saxpby, inc_x_2_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -226,13 +221,14 @@ CTEST(saxpby, inc_x_neg_1_inc_y_2_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(saxpby, inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -245,13 +241,14 @@ CTEST(saxpby, inc_x_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(saxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -264,6 +261,7 @@ CTEST(saxpby, inc_x_neg_2_inc_y_neg_1_N_100)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -271,7 +269,7 @@ CTEST(saxpby, inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -284,6 +282,7 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -304,6 +303,7 @@ CTEST(saxpby, inc_x_1_inc_y_2_N_100_alpha_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -311,7 +311,7 @@ CTEST(saxpby, inc_x_1_inc_y_2_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(saxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -324,6 +324,7 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -344,6 +345,7 @@ CTEST(saxpby, inc_x_2_inc_y_1_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -364,6 +366,7 @@ CTEST(saxpby, inc_x_1_inc_y_2_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -384,6 +387,7 @@ CTEST(saxpby, inc_x_2_inc_y_2_N_100_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -392,7 +396,7 @@ CTEST(saxpby, inc_x_2_inc_y_2_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -405,6 +409,7 @@ CTEST(saxpby, inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -426,8 +431,9 @@ CTEST(saxpby, inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 }
 
 /**
+ * Fortran API specific test
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(saxpby, check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;
@@ -441,14 +447,13 @@ CTEST(saxpby, check_n_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 1
-*/
+ */
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -462,14 +467,13 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 1
-*/
+ */
 CTEST(saxpby, c_api_inc_x_2_inc_y_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 1;
@@ -483,14 +487,13 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 1
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 1, incy = 2;
@@ -504,14 +507,13 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, c_api_inc_x_2_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = 2;
@@ -525,14 +527,13 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -1
  * Stride of vector y is 2
-*/
+ */
 CTEST(saxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 {
     blasint n = DATASIZE, incx = -1, incy = 2;
@@ -546,14 +547,13 @@ CTEST(saxpby, c_api_inc_x_neg_1_inc_y_2_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is 2
  * Stride of vector y is -1
-*/
+ */
 CTEST(saxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = 2, incy = -1;
@@ -567,14 +567,13 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
  * Size of vectors x, y is 100
  * Stride of vector x is -2
  * Stride of vector y is -1
-*/
+ */
 CTEST(saxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 {
     blasint n = DATASIZE, incx = -2, incy = -1;
@@ -588,7 +587,6 @@ CTEST(saxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -596,7 +594,7 @@ CTEST(saxpby, c_api_inc_x_neg_2_inc_y_neg_1_N_100)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar alpha is zero
-*/
+ */
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -610,7 +608,6 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -632,7 +629,6 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -640,7 +636,7 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_zero)
  * Stride of vector x is 1
  * Stride of vector y is 1
  * Scalar beta is zero
-*/
+ */
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -654,7 +650,6 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -676,7 +671,6 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_1_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -698,7 +692,6 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -720,7 +713,6 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_2_N_100_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -729,7 +721,7 @@ CTEST(saxpby, c_api_inc_x_2_inc_y_2_N_100_beta_zero)
  * Stride of vector y is 1
  * Scalar alpha is zero
  * Scalar beta is zero
-*/
+ */
 CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 {
     blasint n = DATASIZE, incx = 1, incy = 1;
@@ -743,7 +735,6 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_1_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Test saxpby by comparing it with sscal and saxpy.
  * Test with the following options:
  * 
@@ -766,9 +757,8 @@ CTEST(saxpby, c_api_inc_x_1_inc_y_2_N_100_alpha_beta_zero)
 
 /**
  * C API specific test
- * 
  * Check if n - size of vectors x, y is zero
-*/
+ */
 CTEST(saxpby, c_api_check_n_zero)
 {
     blasint n = 0, incx = 1, incy = 1;

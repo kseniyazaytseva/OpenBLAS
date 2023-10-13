@@ -16,6 +16,10 @@
 #define INCREMENT 2
 
 #ifdef BUILD_COMPLEX
+
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, bad_args_N_0){
    blasint i;
    blasint N = 0, inc = 1;
@@ -27,6 +31,9 @@ CTEST(scamax, bad_args_N_0){
    ASSERT_DBL_NEAR_TOL(0.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, step_zero){
    blasint i;
    blasint N = ELEMENTS * 2, inc = 0;
@@ -39,6 +46,9 @@ CTEST(scamax, step_zero){
    ASSERT_DBL_NEAR_TOL(0.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {1.0f, 2.0f};
@@ -46,6 +56,9 @@ CTEST(scamax, positive_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_1_N_1){
    blasint N = 1, inc = 1;
    float x[] = {-1.0f, -2.0f};
@@ -53,6 +66,9 @@ CTEST(scamax, negative_step_1_N_1){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -60,6 +76,9 @@ CTEST(scamax, positive_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_2_N_1){
    blasint N = 1, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -67,6 +86,9 @@ CTEST(scamax, negative_step_2_N_1){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f};
@@ -74,6 +96,9 @@ CTEST(scamax, positive_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_1_N_2){
    blasint N = 2, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f};
@@ -81,6 +106,9 @@ CTEST(scamax, negative_step_1_N_2){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f};
@@ -88,6 +116,9 @@ CTEST(scamax, positive_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_2_N_2){
    blasint N = 2, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f};
@@ -95,6 +126,9 @@ CTEST(scamax, negative_step_2_N_2){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f};
@@ -102,6 +136,9 @@ CTEST(scamax, positive_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(3.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_1_N_3){
    blasint N = 3, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -3.0f, -1.0f};
@@ -109,6 +146,9 @@ CTEST(scamax, negative_step_1_N_3){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 3.0f, 1.0f, 0.0f, 0.0f};
@@ -116,6 +156,9 @@ CTEST(scamax, positive_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_2_N_3){
    blasint N = 3, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -3.0f, -1.0f, 0.0f, 0.0f};
@@ -123,6 +166,9 @@ CTEST(scamax, negative_step_2_N_3){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 1.0f, -2.0f, -2.0f};
@@ -130,6 +176,9 @@ CTEST(scamax, positive_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_1_N_4){
    blasint N = 4, inc = 1;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -2.0f, -1.0f, -2.0f, -2.0f};
@@ -137,6 +186,9 @@ CTEST(scamax, negative_step_1_N_4){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {1.0f, 2.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -144,6 +196,9 @@ CTEST(scamax, positive_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_2_N_4){
    blasint N = 4, inc = 2;
    float x[] = {-1.0f, -2.0f, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -2.0f, -1.0f, 0.0f, 0.0f, -2.0f, -2.0f, 0.0f, 0.0f};
@@ -151,6 +206,9 @@ CTEST(scamax, negative_step_2_N_4){
    ASSERT_DBL_NEAR_TOL(4.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_1_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -164,6 +222,9 @@ CTEST(scamax, positive_step_1_N_70){
    ASSERT_DBL_NEAR_TOL(2000.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_1_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = 1;
@@ -177,6 +238,9 @@ CTEST(scamax, negative_step_1_N_70){
    ASSERT_DBL_NEAR_TOL(2000.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, positive_step_2_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;
@@ -190,6 +254,9 @@ CTEST(scamax, positive_step_2_N_70){
    ASSERT_DBL_NEAR_TOL(2000.0f, amax, SINGLE_EPS);
 }
 
+/**
+ * Test scamax by comparing it against pre-calculated values
+ */
 CTEST(scamax, negative_step_2_N_70){
    blasint i;
    blasint N = ELEMENTS, inc = INCREMENT;

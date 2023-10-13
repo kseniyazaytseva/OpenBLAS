@@ -12,14 +12,13 @@
 #include "utest/openblas_utest.h"
 #include "common.h"
 
-
 #define N 100
 #define M 100
 #define INCREMENT 2
 
-struct DATA_ZGEMV_T{
-    double A_test[N * M * 2];
-    double A_verify[N * M * 2];
+struct DATA_ZGEMV_T {
+    double a_test[N * M * 2];
+    double a_verify[N * M * 2];
     double y_test[M * INCREMENT * 2];
     double y_verify[M * INCREMENT * 2];
     double x_test[M * INCREMENT * 2];
@@ -33,37 +32,9 @@ struct DATA_ZGEMV_T{
 #ifdef BUILD_COMPLEX16
 static struct DATA_ZGEMV_T data_zgemv_t;
 
-static void rand_generate(double *a, blasint n)
-{
-    blasint i;
-    for (i = 0; i < n; i++)
-        a[i] = (double)rand() / (double)RAND_MAX * 5.0;
-}
-
-/**
- * Complex conjugate operation for vector
- * 
- * param n specifies number of elements in vector x
- * param inc_x specifies increment of vector x
- * param x specifies buffer holding vector x
- */
-static void conj_vec(blasint n, blasint inc_x, double *x)
-{
-    blasint i;
-    blasint offset = 2;
-
-    double *x_ptr = x;
-
-    for (i = 0; i < n; i++)
-    {
-        x_ptr[1] *= (-1);
-        x_ptr +=  offset * inc_x;
-    }
-}
-
 /**
  * Find product of matrix-vector multiplication
- * 
+ *
  * param n specifies number of columns of A
  * param m specifies number of rows of A and size of vector x
  * param lda specifies leading dimension of A
@@ -72,13 +43,13 @@ static void conj_vec(blasint n, blasint inc_x, double *x)
 static void matrix_vector_product(blasint n, blasint m, blasint lda, blasint inc_x)
 {
     blasint i;
-    double *a_ptr = data_zgemv_t.A_verify;
+    double *a_ptr = data_zgemv_t.a_verify;
     double *x_ptr = data_zgemv_t.x_test;
     double *x_res = data_zgemv_t.x_verify;
 
     openblas_complex_double result;
 
-    for (i = 0; i < n * inc_x; i+= inc_x)
+    for (i = 0; i < n * inc_x; i += inc_x)
     {
         result = cblas_zdotu(lda, a_ptr, 1, x_ptr, inc_x);
         x_res[0] = CREAL(result);
@@ -91,14 +62,14 @@ static void matrix_vector_product(blasint n, blasint m, blasint lda, blasint inc
 /**
  * Test zgemv by comparing it against zomatcopy, zaxpby and
  * reference func matrix_vector_product
- * 
+ *
  * zomatcopy perform operation: op(A)
  * matrix_vector_product perform operation: A*x
  * zaxpby perform operation: alpha*x + beta*y
  *
  * param api specifies tested api (C or Fortran)
  * param order specifies row or column major order
- * param trans specifies op(A), the transposition operation 
+ * param trans specifies op(A), the transposition operation
  * applied to the matrix A
  * param m specifies number of rows of A
  * param n specifies number of columns of A
@@ -109,8 +80,8 @@ static void matrix_vector_product(blasint n, blasint m, blasint lda, blasint inc
  * param inc_y specifies increment for vector y
  * return norm of difference between zgemv and result of reference funcs
  */
-static double check_zgemv(char api, char order, char trans, blasint m, blasint n, double *alpha, 
-                            blasint lda, blasint inc_x, double *beta, blasint inc_y)
+static double check_zgemv(char api, char order, char trans, blasint m, blasint n, double *alpha,
+                          blasint lda, blasint inc_x, double *beta, blasint inc_y)
 {
     blasint i;
 
@@ -118,7 +89,7 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
     enum CBLAS_TRANSPOSE ctrans;
 
     // Transpose parameters for zomatcopy
-    // zgemv_t perform operation on transposed matrix, no need to transpose A_verify
+    // zgemv_t perform operation on transposed matrix, no need to transpose a_verify
     char trans_copy;
     char ctrans_copy;
 
@@ -127,13 +98,14 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
 
     memset(data_zgemv_t.x_verify, 0.0, m * inc_x * 2 * sizeof(double));
 
-    // Fill matrix A, vectors x, y    
-    rand_generate(data_zgemv_t.A_test, lda * n * 2);
-    rand_generate(data_zgemv_t.x_test, m * inc_x * 2);
-    rand_generate(data_zgemv_t.y_test, m * inc_y * 2);
+    // Fill matrix A, vectors x, y
+    drand_generate(data_zgemv_t.a_test, lda * n * 2);
+    drand_generate(data_zgemv_t.x_test, m * inc_x * 2);
+    drand_generate(data_zgemv_t.y_test, m * inc_y * 2);
 
     // Copy vector y for reference funcs
-    for (int i = 0; i < m * inc_y * 2; i++) {
+    for (int i = 0; i < m * inc_y * 2; i++)
+    {
         data_zgemv_t.y_verify[i] = data_zgemv_t.y_test[i];
     }
 
@@ -144,21 +116,24 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
         if (trans == 'D') trans_copy = 'N';
 
         // Perform operation: op(A)
-        BLASFUNC(zomatcopy)(&order, &trans_copy, &m, &n, alpha_one, data_zgemv_t.A_test, &lda, data_zgemv_t.A_verify, &lda);
+        BLASFUNC(zomatcopy)(&order, &trans_copy, &m, &n, alpha_one, 
+                            data_zgemv_t.a_test, &lda, data_zgemv_t.a_verify, &lda);
 
         // Find A*x
         matrix_vector_product(n, m, lda, inc_x);
 
         // Find conj(x)
-        if (trans == 'U' || trans == 'D') {
-            conj_vec(m, inc_x, data_zgemv_t.x_verify);
+        if (trans == 'U' || trans == 'D')
+        {
+            zconjugate_vector(m, inc_x, data_zgemv_t.x_verify);
         }
 
         // Find alpha*x+beta*y
-        BLASFUNC(zaxpby)(&n, alpha, data_zgemv_t.x_verify, &inc_x, beta, data_zgemv_t.y_verify, &inc_y);
+        BLASFUNC(zaxpby)(&n, alpha, data_zgemv_t.x_verify, &inc_x, beta, 
+                         data_zgemv_t.y_verify, &inc_y);
 
-        BLASFUNC(zgemv)(&trans, &m, &n, alpha, data_zgemv_t.A_test, 
-                        &lda, data_zgemv_t.x_test, &inc_x, beta, data_zgemv_t.y_test, &inc_y);
+        BLASFUNC(zgemv)(&trans, &m, &n, alpha, data_zgemv_t.a_test, &lda, 
+                        data_zgemv_t.x_test, &inc_x, beta, data_zgemv_t.y_test, &inc_y);
     }
     else {
         if (order == 'C') corder = CblasColMajor;
@@ -169,7 +144,7 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
         if (trans == 'R') {ctrans = CblasConjNoTrans; ctrans_copy = (corder == CblasRowMajor) ? CblasConjNoTrans : CblasConjTrans;}
 
         // Perform operation: op(A)
-        cblas_zomatcopy(corder, ctrans_copy, m, n, alpha_one, data_zgemv_t.A_test, lda, data_zgemv_t.A_verify, lda);
+        cblas_zomatcopy(corder, ctrans_copy, m, n, alpha_one, data_zgemv_t.a_test, lda, data_zgemv_t.a_verify, lda);
 
         // Find A*x
         matrix_vector_product(n, m, lda, inc_x);
@@ -177,8 +152,8 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
         // Find alpha*x+beta*y
         cblas_zaxpby(n, alpha, data_zgemv_t.x_verify, inc_x, beta, data_zgemv_t.y_verify, inc_y);
 
-        cblas_zgemv(corder, ctrans, m, n, alpha, data_zgemv_t.A_test, 
-                        lda, data_zgemv_t.x_test, inc_x, beta, data_zgemv_t.y_test, inc_y);
+        cblas_zgemv(corder, ctrans, m, n, alpha, data_zgemv_t.a_test,
+                    lda, data_zgemv_t.x_test, inc_x, beta, data_zgemv_t.y_test, inc_y);
     }
 
     // Find the differences between output vector caculated by zgemv and reference funcs
@@ -194,7 +169,7 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
  * and param info
  *
  * param order specifies row or column major order
- * param trans specifies op(A), the transposition operation 
+ * param trans specifies op(A), the transposition operation
  * applied to the matrix A
  * param m specifies number of rows of A
  * param n specifies number of columns of A
@@ -204,8 +179,8 @@ static double check_zgemv(char api, char order, char trans, blasint m, blasint n
  * param expected_info - expected invalid parameter number
  * return TRUE if everything is ok, otherwise FALSE
  */
-static int check_badargs(char order, char trans, blasint m, blasint n, 
-                        blasint lda, blasint inc_x, blasint inc_y, int expected_info)
+static int check_badargs(char order, char trans, blasint m, blasint n,
+                         blasint lda, blasint inc_x, blasint inc_y, int expected_info)
 {
     double alpha[] = {1.0, 1.0};
     double a[] = {1.0, 1.0};
@@ -215,19 +190,19 @@ static int check_badargs(char order, char trans, blasint m, blasint n,
 
     set_xerbla("ZGEMV ", expected_info);
 
-    BLASFUNC(zgemv)(&trans, &m, &n, alpha, a, &lda, x, &inc_x, beta, y, &inc_y);
+    BLASFUNC(zgemv)(&trans, &m, &n, alpha, a, &lda, x, 
+                    &inc_x, beta, y, &inc_y);
 
     return check_error();
 }
 
 /**
  * C API specific function
- * 
  * Check if error function was called with expected function name
  * and param info
  *
  * param order specifies row or column major order
- * param trans specifies op(A), the transposition operation 
+ * param trans specifies op(A), the transposition operation
  * applied to the matrix A
  * param m specifies number of rows of A
  * param n specifies number of columns of A
@@ -237,8 +212,8 @@ static int check_badargs(char order, char trans, blasint m, blasint n,
  * param expected_info - expected invalid parameter number
  * return TRUE if everything is ok, otherwise FALSE
  */
-static int c_api_check_badargs(CBLAS_ORDER corder, CBLAS_TRANSPOSE ctrans, blasint m, blasint n, 
-                        blasint lda, blasint inc_x, blasint inc_y, int expected_info)
+static int c_api_check_badargs(CBLAS_ORDER corder, CBLAS_TRANSPOSE ctrans, blasint m, blasint n,
+                               blasint lda, blasint inc_x, blasint inc_y, int expected_info)
 {
     double alpha[] = {1.0, 1.0};
     double a[] = {1.0, 1.0};
@@ -254,8 +229,7 @@ static int c_api_check_badargs(CBLAS_ORDER corder, CBLAS_TRANSPOSE ctrans, blasi
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -280,14 +254,13 @@ CTEST(zgemv, colmajor_trans_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -312,14 +285,13 @@ CTEST(zgemv, colmajor_trans_col_100_row_100_inc_x_2_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -344,14 +316,13 @@ CTEST(zgemv, colmajor_conjtrans_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -376,14 +347,13 @@ CTEST(zgemv, colmajor_conjtrans_col_100_row_100_inc_x_1_y_2)
     blasint inc_y = 2;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -408,14 +378,13 @@ CTEST(zgemv, colmajor_trans_x_conj_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -440,15 +409,13 @@ CTEST(zgemv, colmajor_trans_x_conj_col_100_row_100_inc_x_2_y_2)
     blasint inc_y = 2;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
-
 /**
- * FORTRAN API specific test
- * 
+ * Fortran API specific test
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -473,14 +440,13 @@ CTEST(zgemv, colmajor_conjtrans_x_conj_col_100_row_100_inc_x_1_y_2)
     blasint inc_y = 2;
 
     double norm = check_zgemv('F', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -505,14 +471,13 @@ CTEST(zgemv, c_api_colmajor_trans_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -537,14 +502,13 @@ CTEST(zgemv, c_api_colmajor_conjtrans_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -569,14 +533,13 @@ CTEST(zgemv, c_api_colmajor_conjtrans_col_100_row_100_inc_x_1_y_2)
     blasint inc_y = 2;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -600,14 +563,13 @@ CTEST(zgemv, c_api_rowmajor_notrans_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -632,14 +594,13 @@ CTEST(zgemv, c_api_rowmajor_notrans_col_100_row_100_inc_x_2_y_2)
     blasint inc_y = 2;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -664,14 +625,13 @@ CTEST(zgemv, c_api_rowmajor_conj_col_100_row_100_inc_x_1_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
  * C API specific test
- * 
  * Test zgemv by comparing it against reference
  * with the following options:
  *
@@ -696,15 +656,16 @@ CTEST(zgemv, c_api_rowmajor_conj_col_100_row_100_inc_x_2_y_1)
     blasint inc_y = 1;
 
     double norm = check_zgemv('C', order, trans, m, n, alpha, lda,
-                                inc_x, beta, inc_y);
+                              inc_x, beta, inc_y);
 
     ASSERT_DBL_NEAR_TOL(0.0, norm, DOUBLE_EPS_ZGEMV);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param inc_y.
  * Must be positive
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_inc_y)
@@ -719,16 +680,16 @@ CTEST(zgemv, xerbla_invalid_inc_y)
     blasint inc_y = 0;
 
     int expected_info = 11;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param inc_y.
  * Must be positive
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_inc_y_col_major)
@@ -743,16 +704,16 @@ CTEST(zgemv, c_api_xerbla_invalid_inc_y_col_major)
     blasint inc_y = 0;
 
     int expected_info = 11;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param inc_y.
  * Must be positive
- * 
+ *
  * Row major
  */
 CTEST(zgemv, c_api_xerbla_invalid_inc_y_row_major)
@@ -767,16 +728,16 @@ CTEST(zgemv, c_api_xerbla_invalid_inc_y_row_major)
     blasint inc_y = 0;
 
     int expected_info = 11;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param inc_x.
  * Must be positive
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_inc_x)
@@ -785,21 +746,21 @@ CTEST(zgemv, xerbla_invalid_inc_x)
     char trans = 'T';
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 0;
     blasint inc_y = 1;
-    
-    int expected_info = 8;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int expected_info = 8;
+
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param inc_x.
  * Must be positive
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_inc_x_col_major)
@@ -809,21 +770,21 @@ CTEST(zgemv, c_api_xerbla_invalid_inc_x_col_major)
 
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 0;
     blasint inc_y = 1;
-    
-    int expected_info = 8;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int expected_info = 8;
+
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param inc_x.
  * Must be positive
- * 
+ *
  * Row major
  */
 CTEST(zgemv, c_api_xerbla_invalid_inc_x_row_major)
@@ -833,21 +794,21 @@ CTEST(zgemv, c_api_xerbla_invalid_inc_x_row_major)
 
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 0;
     blasint inc_y = 1;
-    
-    int expected_info = 8;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int expected_info = 8;
+
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param n.
  * Must be positive.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_n)
@@ -857,21 +818,21 @@ CTEST(zgemv, xerbla_invalid_n)
 
     blasint m = 1, n = INVALID;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 3;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param n.
  * Must be positive.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_n_col_major)
@@ -881,21 +842,21 @@ CTEST(zgemv, c_api_xerbla_invalid_n_col_major)
 
     blasint m = 1, n = INVALID;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
-    
-    int expected_info = 3;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int expected_info = 3;
+
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param n.
  * Must be positive.
- * 
+ *
  * Row major
  */
 CTEST(zgemv, c_api_xerbla_invalid_n_row_major)
@@ -905,21 +866,21 @@ CTEST(zgemv, c_api_xerbla_invalid_n_row_major)
 
     blasint m = INVALID, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 3;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param m.
  * Must be positive.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_m)
@@ -929,21 +890,21 @@ CTEST(zgemv, xerbla_invalid_m)
 
     blasint m = INVALID, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
-    
-    int expected_info = 2;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int expected_info = 2;
+
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param m.
  * Must be positive.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_m_col_major)
@@ -953,21 +914,21 @@ CTEST(zgemv, c_api_xerbla_invalid_m_col_major)
 
     blasint m = INVALID, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 2;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param m.
  * Must be positive.
- * 
+ *
  * Row major
  */
 CTEST(zgemv, c_api_xerbla_invalid_m_row_major)
@@ -977,21 +938,21 @@ CTEST(zgemv, c_api_xerbla_invalid_m_row_major)
 
     blasint m = 1, n = INVALID;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 2;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param lda.
  * lda must be at least n.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_lda)
@@ -1001,22 +962,22 @@ CTEST(zgemv, xerbla_invalid_lda)
 
     blasint m = 1, n = 1;
     blasint lda = INVALID;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 6;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param lda.
- * If matrices are stored using col major layout, 
+ * If matrices are stored using col major layout,
  * lda must be at least m.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_lda_col_major)
@@ -1026,22 +987,22 @@ CTEST(zgemv, c_api_xerbla_invalid_lda_col_major)
 
     blasint m = 1, n = 1;
     blasint lda = INVALID;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 6;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param lda.
- * If matrices are stored using col major layout, 
+ * If matrices are stored using col major layout,
  * lda must be at least n.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_lda_row_major)
@@ -1051,20 +1012,20 @@ CTEST(zgemv, c_api_xerbla_invalid_lda_row_major)
 
     blasint m = 1, n = 1;
     blasint lda = INVALID;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 6;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * Fortran API specific test
  * Test error function for an invalid param trans.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, xerbla_invalid_trans)
@@ -1074,20 +1035,20 @@ CTEST(zgemv, xerbla_invalid_trans)
 
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 1;
-    int passed;
 
-    passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = check_badargs(order, trans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param trans.
- * 
+ *
  * Column major
  */
 CTEST(zgemv, c_api_xerbla_invalid_trans_col_major)
@@ -1097,42 +1058,42 @@ CTEST(zgemv, c_api_xerbla_invalid_trans_col_major)
 
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 1;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
+ * C API specific test
  * Test error function for an invalid param trans.
- * 
+ *
  * Row major
  */
 CTEST(zgemv, c_api_xerbla_invalid_trans_row_major)
 {
     enum CBLAS_ORDER corder = CblasRowMajor;
     enum CBLAS_TRANSPOSE ctrans = INVALID;
-    
+
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 1;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 
 /**
- * Test error function for an invalid param order. 
+ * C API specific test
+ * Test error function for an invalid param order.
  */
 CTEST(zgemv, c_api_xerbla_invalid_order_col_major)
 {
@@ -1141,14 +1102,13 @@ CTEST(zgemv, c_api_xerbla_invalid_order_col_major)
 
     blasint m = 1, n = 1;
     blasint lda = 1;
-    
+
     blasint inc_x = 1;
     blasint inc_y = 1;
 
     int expected_info = 0;
-    int passed;
 
-    passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
+    int passed = c_api_check_badargs(corder, ctrans, m, n, lda, inc_x, inc_y, expected_info);
     ASSERT_EQUAL(TRUE, passed);
 }
 #endif
