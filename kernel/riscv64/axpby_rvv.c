@@ -53,7 +53,7 @@ int CNAME(BLASLONG n, FLOAT alpha, FLOAT *x, BLASLONG inc_x, FLOAT beta, FLOAT *
 {
     FLOAT_V_T vx, vy;
 
-    if ( n < 0     )  return(0);
+    if ( n <= 0     )  return(0);
 
     if ( beta == 0.0 ) {
         if ( alpha == 0.0 ) {
