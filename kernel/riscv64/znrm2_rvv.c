@@ -35,7 +35,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MASK_T              vbool8_t
 #define VLEV_FLOAT          __riscv_vle32_v_f32m4
 #define VLSEV_FLOAT         __riscv_vlse32_v_f32m4
-#define VFREDSUM_FLOAT      __riscv_vfredusum_vs_f32m4_f32m1
+#define VFREDSUM_FLOAT      __riscv_vfredusum_vs_f32m4_f32m1_tu
 #define VFMACCVV_FLOAT_TU   __riscv_vfmacc_vv_f32m4_tu
 #define VFMVVF_FLOAT        __riscv_vfmv_v_f_f32m4
 #define VFMVVF_FLOAT_M1     __riscv_vfmv_v_f_f32m1
@@ -53,7 +53,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MASK_T              vbool16_t
 #define VLEV_FLOAT          __riscv_vle64_v_f64m4
 #define VLSEV_FLOAT         __riscv_vlse64_v_f64m4
-#define VFREDSUM_FLOAT      __riscv_vfredusum_vs_f64m4_f64m1
+#define VFREDSUM_FLOAT      __riscv_vfredusum_vs_f64m4_f64m1_tu
 #define VFMACCVV_FLOAT_TU   __riscv_vfmacc_vv_f64m4_tu
 #define VFMVVF_FLOAT        __riscv_vfmv_v_f_f64m4
 #define VFMVVF_FLOAT_M1     __riscv_vfmv_v_f_f64m1
