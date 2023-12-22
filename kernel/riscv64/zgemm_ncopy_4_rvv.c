@@ -29,18 +29,14 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if !defined(DOUBLE)
 #define VSETVL(n)               __riscv_vsetvl_e32m1(n)
-#define FLOAT_V_T               vfloat32m1_t
-#define VLSEG2_FLOAT            __riscv_vlseg2e32_v_f32m1
-#define VSSEG2_FLOAT            __riscv_vsseg2e32_v_f32m1
-#define VSSEG4_FLOAT            __riscv_vsseg4e32_v_f32m1
-#define VSSEG8_FLOAT            __riscv_vsseg8e32_v_f32m1
+#define FLOAT_VX2_T             vfloat32m1x2_t
+#define VLSEG2_FLOAT            __riscv_vlseg2e32_v_f32m1x2
+#define VSSEG2_FLOAT            __riscv_vsseg2e32_v_f32m1x2
 #else
 #define VSETVL(n)               __riscv_vsetvl_e64m1(n)
-#define FLOAT_V_T               vfloat64m1_t
-#define VLSEG2_FLOAT            __riscv_vlseg2e64_v_f64m1
-#define VSSEG2_FLOAT            __riscv_vsseg2e64_v_f64m1
-#define VSSEG4_FLOAT            __riscv_vsseg4e64_v_f64m1
-#define VSSEG8_FLOAT            __riscv_vsseg8e64_v_f64m1
+#define FLOAT_VX2_T             vfloat64m1x2_t
+#define VLSEG2_FLOAT            __riscv_vlseg2e64_v_f64m1x2
+#define VSSEG2_FLOAT            __riscv_vsseg2e64_v_f64m1x2
 #endif
 
 // Optimizes the implementation in ../generic/zgemm_ncopy_4.c
@@ -53,7 +49,7 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT *a, BLASLONG lda, FLOAT *b){
 
     FLOAT *boffset;
 
-    FLOAT_V_T v11, v12, v21, v22, v31, v32, v41, v42;
+    FLOAT_VX2_T v1x2, v2x2, v3x2, v4x2;
     size_t vl;
 
     aoffset = a;
@@ -69,18 +65,24 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT *a, BLASLONG lda, FLOAT *b){
 
         for (i = m; i > 0; i -= vl) {
             vl = VSETVL(i);
-            VLSEG2_FLOAT(&v11, &v12, aoffset1, vl);
-            VLSEG2_FLOAT(&v21, &v22, aoffset2, vl);
-            VLSEG2_FLOAT(&v31, &v32, aoffset3, vl);
-            VLSEG2_FLOAT(&v41, &v42, aoffset4, vl);
+            v1x2 = VLSEG2_FLOAT(aoffset1, vl);
+            v2x2 = VLSEG2_FLOAT(aoffset2, vl);
+            v3x2 = VLSEG2_FLOAT(aoffset3, vl);
+            v4x2 = VLSEG2_FLOAT(aoffset4, vl);
 
-            VSSEG8_FLOAT(boffset, v11, v12, v21, v22, v31, v32, v41, v42, vl);
+            VSSEG2_FLOAT(boffset, v1x2, vl);
+            boffset  += vl * 2;
+            VSSEG2_FLOAT(boffset, v2x2, vl);
+            boffset  += vl * 2;
+            VSSEG2_FLOAT(boffset, v3x2, vl);
+            boffset  += vl * 2;
+            VSSEG2_FLOAT(boffset, v4x2, vl);
+            boffset  += vl * 2;
 
             aoffset1 += vl * 2;
             aoffset2 += vl * 2;
             aoffset3 += vl * 2;
             aoffset4 += vl * 2;
-            boffset  += vl * 8;
         }
     }
 
@@ -91,14 +93,16 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT *a, BLASLONG lda, FLOAT *b){
         
         for (i = m; i > 0; i -= vl) {
             vl = VSETVL(i);
-            VLSEG2_FLOAT(&v11, &v12, aoffset1, vl);
-            VLSEG2_FLOAT(&v21, &v22, aoffset2, vl);
+            v1x2 = VLSEG2_FLOAT(aoffset1, vl);
+            v2x2 = VLSEG2_FLOAT(aoffset2, vl);
         
-            VSSEG4_FLOAT(boffset, v11, v12, v21, v22, vl);
+            VSSEG2_FLOAT(boffset, v1x2, vl);
+            boffset  += vl * 2;
+            VSSEG2_FLOAT(boffset, v2x2, vl);
+            boffset  += vl * 2;
         
             aoffset1 += vl * 2;
             aoffset2 += vl * 2;
-            boffset  += vl * 4;
         }
     }
 
@@ -108,9 +112,9 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT *a, BLASLONG lda, FLOAT *b){
 
         for (i = m; i > 0; i -= vl) {
             vl = VSETVL(i);
-            VLSEG2_FLOAT(&v11, &v12, aoffset1, vl);
+            v1x2 = VLSEG2_FLOAT(aoffset1, vl);
 
-            VSSEG2_FLOAT(boffset, v11, v12, vl);
+            VSSEG2_FLOAT(boffset, v1x2, vl);
 
             aoffset1 += vl * 2;
             boffset  += vl * 2;
