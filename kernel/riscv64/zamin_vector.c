@@ -30,24 +30,13 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <float.h>
 
 
-#ifdef RISCV64_ZVL256B
-#       define LMUL m2
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN 32
-#       else
-#               define ELEN 32
-#               define MLEN 16
-#       endif
+#define LMUL m8
+#if defined(DOUBLE)
+#        define ELEN 64
+#        define MLEN 8
 #else
-#       define LMUL m8
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN 8
-#       else
-#               define ELEN 32
-#               define MLEN 4
-#       endif
+#        define ELEN 32
+#        define MLEN 4
 #endif
 
 #define _
@@ -55,19 +44,19 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define JOIN2(x, y) JOIN2_X(x, y)
 #define JOIN(v, w, x, y, z) JOIN2( JOIN2( JOIN2( JOIN2( v, w ), x), y), z)
 
-#define VSETVL          JOIN(__riscv_vsetvl,    _e,     ELEN,   LMUL,   _)
+#define VSETVL          JOIN(vsetvl,    _e,     ELEN,   LMUL,   _)
 #define FLOAT_V_T       JOIN(vfloat,            ELEN,   LMUL,   _t,     _)
 #define FLOAT_V_T_M1    JOIN(vfloat,            ELEN,   m1,     _t,     _)
-#define VLEV_FLOAT      JOIN(__riscv_vle,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VLSEV_FLOAT     JOIN(__riscv_vlse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VFREDMINVS_FLOAT JOIN(__riscv_vfredmin_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
+#define VLEV_FLOAT      JOIN(vle,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VLSEV_FLOAT     JOIN(vlse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VFREDMINVS_FLOAT JOIN(vfredmin_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
 #define MASK_T          JOIN(vbool,             MLEN,   _t,     _,      _)
-#define VMFLTVF_FLOAT   JOIN(__riscv_vmflt_vf_f, ELEN,  LMUL,   _b,     MLEN)
-#define VFMVVF_FLOAT    JOIN(__riscv_vfmv,      _v_f_f, ELEN,   LMUL,   _)
-#define VFMVVF_FLOAT_M1 JOIN(__riscv_vfmv,      _v_f_f, ELEN,   m1,     _)
-#define VFRSUBVF_MASK_FLOAT JOIN(__riscv_vfrsub,_vf_f,  ELEN,   LMUL,   _m)
-#define VFMINVV_FLOAT   JOIN(__riscv_vfmin,     _vv_f,  ELEN,   LMUL,   _)
-#define VFADDVV_FLOAT   JOIN(__riscv_vfadd,     _vv_f,  ELEN,   LMUL,   _)
+#define VMFLTVF_FLOAT   JOIN(vmflt_vf_f, ELEN,  LMUL,   _b,     MLEN)
+#define VFMVVF_FLOAT    JOIN(vfmv,      _v_f_f, ELEN,   LMUL,   _)
+#define VFMVVF_FLOAT_M1 JOIN(vfmv,      _v_f_f, ELEN,   m1,     _)
+#define VFRSUBVF_MASK_FLOAT JOIN(vfrsub,_vf_f,  ELEN,   LMUL,   _m)
+#define VFMINVV_FLOAT   JOIN(vfmin,     _vv_f,  ELEN,   LMUL,   _)
+#define VFADDVV_FLOAT   JOIN(vfadd,     _vv_f,  ELEN,   LMUL,   _)
 
 FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 {
@@ -89,9 +78,9 @@ FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
                 v0 = VLSEV_FLOAT(&x[ix], stride_x, gvl);
                 v1 = VLSEV_FLOAT(&x[ix+1], stride_x, gvl);
                 mask0 = VMFLTVF_FLOAT(v0, 0, gvl);
-                v0 = VFRSUBVF_MASK_FLOAT(mask0, v0, 0, gvl);
+                v0 = VFRSUBVF_MASK_FLOAT(mask0, v0, v0, 0, gvl);
                 mask1 = VMFLTVF_FLOAT(v1, 0, gvl);
-                v1 = VFRSUBVF_MASK_FLOAT(mask1, v1, 0, gvl);
+                v1 = VFRSUBVF_MASK_FLOAT(mask1, v1, v1, 0, gvl);
 
                 v0 = VFADDVV_FLOAT(v0, v1, gvl);
                 v_min = VFMINVV_FLOAT(v_min, v0, gvl);
@@ -99,18 +88,18 @@ FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
                 j += gvl;
                 ix += inc_xv;
         }
-        v_res = VFREDMINVS_FLOAT(v_min, v_res, gvl);
+        v_res = VFREDMINVS_FLOAT(v_res, v_min, v_res, gvl);
 
         if(j<n){
                 gvl = VSETVL(n-j);
                 v0 = VLSEV_FLOAT(&x[ix], stride_x, gvl);
                 v1 = VLSEV_FLOAT(&x[ix+1], stride_x, gvl);
                 mask0 = VMFLTVF_FLOAT(v0, 0, gvl);
-                v0 = VFRSUBVF_MASK_FLOAT(mask0, v0, 0, gvl);
+                v0 = VFRSUBVF_MASK_FLOAT(mask0, v0, v0, 0, gvl);
                 mask1 = VMFLTVF_FLOAT(v1, 0, gvl);
-                v1 = VFRSUBVF_MASK_FLOAT(mask1, v1, 0, gvl);
+                v1 = VFRSUBVF_MASK_FLOAT(mask1, v1, v1, 0, gvl);
                 v1 = VFADDVV_FLOAT(v0, v1, gvl);
-                v_res = VFREDMINVS_FLOAT(v1, v_res, gvl);
+                v_res = VFREDMINVS_FLOAT(v_res, v1, v_res, gvl);
         }
 
         minf = EXTRACT_FLOAT(v_res);

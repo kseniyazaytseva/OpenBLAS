@@ -27,28 +27,28 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "common.h"
 #if !defined(DOUBLE)
-#define VSETVL(n) __riscv_vsetvl_e32m2(n)
+#define VSETVL(n) vsetvl_e32m2(n)
 #define FLOAT_V_T vfloat32m2_t
 #define FLOAT_V_T_M1 vfloat32m1_t
-#define VLEV_FLOAT __riscv_vle32_v_f32m2
-#define VLSEV_FLOAT __riscv_vlse32_v_f32m2
-#define VFREDSUM_FLOAT __riscv_vfredusum_vs_f32m2_f32m1
-#define VFMACCVV_FLOAT __riscv_vfmacc_vv_f32m2
-#define VFMVVF_FLOAT __riscv_vfmv_v_f_f32m2
-#define VFMVVF_FLOAT_M1 __riscv_vfmv_v_f_f32m1
-#define VFMULVV_FLOAT __riscv_vfmul_vv_f32m2
+#define VLEV_FLOAT vle32_v_f32m2
+#define VLSEV_FLOAT vlse32_v_f32m2
+#define VFREDSUM_FLOAT vfredusum_vs_f32m2_f32m1
+#define VFMACCVV_FLOAT vfmacc_vv_f32m2
+#define VFMVVF_FLOAT vfmv_v_f_f32m2
+#define VFMVVF_FLOAT_M1 vfmv_v_f_f32m1
+#define VFMULVV_FLOAT vfmul_vv_f32m2
 #define xint_t int
 #else
-#define VSETVL(n) __riscv_vsetvl_e64m2(n)
+#define VSETVL(n) vsetvl_e64m2(n)
 #define FLOAT_V_T vfloat64m2_t
 #define FLOAT_V_T_M1 vfloat64m1_t
-#define VLEV_FLOAT __riscv_vle64_v_f64m2
-#define VLSEV_FLOAT __riscv_vlse64_v_f64m2
-#define VFREDSUM_FLOAT __riscv_vfredusum_vs_f64m2_f64m1
-#define VFMACCVV_FLOAT __riscv_vfmacc_vv_f64m2
-#define VFMVVF_FLOAT __riscv_vfmv_v_f_f64m2
-#define VFMVVF_FLOAT_M1 __riscv_vfmv_v_f_f64m1
-#define VFMULVV_FLOAT __riscv_vfmul_vv_f64m2
+#define VLEV_FLOAT vle64_v_f64m2
+#define VLSEV_FLOAT vlse64_v_f64m2
+#define VFREDSUM_FLOAT vfredusum_vs_f64m2_f64m1
+#define VFMACCVV_FLOAT vfmacc_vv_f64m2
+#define VFMVVF_FLOAT vfmv_v_f_f64m2
+#define VFMVVF_FLOAT_M1 vfmv_v_f_f64m1
+#define VFMULVV_FLOAT vfmul_vv_f64m2
 #define xint_t long long
 #endif
 
@@ -74,7 +74,7 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a, BLASLO
                                 va = VLEV_FLOAT(&a_ptr[j], gvl);
                                 vx = VLEV_FLOAT(&x[j], gvl);
                                 vr = VFMULVV_FLOAT(va, vx, gvl);                // could vfmacc here and reduce outside loop
-                                v_res = VFREDSUM_FLOAT(vr, v_res, gvl);         // but that reordering diverges far enough from scalar path to make tests fail
+                                v_res = VFREDSUM_FLOAT(v_res, vr, v_res, gvl);         // but that reordering diverges far enough from scalar path to make tests fail
                                 j += gvl;
                         }
                         if(j < m){
@@ -82,7 +82,7 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a, BLASLO
                                 va = VLEV_FLOAT(&a_ptr[j], gvl);
                                 vx = VLEV_FLOAT(&x[j], gvl);
                                 vr = VFMULVV_FLOAT(va, vx, gvl);
-                                v_res = VFREDSUM_FLOAT(vr, v_res, gvl);
+                                v_res = VFREDSUM_FLOAT(v_res, vr, v_res, gvl);
                         }
                         temp = (FLOAT)EXTRACT_FLOAT(v_res);
                         y[iy] += alpha * temp;
@@ -103,7 +103,7 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a, BLASLO
                                 va = VLEV_FLOAT(&a_ptr[j], gvl);
                                 vx = VLSEV_FLOAT(&x[ix], stride_x, gvl);
                                 vr = VFMULVV_FLOAT(va, vx, gvl);
-                                v_res = VFREDSUM_FLOAT(vr, v_res, gvl);
+                                v_res = VFREDSUM_FLOAT(v_res, vr, v_res, gvl);
                                 j += gvl;
                                 ix += inc_x * gvl;
                         }
@@ -112,7 +112,7 @@ int CNAME(BLASLONG m, BLASLONG n, BLASLONG dummy1, FLOAT alpha, FLOAT *a, BLASLO
                                 va = VLEV_FLOAT(&a_ptr[j], gvl);
                                 vx = VLSEV_FLOAT(&x[ix], stride_x, gvl);
                                 vr = VFMULVV_FLOAT(va, vx, gvl);
-                                v_res = VFREDSUM_FLOAT(vr, v_res, gvl);
+                                v_res = VFREDSUM_FLOAT(v_res, vr, v_res, gvl);
                         }
                         temp = (FLOAT)EXTRACT_FLOAT(v_res);
                         y[iy] += alpha * temp;

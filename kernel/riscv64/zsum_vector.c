@@ -28,24 +28,13 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "common.h"
 #include <math.h>
 
-#ifdef RISCV64_ZVL256B
-#       define LMUL m2
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN _b32
-#       else
-#               define ELEN 32
-#               define MLEN _b16
-#       endif
+#define LMUL m8
+#if defined(DOUBLE)
+#        define ELEN 64
+#        define MLEN _b8
 #else
-#       define LMUL m8
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN _b8
-#       else
-#               define ELEN 32
-#               define MLEN _b4
-#       endif
+#        define ELEN 32
+#        define MLEN _b4
 #endif
 
 #define _
@@ -53,16 +42,16 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define JOIN2(x, y) JOIN2_X(x, y)
 #define JOIN(v, w, x, y, z) JOIN2( JOIN2( JOIN2( JOIN2( v, w ), x), y), z)
 
-#define VSETVL          JOIN(__riscv_vsetvl,    _e,     ELEN,   LMUL,   _)
+#define VSETVL          JOIN(vsetvl,    _e,     ELEN,   LMUL,   _)
 #define FLOAT_V_T       JOIN(vfloat,            ELEN,   LMUL,   _t,     _)
 #define FLOAT_V_T_M1    JOIN(vfloat,            ELEN,   m1,     _t,     _)
-#define VLEV_FLOAT      JOIN(__riscv_vle,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VLSEV_FLOAT     JOIN(__riscv_vlse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VFREDSUMVS_FLOAT JOIN(__riscv_vfredusum_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
-#define VFMVVF_FLOAT    JOIN(__riscv_vfmv,      _v_f_f, ELEN,   LMUL,   _)
-#define VFMVVF_FLOAT_M1 JOIN(__riscv_vfmv,      _v_f_f, ELEN,   m1,     _)
-#define VFADDVV_FLOAT   JOIN(__riscv_vfadd,     _vv_f,  ELEN,   LMUL,   _)
-#define VMFLTVF_FLOAT   JOIN(__riscv_vmflt,     _vf_f,  ELEN,   LMUL,   MLEN)
+#define VLEV_FLOAT      JOIN(vle,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VLSEV_FLOAT     JOIN(vlse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VFREDSUMVS_FLOAT JOIN(vfredusum_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
+#define VFMVVF_FLOAT    JOIN(vfmv,      _v_f_f, ELEN,   LMUL,   _)
+#define VFMVVF_FLOAT_M1 JOIN(vfmv,      _v_f_f, ELEN,   m1,     _)
+#define VFADDVV_FLOAT   JOIN(vfadd,     _vv_f,  ELEN,   LMUL,   _)
+#define VMFLTVF_FLOAT   JOIN(vmflt,     _vf_f,  ELEN,   LMUL,   MLEN)
 
 FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 {

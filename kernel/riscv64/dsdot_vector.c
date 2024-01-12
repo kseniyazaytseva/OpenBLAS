@@ -34,8 +34,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 gvl = vsetvl_e64m4(n);
                 vr = vfmv_v_f_f64m4(0, gvl);
                 for(i=0,j=0; i<n/gvl; i++){
-                        vx = vle_v_f32m2(&x[j], gvl);
-                        vy = vle_v_f32m2(&y[j], gvl);
+                        vx = vle32_v_f32m2(&x[j], gvl);
+                        vy = vle32_v_f32m2(&y[j], gvl);
                         vr = vfwmacc_vv_f64m4(vr, vx, vy, gvl);
                         j += gvl;
                 }
@@ -46,8 +46,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 //tail
                 if(j < n){
                         gvl = vsetvl_e64m4(n-j);
-                        vx = vle_v_f32m2(&x[j], gvl);
-                        vy = vle_v_f32m2(&y[j], gvl);
+                        vx = vle32_v_f32m2(&x[j], gvl);
+                        vy = vle32_v_f32m2(&y[j], gvl);
                         vfloat64m4_t vz = vfmv_v_f_f64m4(0, gvl);
                         //vr = vfdot_vv_f32m2(vx, vy, gvl);
                         vr = vfwmacc_vv_f64m4(vz, vx, vy, gvl);
@@ -59,8 +59,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 vr = vfmv_v_f_f64m4(0, gvl);
                  int stride_x = inc_x * sizeof(FLOAT);
                 for(i=0,j=0; i<n/gvl; i++){
-                        vx = vlse_v_f32m2(&x[j*inc_x], stride_x, gvl);
-                        vy = vle_v_f32m2(&y[j], gvl);
+                        vx = vlse32_v_f32m2(&x[j*inc_x], stride_x, gvl);
+                        vy = vle32_v_f32m2(&y[j], gvl);
                         vr = vfwmacc_vv_f64m4(vr, vx, vy, gvl);
                         j += gvl;
                 }
@@ -72,8 +72,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 //tail
                 if(j < n){
                         gvl = vsetvl_e64m4(n-j);
-                        vx = vlse_v_f32m2(&x[j*inc_x], stride_x, gvl);
-                        vy = vle_v_f32m2(&y[j], gvl);
+                        vx = vlse32_v_f32m2(&x[j*inc_x], stride_x, gvl);
+                        vy = vle32_v_f32m2(&y[j], gvl);
                         vfloat64m4_t vz = vfmv_v_f_f64m4(0, gvl);
                         //vr = vfdot_vv_f32m2(vx, vy, gvl);
                         vr = vfwmacc_vv_f64m4(vz, vx, vy, gvl);
@@ -86,8 +86,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 vr = vfmv_v_f_f64m4(0, gvl);
                  int stride_y = inc_y * sizeof(FLOAT);
                 for(i=0,j=0; i<n/gvl; i++){
-                        vx = vle_v_f32m2(&x[j], gvl);
-                        vy = vlse_v_f32m2(&y[j*inc_y], stride_y, gvl);
+                        vx = vle32_v_f32m2(&x[j], gvl);
+                        vy = vlse32_v_f32m2(&y[j*inc_y], stride_y, gvl);
                         vr = vfwmacc_vv_f64m4(vr, vx, vy, gvl);
                         j += gvl;
                 }
@@ -99,8 +99,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 //tail
                 if(j < n){
                         gvl = vsetvl_e64m4(n-j);
-                        vx = vle_v_f32m2(&x[j], gvl);
-                        vy = vlse_v_f32m2(&y[j*inc_y], stride_y, gvl);
+                        vx = vle32_v_f32m2(&x[j], gvl);
+                        vy = vlse32_v_f32m2(&y[j*inc_y], stride_y, gvl);
                         vfloat64m4_t vz = vfmv_v_f_f64m4(0, gvl);
                         //vr = vfdot_vv_f32m2(vx, vy, gvl);
                         vr = vfwmacc_vv_f64m4(vz, vx, vy, gvl);
@@ -114,8 +114,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                  int stride_x = inc_x * sizeof(FLOAT);
                  int stride_y = inc_y * sizeof(FLOAT);
                 for(i=0,j=0; i<n/gvl; i++){
-                        vx = vlse_v_f32m2(&x[j*inc_x], stride_x, gvl);
-                        vy = vlse_v_f32m2(&y[j*inc_y], stride_y, gvl);
+                        vx = vlse32_v_f32m2(&x[j*inc_x], stride_x, gvl);
+                        vy = vlse32_v_f32m2(&y[j*inc_y], stride_y, gvl);
                         vr = vfwmacc_vv_f64m4(vr, vx, vy, gvl);
                         j += gvl;
                 }
@@ -127,8 +127,8 @@ double CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y)
                 //tail
                 if(j < n){
                         gvl = vsetvl_e64m4(n-j);
-                        vx = vlse_v_f32m2(&x[j*inc_x], stride_x, gvl);
-                        vy = vlse_v_f32m2(&y[j*inc_y], stride_y, gvl);
+                        vx = vlse32_v_f32m2(&x[j*inc_x], stride_x, gvl);
+                        vy = vlse32_v_f32m2(&y[j*inc_y], stride_y, gvl);
                         vfloat64m4_t vz = vfmv_v_f_f64m4(0, gvl);
                         //vr = vfdot_vv_f32m2(vx, vy, gvl);
                         vr = vfwmacc_vv_f64m4(vz, vx, vy, gvl);

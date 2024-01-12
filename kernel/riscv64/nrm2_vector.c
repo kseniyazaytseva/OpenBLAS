@@ -27,24 +27,13 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "common.h"
 
-#ifdef RISCV64_ZVL256B
-#       define LMUL m1
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN 64
-#       else
-#               define ELEN 32
-#               define MLEN 32
-#       endif
+#define LMUL m4
+#if defined(DOUBLE)
+#        define ELEN 64
+#        define MLEN 16
 #else
-#       define LMUL m4
-#       if defined(DOUBLE)
-#               define ELEN 64
-#               define MLEN 16
-#       else
-#               define ELEN 32
-#               define MLEN 8
-#       endif
+#        define ELEN 32
+#        define MLEN 8
 #endif
 
 #define _
@@ -52,38 +41,38 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define JOIN2(x, y) JOIN2_X(x, y)
 #define JOIN(v, w, x, y, z) JOIN2( JOIN2( JOIN2( JOIN2( v, w ), x), y), z)
 
-#define VSETVL          JOIN(__riscv_vsetvl,    _e,     ELEN,   LMUL,   _)
+#define VSETVL          JOIN( vsetvl,    _e,     ELEN,   LMUL,   _)
 #define FLOAT_V_T       JOIN(vfloat,            ELEN,   LMUL,   _t,     _)
 #define FLOAT_V_T_M1    JOIN(vfloat,            ELEN,   m1,     _t,     _)
-#define VLEV_FLOAT      JOIN(__riscv_vle,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VLSEV_FLOAT     JOIN(__riscv_vlse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VFMVVF_FLOAT    JOIN(__riscv_vfmv,      _v_f_f, ELEN,   LMUL,   _)
-#define VFMVSF_FLOAT    JOIN(__riscv_vfmv,      _s_f_f, ELEN,   LMUL,   _)
-#define VFMVVF_FLOAT_M1 JOIN(__riscv_vfmv,      _v_f_f, ELEN,   m1,     _)
+#define VLEV_FLOAT      JOIN( vle,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VLSEV_FLOAT     JOIN( vlse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VFMVVF_FLOAT    JOIN( vfmv,      _v_f_f, ELEN,   LMUL,   _)
+#define VFMVSF_FLOAT    JOIN( vfmv,      _s_f_f, ELEN,   LMUL,   _)
+#define VFMVVF_FLOAT_M1 JOIN( vfmv,      _v_f_f, ELEN,   m1,     _)
 #define MASK_T          JOIN(vbool,             MLEN,   _t,     _,      _)
-#define VFABS           JOIN(__riscv_vfabs,     _v_f,   ELEN,   LMUL,   _)
-#define VMFNE           JOIN(__riscv_vmfne_vf_f,ELEN,   LMUL,   _b,     MLEN)
-#define VMFGT           JOIN(__riscv_vmfgt_vv_f,ELEN,   LMUL,   _b,     MLEN)
-#define VMFEQ           JOIN(__riscv_vmfeq_vf_f,ELEN,   LMUL,   _b,     MLEN)
-#define VCPOP           JOIN(__riscv_vcpop,     _m_b,   MLEN,   _,      _)
-#define VFREDMAX        JOIN(__riscv_vfredmax_vs_f,ELEN,LMUL,   JOIN2(_f, ELEN), m1)
-#define VFREDMIN        JOIN(__riscv_vfredmin_vs_f,ELEN,LMUL,   JOIN2(_f, ELEN), m1)
-#define VFIRST          JOIN(__riscv_vfirst,    _m_b,   MLEN,   _,      _)
-#define VRGATHER        JOIN(__riscv_vrgather,  _vx_f,  ELEN,   LMUL,   _)
-#define VFDIV           JOIN(__riscv_vfdiv,     _vv_f,  ELEN,   LMUL,   _)
-#define VFDIV_M         JOIN(__riscv_vfdiv,     _vv_f,  ELEN,   LMUL,   _mu)
-#define VFMUL           JOIN(__riscv_vfmul,     _vv_f,  ELEN,   LMUL,   _)
-#define VFMUL_M         JOIN(__riscv_vfmul,     _vv_f,  ELEN,   LMUL,   _mu)
-#define VFMACC          JOIN(__riscv_vfmacc,    _vv_f,  ELEN,   LMUL,   _)
-#define VFMACC_M        JOIN(__riscv_vfmacc,    _vv_f,  ELEN,   LMUL,   _mu)
-#define VMSBF           JOIN(__riscv_vmsbf,     _m_b,   MLEN,   _,      _)
-#define VMSOF           JOIN(__riscv_vmsof,     _m_b,   MLEN,   _,      _)
-#define VMAND           JOIN(__riscv_vmand,     _mm_b,  MLEN,   _,      _)
-#define VMANDN          JOIN(__riscv_vmandn,    _mm_b,  MLEN,   _,      _)
-#define VFREDSUM        JOIN(__riscv_vfredusum_vs_f,ELEN,LMUL,  JOIN2(_f, ELEN), m1)
-#define VMERGE          JOIN(__riscv_vmerge,    _vvm_f, ELEN,   LMUL,   _)
+#define VFABS           JOIN( vfabs,     _v_f,   ELEN,   LMUL,   _)
+#define VMFNE           JOIN( vmfne_vf_f,ELEN,   LMUL,   _b,     MLEN)
+#define VMFGT           JOIN( vmfgt_vv_f,ELEN,   LMUL,   _b,     MLEN)
+#define VMFEQ           JOIN( vmfeq_vf_f,ELEN,   LMUL,   _b,     MLEN)
+#define VCPOP           JOIN( vcpop,     _m_b,   MLEN,   _,      _)
+#define VFREDMAX        JOIN( vfredmax_vs_f,ELEN,LMUL,   JOIN2(_f, ELEN), m1)
+#define VFREDMIN        JOIN( vfredmin_vs_f,ELEN,LMUL,   JOIN2(_f, ELEN), m1)
+#define VFIRST          JOIN( vfirst,    _m_b,   MLEN,   _,      _)
+#define VRGATHER        JOIN( vrgather,  _vx_f,  ELEN,   LMUL,   _)
+#define VFDIV           JOIN( vfdiv,     _vv_f,  ELEN,   LMUL,   _)
+#define VFDIV_M         JOIN( vfdiv,     _vv_f,  ELEN,   LMUL,   _m)
+#define VFMUL           JOIN( vfmul,     _vv_f,  ELEN,   LMUL,   _)
+#define VFMUL_M         JOIN( vfmul,     _vv_f,  ELEN,   LMUL,   _m)
+#define VFMACC          JOIN( vfmacc,    _vv_f,  ELEN,   LMUL,   _)
+#define VFMACC_M        JOIN( vfmacc,    _vv_f,  ELEN,   LMUL,   _m)
+#define VMSBF           JOIN( vmsbf,     _m_b,   MLEN,   _,      _)
+#define VMSOF           JOIN( vmsof,     _m_b,   MLEN,   _,      _)
+#define VMAND           JOIN( vmand,     _mm_b,  MLEN,   _,      _)
+#define VMANDN          JOIN( vmandn,    _mm_b,  MLEN,   _,      _)
+#define VFREDSUM        JOIN( vfredusum_vs_f,ELEN,LMUL,  JOIN2(_f, ELEN), m1)
+#define VMERGE          JOIN( vmerge,    _vvm_f, ELEN,   LMUL,   _)
 
-#define VSEV_FLOAT      JOIN(__riscv_vse,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VSEV_FLOAT      JOIN( vse,       ELEN,   _v_f,   ELEN,   LMUL)
 
 #if defined(DOUBLE)
 #define ABS fabs
@@ -91,7 +80,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define ABS fabsf
 #endif
 
-#define EXTRACT_FLOAT0_V(v) JOIN(__riscv_vfmv_f_s_f, ELEN, LMUL, _f, ELEN)(v)
+#define EXTRACT_FLOAT0_V(v) JOIN( vfmv_f_s_f, ELEN, LMUL, _f, ELEN)(v)
 
 //#define DUMP( label, v0, gvl )
 #define DUMP( label, v0, gvl ) do{ FLOAT x[16]; VSEV_FLOAT( x, v0, gvl ); printf ("%s(%d): %s [ ", __FILE__, __LINE__, label); for( int xxx = 0; xxx < gvl; ++xxx ) { printf("%f, ", x[xxx]); } printf(" ]\n"); } while(0)
@@ -136,7 +125,7 @@ FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
                                 v_scale = VFDIV_M( scale_mask, v_scale, v_scale, v0, gvl );
                                 v_scale = VFMUL_M( scale_mask, v_scale, v_scale, v_scale, gvl );
                                 v_ssq = VFMUL_M( scale_mask, v_ssq, v_ssq, v_scale, gvl );
-                                v_scale = VMERGE( v_scale, v0, scale_mask, gvl );
+                                v_scale = VMERGE(scale_mask, v_scale, v0, gvl );
                         }
                         v0 = VFDIV_M( nonzero_mask, v0, v0, v_scale, gvl );
                         v_ssq = VFMACC_M( nonzero_mask, v_ssq, v0, v0, gvl );

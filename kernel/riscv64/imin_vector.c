@@ -31,50 +31,50 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if defined(DOUBLE)
 
-#define VSETVL(n) __riscv_vsetvl_e64m8(n)
+#define VSETVL(n) vsetvl_e64m8(n)
 #define FLOAT_V_T vfloat64m8_t
 #define FLOAT_V_T_M1 vfloat64m1_t
-#define VLEV_FLOAT __riscv_vle64_v_f64m8
-#define VLSEV_FLOAT __riscv_vlse64_v_f64m8
-#define VFREDMINVS_FLOAT __riscv_vfredmin_vs_f64m8_f64m1
+#define VLEV_FLOAT vle64_v_f64m8
+#define VLSEV_FLOAT vlse64_v_f64m8
+#define VFREDMINVS_FLOAT vfredmin_vs_f64m8_f64m1
 #define MASK_T vbool8_t
-#define VMFGTVV_FLOAT __riscv_vmfgt_vv_f64m8_b8
-#define VFMVVF_FLOAT __riscv_vfmv_v_f_f64m8
-#define VFMVVF_FLOAT_M1 __riscv_vfmv_v_f_f64m1
-#define VFMINVV_FLOAT __riscv_vfmin_vv_f64m8
-#define VMFLEVF_FLOAT __riscv_vmfle_vf_f64m8_b8
-#define VMFIRSTM __riscv_vfirst_m_b8
+#define VMFGTVV_FLOAT vmfgt_vv_f64m8_b8
+#define VFMVVF_FLOAT vfmv_v_f_f64m8
+#define VFMVVF_FLOAT_M1 vfmv_v_f_f64m1
+#define VFMINVV_FLOAT vfmin_vv_f64m8
+#define VMFLEVF_FLOAT vmfle_vf_f64m8_b8
+#define VMFIRSTM vfirst_m_b8
 #define UINT_V_T vuint64m8_t
-#define VIDV_MASK_UINT __riscv_vid_v_u64m8_m
-#define VIDV_UINT __riscv_vid_v_u64m8
-#define VADDVX_MASK_UINT __riscv_vadd_vx_u64m8_m
-#define VADDVX_UINT __riscv_vadd_vx_u64m8
-#define VMVVX_UINT __riscv_vmv_v_x_u64m8
-#define VCOMPRESS __riscv_vcompress_vm_u64m8
-#define VMV_X __riscv_vmv_x_s_u64m8_u64
+#define VIDV_MASK_UINT vid_v_u64m8_m
+#define VIDV_UINT vid_v_u64m8
+#define VADDVX_MASK_UINT vadd_vx_u64m8_m
+#define VADDVX_UINT vadd_vx_u64m8
+#define VMVVX_UINT vmv_v_x_u64m8
+#define VCOMPRESS vcompress_vm_u64m8
+#define VMV_X vmv_x_s_u64m8_u64
 #else
 
-#define VSETVL(n) __riscv_vsetvl_e32m8(n)
+#define VSETVL(n) vsetvl_e32m8(n)
 #define FLOAT_V_T vfloat32m8_t
 #define FLOAT_V_T_M1 vfloat32m1_t
-#define VLEV_FLOAT __riscv_vle32_v_f32m8
-#define VLSEV_FLOAT __riscv_vlse32_v_f32m8
-#define VFREDMINVS_FLOAT __riscv_vfredmin_vs_f32m8_f32m1
+#define VLEV_FLOAT vle32_v_f32m8
+#define VLSEV_FLOAT vlse32_v_f32m8
+#define VFREDMINVS_FLOAT vfredmin_vs_f32m8_f32m1
 #define MASK_T vbool4_t
-#define VMFGTVV_FLOAT __riscv_vmfgt_vv_f32m8_b4
-#define VFMVVF_FLOAT __riscv_vfmv_v_f_f32m8
-#define VFMVVF_FLOAT_M1 __riscv_vfmv_v_f_f32m1
-#define VFMINVV_FLOAT __riscv_vfmin_vv_f32m8
-#define VMFLEVF_FLOAT __riscv_vmfle_vf_f32m8_b4
-#define VMFIRSTM __riscv_vfirst_m_b4
+#define VMFGTVV_FLOAT vmfgt_vv_f32m8_b4
+#define VFMVVF_FLOAT vfmv_v_f_f32m8
+#define VFMVVF_FLOAT_M1 vfmv_v_f_f32m1
+#define VFMINVV_FLOAT vfmin_vv_f32m8
+#define VMFLEVF_FLOAT vmfle_vf_f32m8_b4
+#define VMFIRSTM vfirst_m_b4
 #define UINT_V_T vuint32m8_t
-#define VIDV_MASK_UINT __riscv_vid_v_u32m8_m
-#define VIDV_UINT __riscv_vid_v_u32m8
-#define VADDVX_MASK_UINT __riscv_vadd_vx_u32m8_m
-#define VADDVX_UINT __riscv_vadd_vx_u32m8
-#define VMVVX_UINT __riscv_vmv_v_x_u32m8
-#define VCOMPRESS __riscv_vcompress_vm_u32m8
-#define VMV_X __riscv_vmv_x_s_u32m8_u32
+#define VIDV_MASK_UINT vid_v_u32m8_m
+#define VIDV_UINT vid_v_u32m8
+#define VADDVX_MASK_UINT vadd_vx_u32m8_m
+#define VADDVX_UINT vadd_vx_u32m8
+#define VMVVX_UINT vmv_v_x_u32m8
+#define VCOMPRESS vcompress_vm_u32m8
+#define VMV_X vmv_x_s_u32m8_u32
 #endif
 
 
@@ -101,25 +101,25 @@ BLASLONG CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 
                         //index where element greater than v_min
                         mask = VMFGTVV_FLOAT(v_min, vx, gvl);
-                        v_min_index = VIDV_MASK_UINT(mask, gvl);
-                        v_min_index = VADDVX_MASK_UINT(mask, v_min_index, j, gvl);
+                        v_min_index = VIDV_MASK_UINT(mask, v_min_index, gvl);
+                        v_min_index = VADDVX_MASK_UINT(mask, v_min_index, v_min_index, j, gvl);
 
                         //update v_min and start_index j
                         v_min = VFMINVV_FLOAT(v_min, vx, gvl);
                         j += gvl;
                 }
-                v_res = VFREDMINVS_FLOAT(v_min, v_res, gvl);
+                v_res = VFREDMINVS_FLOAT(v_res, v_min, v_res, gvl);
                 minf = EXTRACT_FLOAT(v_res);
                 mask = VMFLEVF_FLOAT(v_min, minf, gvl);
                 UINT_V_T compressed;
-                compressed = VCOMPRESS(v_min_index, mask, gvl);
+                compressed = VCOMPRESS(mask, compressed, v_min_index, gvl);
                 min_index = VMV_X(compressed);
 
                 if(j < n){
                         gvl = VSETVL(n-j);
                         v_min = VLEV_FLOAT(&x[j], gvl);
 
-                        v_res = VFREDMINVS_FLOAT(v_min, v_res, gvl);
+                        v_res = VFREDMINVS_FLOAT(v_res, v_min, v_res, gvl);
                         FLOAT cur_minf = EXTRACT_FLOAT(v_res);
                         if(cur_minf > minf){
                                 //tail index
@@ -128,7 +128,7 @@ BLASLONG CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 
                                 mask = VMFLEVF_FLOAT(v_min, cur_minf, gvl);
                                 UINT_V_T compressed;
-                                compressed = VCOMPRESS(v_min_index, mask, gvl);
+                                compressed = VCOMPRESS(mask, compressed, v_min_index, gvl);
                                 min_index = VMV_X(compressed);
                         }
                 }
@@ -144,25 +144,25 @@ BLASLONG CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 
                         //index where element greater than v_min
                         mask = VMFGTVV_FLOAT(v_min, vx, gvl);
-                        v_min_index = VIDV_MASK_UINT(mask, gvl);
-                        v_min_index = VADDVX_MASK_UINT(mask, v_min_index, j, gvl);
+                        v_min_index = VIDV_MASK_UINT(mask, v_min_index, gvl);
+                        v_min_index = VADDVX_MASK_UINT(mask, v_min_index, v_min_index, j, gvl);
 
                         //update v_min and start_index j
                         v_min = VFMINVV_FLOAT(v_min, vx, gvl);
                         j += gvl;
                         idx += inc_v;
                 }
-                v_res = VFREDMINVS_FLOAT(v_min, v_res, gvl);
+                v_res = VFREDMINVS_FLOAT(v_res, v_min, v_res, gvl);
                 minf = EXTRACT_FLOAT(v_res);
                 mask = VMFLEVF_FLOAT(v_min, minf, gvl);
                 UINT_V_T compressed;
-                compressed = VCOMPRESS(v_min_index, mask, gvl);
+                compressed = VCOMPRESS(mask, compressed, v_min_index, gvl);
                 min_index = VMV_X(compressed);
 
                 if(j < n){
                         gvl = VSETVL(n-j);
                         v_min = VLSEV_FLOAT(&x[idx], stride_x, gvl);
-                        v_res = VFREDMINVS_FLOAT(v_min, v_res, gvl);
+                        v_res = VFREDMINVS_FLOAT(v_res, v_min, v_res, gvl);
                         FLOAT cur_minf = EXTRACT_FLOAT(v_res);
                         if(cur_minf > minf){
                                 //tail index
@@ -171,7 +171,7 @@ BLASLONG CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 
                                 mask = VMFLEVF_FLOAT(v_min, cur_minf, gvl);
                                 UINT_V_T compressed;
-                                compressed = VCOMPRESS(v_min_index, mask, gvl);
+                                compressed = VCOMPRESS(mask, compressed, v_min_index, gvl);
                                 min_index = VMV_X(compressed);
                         }
                 }
