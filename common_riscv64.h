@@ -94,9 +94,9 @@ static inline int blas_quickdivide(blasint x, blasint y){
 #if defined(C910V) || defined(RISCV64_ZVL256B) || defined(__riscv_v)
 # include <riscv_vector.h>
 # if !defined(DOUBLE)
-#  define EXTRACT_FLOAT(v) vfmv_f_s_f32m1_f32(v)
+#  define EXTRACT_FLOAT(v) __riscv_vfmv_f_s_f32m1_f32(v)
 # else
-#  define EXTRACT_FLOAT(v) vfmv_f_s_f64m1_f64(v)
+#  define EXTRACT_FLOAT(v) __riscv_vfmv_f_s_f64m1_f64(v)
 # endif
 #else
 # define EXTRACT_FLOAT(v) (v[0])

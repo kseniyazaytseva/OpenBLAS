@@ -49,16 +49,16 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define JOIN2(x, y) JOIN2_X(x, y)
 #define JOIN(v, w, x, y, z) JOIN2( JOIN2( JOIN2( JOIN2( v, w ), x), y), z)
 
-#define VSETVL          JOIN(vsetvl,    _e,     ELEN,   LMUL,   _)
-#define FLOAT_V_T       JOIN(vfloat,    ELEN,   LMUL,   _t,     _)
-#define FLOAT_V_T_M1    JOIN(vfloat,    ELEN,   m1,     _t,     _)
-#define VLEV_FLOAT      JOIN(vle,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VLSEV_FLOAT     JOIN(vlse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VFREDSUMVS_FLOAT JOIN(vfredusum_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
-#define VFABS_FLOAT     JOIN(vfabs,     _v_f,   ELEN,   LMUL,   _)
-#define VFMVVF_FLOAT    JOIN(vfmv,      _v_f_f, ELEN,   LMUL,   _)
-#define VFMVVF_FLOAT_M1 JOIN(vfmv,      _v_f_f, ELEN,   m1,     _)
-#define VFADDVV_FLOAT   JOIN(vfadd,     _vv_f,  ELEN,   LMUL,   _)
+#define VSETVL          JOIN(__riscv_vsetvl,    _e,     ELEN,   LMUL,   _)
+#define FLOAT_V_T       JOIN(vfloat,            ELEN,   LMUL,   _t,     _)
+#define FLOAT_V_T_M1    JOIN(vfloat,            ELEN,   m1,     _t,     _)
+#define VLEV_FLOAT      JOIN(__riscv_vle,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VLSEV_FLOAT     JOIN(__riscv_vlse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VFREDSUMVS_FLOAT JOIN(__riscv_vfredusum_vs_f,  ELEN,   LMUL,   _f, JOIN2( ELEN,   m1))
+#define VFABS_FLOAT     JOIN(__riscv_vfabs,     _v_f,   ELEN,   LMUL,   _)
+#define VFMVVF_FLOAT    JOIN(__riscv_vfmv,      _v_f_f, ELEN,   LMUL,   _)
+#define VFMVVF_FLOAT_M1 JOIN(__riscv_vfmv,      _v_f_f, ELEN,   m1,     _)
+#define VFADDVV_FLOAT   JOIN(__riscv_vfadd,     _vv_f,  ELEN,   LMUL,   _)
 
 FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
 {
@@ -84,13 +84,13 @@ FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
                                 v_sum = VFADDVV_FLOAT(v_sum, v1, gvl);
                                 j += gvl * 2;
                         }
-                        v_res = VFREDSUMVS_FLOAT(v_res, v_sum, v_res, gvl);
+                        v_res = VFREDSUMVS_FLOAT(v_sum, v_res, gvl);
                 }
                 for(;j<n;){
                         gvl = VSETVL(n-j);
                         v0 = VLEV_FLOAT(&x[j], gvl);
                         v0 = VFABS_FLOAT(v0, gvl);
-                        v_res = VFREDSUMVS_FLOAT(v_res, v0, v_res, gvl);
+                        v_res = VFREDSUMVS_FLOAT(v0, v_res, gvl);
                         j += gvl;
                 }
         }else{
@@ -108,13 +108,13 @@ FLOAT CNAME(BLASLONG n, FLOAT *x, BLASLONG inc_x)
                                 v_sum = VFADDVV_FLOAT(v_sum, v1, gvl);
                                 j += gvl * 2;
                         }
-                        v_res = VFREDSUMVS_FLOAT(v_res, v_sum, v_res, gvl);
+                        v_res = VFREDSUMVS_FLOAT(v_sum, v_res, gvl);
                 }
                 for(;j<n;){
                         gvl = VSETVL(n-j);
                         v0 = VLSEV_FLOAT(&x[j*inc_x], stride_x, gvl);
                         v0 = VFABS_FLOAT(v0, gvl);
-                        v_res = VFREDSUMVS_FLOAT(v_res, v0, v_res, gvl);
+                        v_res = VFREDSUMVS_FLOAT(v0, v_res, gvl);
                         j += gvl;
                 }
         }

@@ -28,11 +28,20 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "common.h"
 
-#define LMUL m4
-#if defined(DOUBLE)
-#       define ELEN 64
+#ifdef RISCV64_ZVL256B
+#       define LMUL m2
+#       if defined(DOUBLE)
+#               define ELEN 64
+#       else
+#               define ELEN 32
+#       endif
 #else
-#       define ELEN 32
+#       define LMUL m4
+#       if defined(DOUBLE)
+#               define ELEN 64
+#       else
+#               define ELEN 32
+#       endif
 #endif
 
 #define _
@@ -40,13 +49,13 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define JOIN2(x, y) JOIN2_X(x, y)
 #define JOIN(v, w, x, y, z) JOIN2( JOIN2( JOIN2( JOIN2( v, w ), x), y), z)
 
-#define VSETVL          JOIN(vsetvl,    _e,     ELEN,   LMUL,   _)
-#define FLOAT_V_T       JOIN(vfloat,    ELEN,   LMUL,   _t,     _)
-#define VLEV_FLOAT      JOIN(vle,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VLSEV_FLOAT     JOIN(vlse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VSEV_FLOAT      JOIN(vse,       ELEN,   _v_f,   ELEN,   LMUL)
-#define VSSEV_FLOAT     JOIN(vsse,      ELEN,   _v_f,   ELEN,   LMUL)
-#define VFMACCVF_FLOAT  JOIN(vfmacc,    _vf_f, 	ELEN,   LMUL,   _)
+#define VSETVL          JOIN(__riscv_vsetvl,    _e,     ELEN,   LMUL,   _)
+#define FLOAT_V_T       JOIN(vfloat,    	ELEN,   LMUL,   _t,     _)
+#define VLEV_FLOAT      JOIN(__riscv_vle,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VLSEV_FLOAT     JOIN(__riscv_vlse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VSEV_FLOAT      JOIN(__riscv_vse,       ELEN,   _v_f,   ELEN,   LMUL)
+#define VSSEV_FLOAT     JOIN(__riscv_vsse,      ELEN,   _v_f,   ELEN,   LMUL)
+#define VFMACCVF_FLOAT  JOIN(__riscv_vfmacc,    _vf_f, 	ELEN,   LMUL,   _)
 
 int CNAME(BLASLONG n, BLASLONG dummy0, BLASLONG dummy1, FLOAT da, FLOAT *x, BLASLONG inc_x, FLOAT *y, BLASLONG inc_y, FLOAT *dummy, BLASLONG dummy2)
 {
